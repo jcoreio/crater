@@ -1,0 +1,45 @@
+import express from 'express'
+import path from 'path'
+import compression from 'compression'
+import httpProxy from 'http-proxy'
+import url from 'url'
+import createSSR from './createSSR'
+
+import '../collections/Counts'
+
+const app = express()
+
+app.use((req, res, next) => {
+  if (/\/favicon\.?(jpe?g|png|ico|gif)?$/i.test(req.url)) {
+    res.status(404).end()
+  } else {
+    next()
+  }
+})
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(compression())
+  app.use('/static', express.static(path.resolve(__dirname, '../../build/static')))
+} else {
+  const webpackConfig = require('../../webpack/webpack.config.dev').default
+  const compiler = require('webpack')(webpackConfig)
+  app.use(require('webpack-dev-middleware')(compiler, webpackConfig.devServer || {}))
+  app.use(require('webpack-hot-middleware')(compiler))
+}
+
+// server-side rendering
+app.get('*', createSSR)
+
+const server = app.listen(process.env.EXPRESS_PORT)
+
+const proxy = httpProxy.createProxyServer()
+proxy.on('error', (err) => console.error(err.stack))
+server.on('upgrade', (req, socket, head) => {
+  // proxy for Meteor DDP
+  if (/sockjs\/.*/.test(url.parse(req.url).pathname)) {
+    proxy.ws(req, socket, head, {target: process.env.ROOT_URL})
+  }
+})
+
+console.log(`App is listening on http://0.0.0.0:${process.env.EXPRESS_PORT}`)
+
