@@ -1,12 +1,11 @@
 {
   "name": "crater",
-  "private": true,
   "scripts": {
     "start": "NODE_ENV=development node src/server/index.js",
     "build": "rimraf build && concurrently \"npm run build:client\" \"npm run build:server\"",
     "build:server": "NODE_ENV=production webpack --config ./webpack/server.babel.js && NODE_ENV=production node transpile.babel.js && cd meteor && meteor build ../build/meteor --directory",
     "build:client": "NODE_ENV=production webpack --config ./webpack/prod.babel.js",
-    "prod": "NODE_ENV=production node build/server/index.js"
+    "prod": "cd build/meteor/bundle/programs/server && npm i && cd ../../../../.. && NODE_ENV=production node build/server/index.js"
   },
   "dependencies": {
     "compression": "^1.6.2",
@@ -24,11 +23,11 @@
     "redux": "^3.5.2",
     "url": "^0.11.0"
   },
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.0",
   "main": "index.js",
-  "author": "Meteor(/React) app skeleton that runs your userland code with pure Webpack/Babel instead of isobuild",
+  "author": "Andy Edwards <jedwards@fastmail.com>",
   "license": "ISC",
-  "description": "",
+  "description": "Meteor(/React) app skeleton that runs your userland code with pure Webpack/Babel instead of isobuild",
   "devDependencies": {
     "assets-webpack-plugin": "^3.4.0",
     "babel-core": "^6.14.0",
