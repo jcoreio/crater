@@ -27,19 +27,23 @@ if (process.env.NODE_ENV === 'production') {
   app.use(require('webpack-hot-middleware')(compiler))
 }
 
-// server-side rendering
-app.get('*', createSSR)
-
 const server = app.listen(process.env.EXPRESS_PORT)
 
 const proxy = httpProxy.createProxyServer()
 proxy.on('error', (err) => console.error(err.stack))
+// proxy for Meteor DDP
+app.all('/sockjs/*', (req, res) => {
+  const {pathname, query} = url.parse(req.url)
+  proxy.web(req, res, {target: `http://localhost:${process.env.PORT}${pathname}?${query}`})
+})
 server.on('upgrade', (req, socket, head) => {
-  // proxy for Meteor DDP
   if (/sockjs\/.*/.test(url.parse(req.url).pathname)) {
-    proxy.ws(req, socket, head, {target: process.env.ROOT_URL})
+    proxy.ws(req, socket, head, {target: `http://localhost:${process.env.PORT}`})
   }
 })
+
+// server-side rendering
+app.get('*', createSSR)
 
 console.log(`App is listening on http://0.0.0.0:${process.env.EXPRESS_PORT}`)
 
