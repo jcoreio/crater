@@ -16,7 +16,6 @@ function renderApp(res, store, assets, renderProps) {
   const location = renderProps && renderProps.location && renderProps.location.pathname || '/'
   // Needed so some components can render based on location
   store.dispatch(push(location))
-  console.log(store.getState().toJS())
   const htmlStream = renderToStaticMarkup(
     <Html
       title="Crater"
