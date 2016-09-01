@@ -2,12 +2,12 @@ global.__CLIENT__ = false
 
 var path = require('path')
 
+// load dev environment variables
+require('dotenv').config()
+
 if (process.env.NODE_ENV === 'production') {
   start()
 } else {
-  // load dev environment variables
-  require('dotenv').config()
-
   // piping restarts the server when any files change
   if (require('piping')({
     hook: false,
