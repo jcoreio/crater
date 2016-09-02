@@ -63,7 +63,7 @@ Then after that, run:
 ```
 npm start
 ```
-And open [http://localhost:3000] in your browser.
+And open http://localhost:3000 in your browser.
 
 ### Prod mode
 Before running prod mode, you need to build the prod version of the app:
@@ -79,7 +79,7 @@ Once the app is built, run the following command:
 ```
 npm run prod
 ```
-And open [http://localhost:3000] in your browser.
+And open http://localhost:3000 in your browser.
 
 ## Testing
 ```
