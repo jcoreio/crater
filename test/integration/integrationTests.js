@@ -41,7 +41,7 @@ describe('dev mode', function () {
   let server
 
   before(async function () {
-    this.timeout(30000)
+    this.timeout(60000)
     server = await launchAndWait('npm start', /webpack built [a-z0-9]+ in \d+ms/i)
     await browser.url('/')
   })
@@ -53,7 +53,7 @@ describe('dev mode', function () {
   sharedTests()
 
   it('supports hot reloading', async function () {
-    this.timeout(20000)
+    this.timeout(40000)
     const appFile = path.resolve(__dirname, '../../src/universal/components/App.js')
     const appCode = await promisify(fs.readFile)(appFile, 'utf8')
     const newHeader = 'Welcome to Crater! with hot reloading'
@@ -62,7 +62,7 @@ describe('dev mode', function () {
       await promisify(fs.writeFile)(appFile, modified, 'utf8')
       await browser.waitUntil(
         () => browser.getText('h1') === newHeader,
-        10000,
+        20000,
         'expected header text to hot update within 10s'
       )
     } finally {
@@ -75,7 +75,7 @@ describe('prod mode', function () {
   let server
 
   before(async function () {
-    this.timeout(120000)
+    this.timeout(240000)
     await exec('npm run build')
     await exec('npm install', {
       cwd: path.join(__dirname, '../../build/meteor/bundle/programs/server'),
