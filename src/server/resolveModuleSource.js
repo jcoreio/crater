@@ -9,12 +9,12 @@ try {
 }
 
 // Custom babel resolver for importing Meteor packages
-module.exports = function resolveModuleSource(source) {
+module.exports = function resolveModuleSource(source, file) {
   const match = /^meteor\/(.*)/.exec(source)
   if (match) {
     const shimFile = path.join(shimDir, match[1] + '.js')
     fs.writeFileSync(shimFile, 'module.exports = Package.' + match[1].replace(/\//g, '.'))
-    return shimFile
+    return path.relative(path.dirname(file), shimFile)
   }
   return source
 }

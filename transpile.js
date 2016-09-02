@@ -16,12 +16,12 @@ import {transformFile} from 'babel-core'
     ]
     await Promise.all(files.map(async file => {
       const {code} = await promisify(transformFile)(file, {
-        resolveModuleSource(source) {
+        resolveModuleSource(source, file) {
           const match = /^meteor\/(.*)/.exec(source)
           if (match) {
             const shimFile = path.join(shimDir, match[1] + '.js')
             fs.writeFileSync(shimFile, 'module.exports = Package.' + match[1].replace(/\//g, '.'))
-            return shimFile
+            return path.relative(path.dirname(file), path.join(__dirname, 'src', 'shims', path.basename(shimFile)))
           }
           return source
         }
