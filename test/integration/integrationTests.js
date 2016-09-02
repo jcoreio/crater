@@ -23,7 +23,7 @@ function sharedTests() {
   })
   it('updates the counter', async function () {
     const getCounter = async () => {
-      const text = await browser.getText('h3')
+      const text = await browser.getText('.counter')
       const match = /(\d+)/.exec(text)
       return match && parseInt(match[1])
     }
@@ -31,6 +31,9 @@ function sharedTests() {
     const initCounter = await getCounter()
     await delay(2000)
     expect(await getCounter()).to.be.above(initCounter)
+  })
+  it('sends Meteor.settings.public to the client', async function () {
+    expect(await browser.getText('.settings-test')).to.equal('success')
   })
 }
 
@@ -96,7 +99,16 @@ describe('docker build', function () {
     const host = execSync('which docker-machine') ? '192.168.99.100' : 'localhost'
     await exec('npm run build')
     await exec('npm run build:docker')
-    server = await launchAndWait('npm run docker', /App is listening on http/i)
+    server = await launchAndWait('npm run docker', /App is listening on http/i, {
+      env: {
+        ...process.env,
+        METEOR_SETTINGS: JSON.stringify({
+          public: {
+            test: 'success'
+          }
+        })
+      }
+    })
     await browser.url(`http://${host}:3000/`)
   })
 

@@ -27,6 +27,7 @@ export default class App extends Component {
       <div className={styles.app}>
         <h1>Welcome to Crater!</h1>
         <h3 className="counter">Counter: {this.state.value}</h3>
+        <h3>Meteor.settings.public.test: <span className="settings-test">{Meteor.settings.public.test}</span></h3>
       </div>
     )
   }

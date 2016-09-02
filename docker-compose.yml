@@ -9,5 +9,6 @@ services:
       - "3000:80"
     environment:
       - ROOT_URL=$ROOT_URL
+      - METEOR_SETTINGS=$METEOR_SETTINGS
     depends_on:
       - mongo
