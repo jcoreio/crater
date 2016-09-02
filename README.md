@@ -3,6 +3,7 @@
 ## A new app skeleton for Meteor
 
 **Note: this is not for beginners!**
+(and it's still somewhat experimental)
 
 Ever since I started using Meteor, Isobuild has been my biggest source of frustration with it, for the following
 reasons:
@@ -39,6 +40,12 @@ I moved Meteor to port 4000 and put Express on port 3000 by default, so that you
 
 The client-side code is bundled using Webpack and [meteor-imports-webpack-plugin](https://github.com/luisherranz/meteor-imports-webpack-plugin), and comes with all the usual
 goodies in this skeleton: `react-hot-loader`, `redux`, `react-router`, `react-router-redux`.
+
+## Version notes
+* **Node**: So far I've gotten this to work on:
+  * 5.10.1
+  * 6.3.0
+* **Webpack**: Webpack 2 is not supported yet by `meteor-imports-webpack-plugin`.
 
 ## Obtaining
 ```
