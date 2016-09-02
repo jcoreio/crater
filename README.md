@@ -44,6 +44,7 @@ goodies in this skeleton: `react-hot-loader`, `redux`, `react-router`, `react-ro
 ## Version notes
 * **Node**: So far I've gotten this to work on:
   * 5.10.1
+  * 5.12.0
   * 6.3.0
   * 6.5.0
 * **Webpack**: Webpack 2 is not supported yet by `meteor-imports-webpack-plugin`.
