@@ -1,9 +1,13 @@
 # Crater
 
-## A new app skeleton for Meteor
+## A new app skeleton for Meteor/React
 
 **Note: this is not for beginners!**
 (and it's still somewhat experimental)
+
+It's 2016, and your Meteor app has crash landed in the middle of a more advanced JavaScript civilization, leaving a crater full of mangled and poorly forked npm packages and antique build tools.  You climb out of the ruins of your Celestial-Body-as-a-Service and wonder, how can I pick up the pieces and keep going in this new ecosystem?
+
+If you can't start over (i.e. switch to [Meatier](https://github.com/mattkrick/meatier), which I recommend highly) because your codebase is too firmly entrenched in Meteor, then you may find this app skeleton quite useful.
 
 Ever since I started using Meteor, Isobuild has been my biggest source of frustration with it, for the following
 reasons:
