@@ -3,6 +3,8 @@ import {spawn} from 'child_process'
 import exec from '../../util/exec'
 import launchAndWait from '../../util/launchAndWait'
 import path from 'path'
+import fs from 'fs'
+import promisify from 'es6-promisify'
 
 async function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -19,10 +21,9 @@ function sharedTests() {
     const color = await browser.getCssProperty('h1', 'color')
     expect(color.parsed.hex).to.equal('#333333')
   })
-  it('updates the counter', async function() {
+  it('updates the counter', async function () {
     const getCounter = async () => {
       const text = await browser.getText('h3')
-      console.log(text)
       const match = /(\d+)/.exec(text)
       return match && parseInt(match[1])
     }
@@ -47,6 +48,24 @@ describe('dev mode', function () {
   })
 
   sharedTests()
+
+  it('supports hot reloading', async function () {
+    this.timeout(20000)
+    const appFile = path.resolve(__dirname, '../../src/universal/components/App.js')
+    const appCode = await promisify(fs.readFile)(appFile, 'utf8')
+    const newHeader = 'Welcome to Crater! with hot reloading'
+    const modified = appCode.replace(/Welcome to Crater!/, newHeader)
+    try {
+      await promisify(fs.writeFile)(appFile, modified, 'utf8')
+      await browser.waitUntil(
+        () => browser.getText('h1') === newHeader,
+        10000,
+        'expected header text to hot update within 10s'
+      )
+    } finally {
+      await promisify(fs.writeFile)(appFile, appCode, 'utf8')
+    }
+  })
 })
 
 describe('prod mode', function () {
