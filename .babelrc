@@ -1,7 +1,9 @@
 {
   "presets": ["es2015", "stage-1", "react", "flow"],
   "plugins": [
-    "transform-runtime"
+    ["transform-runtime", {
+      "polyfill": false
+    }]
   ],
   "env": {
     "development": {

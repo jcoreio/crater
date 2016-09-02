@@ -5,7 +5,8 @@
     "build": "rimraf build && concurrently \"npm run build:client\" \"npm run build:server\"",
     "build:server": "NODE_ENV=production webpack --config ./webpack/server.babel.js && NODE_ENV=production node transpile.babel.js && cd meteor && meteor build ../build/meteor --directory",
     "build:client": "NODE_ENV=production webpack --config ./webpack/prod.babel.js",
-    "prod": "cd build/meteor/bundle/programs/server && npm i && cd ../../../../.. && NODE_ENV=production node build/server/index.js"
+    "prod": "cd build/meteor/bundle/programs/server && npm i && cd ../../../../.. && NODE_ENV=production node build/server/index.js",
+    "test": "node integration-test.babel.js"
   },
   "dependencies": {
     "compression": "^1.6.2",
@@ -40,6 +41,7 @@
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-1": "^6.13.0",
     "babel-runtime": "^6.11.6",
+    "chai": "^3.5.0",
     "concurrently": "^2.2.0",
     "css-loader": "^0.24.0",
     "dotenv": "^2.0.0",
@@ -50,6 +52,8 @@
     "json-loader": "^0.5.4",
     "meteor-imports-webpack-plugin": "^1.0.6",
     "mkdirp": "^0.5.1",
+    "mocha": "^3.0.2",
+    "phantomjs-prebuilt": "^2.1.12",
     "piping": "^1.0.0-rc.3",
     "progress-bar-webpack-plugin": "^1.9.0",
     "raw-loader": "^0.5.1",
@@ -59,8 +63,25 @@
     "rimraf": "^2.5.4",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
+    "wdio-mocha-framework": "^0.4.0",
+    "webdriverio": "^4.2.11",
     "webpack": "^1.13.2",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-hot-middleware": "^2.12.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jedwards1211/crater.git"
+  },
+  "keywords": [
+    "meteor",
+    "babel",
+    "webpack",
+    "react",
+    "crater"
+  ],
+  "bugs": {
+    "url": "https://github.com/jedwards1211/crater/issues"
+  },
+  "homepage": "https://github.com/jedwards1211/crater#readme"
 }
