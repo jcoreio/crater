@@ -69,6 +69,8 @@ git remote rename origin skeleton
 ## Running
 Crater doesn't start a Mongo dev database, before running, you must start one by running `mongod` in a separate shell.
 
+**Note: if you're *not* using Node 4, you will need to rebuild the fibers binary for your node version -- see the [Troubleshooting](#troubleshooting) section for more details.**
+
 ### Dev mode
 Before running the app for the very first time you need to have isobuild download and build all of the Meteor packages for you.  To do that, run the following:
 ```
@@ -90,21 +92,6 @@ npm start
 ```
 And open http://localhost:3000 in your browser.
 
-If you see the following error (or likewise for any other package that uses native code):
-```
-<your home dir>/.meteor/packages/meteor-tool/.1.4.1_1.msrh2w++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib/node_modules/fibers/fibers.js:16
-	throw new Error('`'+ modPath+ '.node` is missing. Try reinstalling `node-fibers`?');
-	^
-
-Error: `<your home dir>/.meteor/packages/meteor-tool/.1.4.1_1.msrh2w++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib/node_modules/fibers/bin/darwin-x64-v8-5.0/fibers.node` is missing. Try reinstalling `node-fibers`?
-```
-It means you're trying to run the app with a different version of Node than Meteor 1.4.1 uses, which is okay -- you just have to manually build the fibers binary for your Node version, like this:
-```
-cd <your home dir>/.meteor/packages/meteor-tool/.1.4.1_1.msrh2w++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib
-npm rebuild fibers
-```
-And then retry `npm start`.  Hopefully I can find a more robust way to handle cases like this soon.
-
 ### Prod mode
 Before running prod mode, you need to build the prod version of the app:
 ```
@@ -120,6 +107,23 @@ Once the app is built, run the following command:
 npm run prod
 ```
 And open http://localhost:3000 in your browser.
+
+## Troubleshooting
+
+If you see the following error (or likewise for any other package that uses native code):
+```
+<your home dir>/.meteor/packages/meteor-tool/.1.4.1_1.msrh2w++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib/node_modules/fibers/fibers.js:16
+	throw new Error('`'+ modPath+ '.node` is missing. Try reinstalling `node-fibers`?');
+	^
+
+Error: `<your home dir>/.meteor/packages/meteor-tool/.1.4.1_1.msrh2w++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib/node_modules/fibers/bin/darwin-x64-v8-5.0/fibers.node` is missing. Try reinstalling `node-fibers`?
+```
+It means you're trying to run the app with a different version of Node than Meteor 1.4.1 uses, which is okay -- you just have to manually build the fibers binary for your Node version, like this:
+```
+cd <your home dir>/.meteor/packages/meteor-tool/.1.4.1_1.msrh2w++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib
+npm rebuild fibers
+```
+And then retry `npm start`.  Hopefully I can find a more robust way to handle cases like this soon.
 
 ## Testing
 ```
