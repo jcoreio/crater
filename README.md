@@ -2,14 +2,15 @@
 
 ## A new app skeleton for Meteor
 
-> Note: this is not for beginners!
+**Note: this is not for beginners!**
 
 Ever since I started using Meteor, Isobuild has been my biggest source of frustration with it, for the following
 reasons:
 * It made it more difficult to use Webpack with Meteor
 * It's hard to customize index.html too much
 * It's been horribly slow for me in recent versions
-(almost 100 upvotes on this issue! [Meteor build time/refresh time after file save is VERY slow](https://github.com/meteor/meteor/issues/4284))
+([Meteor build time/refresh time after file save is VERY slow](https://github.com/meteor/meteor/issues/4284) --
+over 90 upvotes and it's been open since April!)
 * I just want to be in control of the initial entry point, period.
 
 Well, thanks to Babel custom resolvers and [meteor-imports-webpack-plugin](https://github.com/luisherranz/meteor-imports-webpack-plugin),
