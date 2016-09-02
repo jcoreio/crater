@@ -24,7 +24,9 @@ And for that and other reasons, this skeleton tends to start up faster than runn
 
 ## How it works
 
-**Special thanks to [Meatier](https://github.com/mattkrick/meatier) for the inspiration for a lot of the app structure!**
+**Special thanks to [Matt Krick](https://github.com/mattkrick), creator of
+[Meatier](https://github.com/mattkrick/meatier) -- I learned a lot from
+Meatier, and copped some of its code for this project**
 
 `src/server/index.js` uses `piping` (to enable server restarts when the code changes) and then uses
 `babel-register` with a custom `resolveModuleSource` that shims Meteor imports.  It then requires Meteor's `boot.js`,
