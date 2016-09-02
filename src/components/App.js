@@ -24,7 +24,7 @@ export default class App extends Component {
     return (
       <div>
         <h1>Welcome to Crater!</h1>
-        <h3>Counter: {this.state.value}</h3>
+        <h3 className="counter">Counter: {this.state.value}</h3>
       </div>
     )
   }
