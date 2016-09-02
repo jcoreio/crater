@@ -43,7 +43,7 @@ goodies in this skeleton: `react-hot-loader`, `redux`, `react-router`, `react-ro
 
 ## Version notes
 * **Node**: < 4.4.7 won't be supported.  So far I've gotten this to work on:
-  * 4.5.0
+  * 4.5.0 (though the tests don't quite work properly, even though they pass)
   * 5.10.1
   * 5.12.0
   * 6.3.0
