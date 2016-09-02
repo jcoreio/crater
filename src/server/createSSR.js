@@ -12,7 +12,7 @@ import {Map as iMap} from 'immutable'
 import {Meteor} from 'meteor/meteor'
 
 const __meteor_runtime_config__ = {
-  PUBLIC_SETTINGS: {},
+  PUBLIC_SETTINGS: Meteor.settings.public || {},
   ROOT_URL: process.env.ROOT_URL,
   ROOT_URL_PATH_PREFIX: '',
   meteorEnv: {
