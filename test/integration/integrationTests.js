@@ -1,5 +1,7 @@
 import {expect} from 'chai'
 import {spawn} from 'child_process'
+import exec from '../../util/exec'
+import launchAndWait from '../../util/launchAndWait'
 import path from 'path'
 
 async function testHomePage() {
@@ -59,40 +61,3 @@ describe('prod mode', function () {
   })
 })
 
-async function exec(command, options = {}) {
-  const parts = command.split(/\s+/g)
-  return new Promise((resolve, reject) => {
-    const child = spawn(parts[0], parts.slice(1), {
-      cwd: path.join(__dirname, '../..'),
-      stdio: 'inherit',
-      ...options,
-    })
-    child.on('error', reject)
-    child.on('close', code => {
-      if (code > 0) return reject(`'${command}' exited with code ${code}`)
-      resolve()
-    })
-    process.on('exit', () => child.kill())
-  })
-}
-
-async function launchAndWait(command, predicate, options = {}) {
-  const parts = command.split(/\s+/g)
-  return new Promise((resolve, reject) => {
-    const child = spawn(parts[0], parts.slice(1), {
-      cwd: path.join(__dirname, '../..'),
-      ...options,
-    })
-    child.stdout.pipe(process.stdout)
-    child.stderr.pipe(process.stderr)
-    child.on('error', reject)
-    child.stdout.on('data', data => {
-      const message = data.toString()
-      if (predicate instanceof RegExp ? predicate.test(message) : predicate(message)) resolve(child)
-    })
-    child.on('close', code => {
-      if (code > 0) return reject(`'${command}' exited with code ${code}`)
-    })
-    process.on('exit', () => child.kill())
-  })
-}

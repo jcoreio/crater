@@ -7,16 +7,16 @@ phantomjs.run('--webdriver=4444').then(program => {
     stdio: 'inherit'
   })
   wdio.on('error', error => {
-    program.kill()
+    console.error(error.stack)
     process.exit(1)
   })
-  process.on('exit', () => {
+  const kill = () => {
     program.kill()
     wdio.kill()
-  })
+  }
+  process.on('exit', kill)
+  process.on('SIGINT', kill)
+  process.on('SIGTERM', kill)
 
-  wdio.on('close', code => {
-    program.kill()
-    process.exit(code)
-  })
+  wdio.on('close', code => process.exit(code))
 })
