@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {spawn} from 'child_process'
+import {spawn, execSync} from 'child_process'
 import exec from '../../util/exec'
 import launchAndWait from '../../util/launchAndWait'
 import path from 'path'
@@ -88,3 +88,22 @@ describe('prod mode', function () {
   sharedTests()
 })
 
+describe('docker build', function () {
+  let server
+
+  before(async function () {
+    this.timeout(120000)
+    const host = execSync('which docker-machine') ? '192.168.99.100' : 'localhost'
+    await exec('npm run build')
+    await exec('npm run build:docker')
+    server = await launchAndWait('npm run docker', /App is listening on http/i)
+    await browser.url(`http://${host}:3000/`)
+  })
+
+  after(async function () {
+    this.timeout(20000)
+    execSync('docker-compose down', {stdio: 'inherit'})
+  })
+
+  sharedTests()
+})

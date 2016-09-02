@@ -6,7 +6,9 @@
     "build:server": "NODE_ENV=production webpack --config ./webpack/server.babel.js && NODE_ENV=production node transpile.babel.js && cd meteor && meteor build ../build/meteor --directory",
     "build:client": "NODE_ENV=production webpack --config ./webpack/prod.babel.js",
     "prod": "NODE_ENV=production USE_DOTENV=1 node build/server/index.js",
-    "test": "node run-integration-test.babel.js"
+    "test": "node run-integration-test.babel.js",
+    "build:docker": "docker build -t jedwards1211/crater:$(git rev-parse HEAD) .",
+    "docker": "TAG=$(git rev-parse HEAD) ROOT_URL=http://localhost:3000 docker-compose up"
   },
   "dependencies": {
     "babel-runtime": "^6.11.6",

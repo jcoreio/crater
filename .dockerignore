@@ -1,0 +1,4 @@
+**
+!*.json
+!build
+build/meteor/bundle/programs/server/node_modules
