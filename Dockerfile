@@ -1,4 +1,4 @@
-FROM node:5.12
+FROM node:4.5
 MAINTAINER Andy Edwards
 
 RUN mkdir -p /usr/app/meteor/bundle/programs/server
