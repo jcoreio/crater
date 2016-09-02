@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 
 if (process.env.NODE_ENV === 'production') {
   app.use(compression())
-  app.use('/static', express.static(path.resolve(__dirname, '../../build/static')))
+  app.use('/static', express.static(path.resolve(__dirname, '../static')))
 } else {
   const webpackConfig = require('../../webpack/webpack.config.dev').default
   const compiler = require('webpack')(webpackConfig)
