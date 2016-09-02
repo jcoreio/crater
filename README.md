@@ -117,6 +117,7 @@ npm run prod
 And open http://localhost:3000 in your browser.
 
 ## Docker
+**Note: the Dockerfile is configured to use Node 4.5, but feel free to change it in your own project.**
 
 Before running the docker build, you need to build the app:
 ```
