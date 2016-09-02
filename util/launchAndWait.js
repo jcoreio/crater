@@ -15,10 +15,15 @@ async function launchAndWait(command, predicate, options = {}) {
       const message = data.toString()
       if (predicate instanceof RegExp ? predicate.test(message) : predicate(message)) resolve(child)
     })
-    child.on('close', code => {
+    let exited = false
+    child.on('exit', (code, signal) => {
+      exited = true
       if (code > 0) return reject(`'${command}' exited with code ${code}`)
+      if (signal) return reject(`'${command}' exited with signal ${signal}`)
     })
-    const kill = () => child.kill()
+    const kill = () => {
+      if (!exited) child.kill('SIGKILL')
+    }
     process.on('exit', kill)
     process.on('SIGINT', kill)
     process.on('SIGTERM', kill)

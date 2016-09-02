@@ -10,11 +10,16 @@ async function exec(command, options = {}) {
       ...options,
     })
     child.on('error', reject)
-    child.on('close', code => {
+    let exited = false
+    child.on('exit', (code, signal) => {
+      exited = true
       if (code > 0) return reject(`'${command}' exited with code ${code}`)
+      if (signal) return reject(`'${command}' exited with signal ${signal}`)
       resolve()
     })
-    const kill = () => child.kill()
+    const kill = () => {
+      if (!exited) child.kill('SIGKILL')
+    }
     process.on('exit', kill)
     process.on('SIGINT', kill)
     process.on('SIGTERM', kill)
