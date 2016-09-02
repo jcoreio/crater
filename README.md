@@ -50,22 +50,36 @@ git remote rename origin skeleton
 ## Running
 
 ### Dev mode
+Before running the app for the very first time you need to have isobuild download and build all of the Meteor packages for you.  To do that, run the following:
+```
+cd meteor
+meteor
+Ctrl-C after app starts up (this is just so Isobuild will install and build all the Meteor package deps)
+cd ..
+```
+(You don't need to repeat the above steps again, unless `meteor/.meteor/local/build` gets messed up for some reason.)
+
+Then after that, run:
 ```
 npm start
 ```
-
-Then navigate to `localhost:3000`.
+And open [http://localhost:3000] in your browser.
 
 ### Prod mode
+Before running prod mode, you need to build the prod version of the app:
 ```
 npm run build
 cd build/meteor/bundle/programs/server
 npm install
 cd <project root>
+```
+(You don't need to repeat the above steps unless you've changed something and need to rebuild.)
+
+Once the app is built, run the following command:
+```
 npm run prod
 ```
-
-Then navigate to `localhost:3000`.
+And open [http://localhost:3000] in your browser.
 
 ## Testing
 ```
