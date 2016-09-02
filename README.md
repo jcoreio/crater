@@ -101,6 +101,9 @@ And open http://localhost:3000 in your browser.
 Before running prod mode, you need to build the prod version of the app:
 ```
 npm run build
+```
+Then you need to install Meteor's npm dependencies:
+```
 cd build/meteor/bundle/programs/server
 npm install
 cd <project root>
@@ -112,6 +115,23 @@ Once the app is built, run the following command:
 npm run prod
 ```
 And open http://localhost:3000 in your browser.
+
+## Docker
+
+Before running the docker build, you need to build the app:
+```
+npm run build
+```
+Then to build the docker image, run:
+```
+npm run build:docker
+```
+To run the docker image (requires `docker-compose`):
+```
+npm run docker
+```
+And open http://localhost:3000 in your browser.
+
 
 ## Troubleshooting
 
@@ -137,3 +157,5 @@ npm test
 This runs an integration test that successively runs dev and prod mode via the commands above, and tests that Meteor
 integration is working via [PhantomJS](https://www.npmjs.com/package/phantomjs-prebuilt) and
 [Webdriver.IO](http://webdriver.io/).
+
+It also tests the docker build, so you need to have `docker` and `docker-compose` installed for the docker test to pass.
