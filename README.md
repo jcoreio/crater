@@ -50,5 +50,5 @@ npm run prod
 npm test
 ```
 This runs an integration test that successively runs dev and prod mode via the commands above, and tests that Meteor
-integration i working via [PhantomJS](https://www.npmjs.com/package/phantomjs-prebuilt) and
+integration is working via [PhantomJS](https://www.npmjs.com/package/phantomjs-prebuilt) and
 [Webdriver.IO](http://webdriver.io/).
