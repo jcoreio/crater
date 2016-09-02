@@ -62,6 +62,7 @@ git remote rename origin skeleton
 ```
 
 ## Running
+Crater doesn't start a Mongo dev database, before running, you must start one by running `mongod` in a separate shell.
 
 ### Dev mode
 Before running the app for the very first time you need to have isobuild download and build all of the Meteor packages for you.  To do that, run the following:
