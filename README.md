@@ -85,7 +85,7 @@ If you see the following error (or likewise for any other package that uses nati
 
 Error: `<your home dir>/.meteor/packages/meteor-tool/.1.4.1_1.msrh2w++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib/node_modules/fibers/bin/darwin-x64-v8-5.0/fibers.node` is missing. Try reinstalling `node-fibers`?
 ```
-It means you're trying to run the app with a different version of Node than Meteor 1.4.1 uses, which is okay -- you just have to manually build fibers for your Node version, like this:
+It means you're trying to run the app with a different version of Node than Meteor 1.4.1 uses, which is okay -- you just have to manually build the fibers binary for your Node version, like this:
 ```
 cd <your home dir>/.meteor/packages/meteor-tool/.1.4.1_1.msrh2w++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib
 npm rebuild fibers
