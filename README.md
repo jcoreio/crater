@@ -77,7 +77,7 @@ npm start
 ```
 And open http://localhost:3000 in your browser.
 
-If you see the following error:
+If you see the following error (or likewise for any other package that uses native code):
 ```
 <your home dir>/.meteor/packages/meteor-tool/.1.4.1_1.msrh2w++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib/node_modules/fibers/fibers.js:16
 	throw new Error('`'+ modPath+ '.node` is missing. Try reinstalling `node-fibers`?');
