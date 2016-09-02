@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 exports.config = {
     
     //
@@ -68,7 +70,7 @@ exports.config = {
     //
     // Set a base URL in order to shorten url command calls. If your url parameter starts
     // with "/", then the base url gets prepended.
-    baseUrl: 'http://localhost:9000',
+    baseUrl: 'http://localhost:' + process.env.EXPRESS_PORT,
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: 10000,
