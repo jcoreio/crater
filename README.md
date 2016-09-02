@@ -3,6 +3,7 @@
 ## A new app skeleton for Meteor
 
 **Note: this is not for beginners!**
+(and it's still somewhat experimental)
 
 Ever since I started using Meteor, Isobuild has been my biggest source of frustration with it, for the following
 reasons:
@@ -40,6 +41,15 @@ I moved Meteor to port 4000 and put Express on port 3000 by default, so that you
 The client-side code is bundled using Webpack and [meteor-imports-webpack-plugin](https://github.com/luisherranz/meteor-imports-webpack-plugin), and comes with all the usual
 goodies in this skeleton: `react-hot-loader`, `redux`, `react-router`, `react-router-redux`.
 
+## Version notes
+* **Node**: < 4.4.7 won't be supported.  So far I've gotten this to work on:
+  * 4.5.0 (though the tests don't quite work properly, even though they pass)
+  * 5.10.1
+  * 5.12.0
+  * 6.3.0
+  * 6.5.0
+* **Webpack**: Webpack 2 is not supported yet by `meteor-imports-webpack-plugin`.
+
 ## Obtaining
 ```
 git clone https://github.com/jedwards1211/crater
@@ -50,22 +60,56 @@ git remote rename origin skeleton
 ## Running
 
 ### Dev mode
+Before running the app for the very first time you need to have isobuild download and build all of the Meteor packages for you.  To do that, run the following:
+```
+cd meteor
+meteor
+Ctrl-C after app starts up (this is just so Isobuild will install and build all the Meteor package deps)
+cd ..
+```
+(You don't need to repeat the above steps again, unless `meteor/.meteor/local/build` gets messed up for some reason.)
+
+Then you need to install the NPM modules specified in package.json:
+```
+npm install
+```
+
+Then after that, run:
 ```
 npm start
 ```
+And open http://localhost:3000 in your browser.
 
-Then navigate to `localhost:3000`.
+If you see the following error (or likewise for any other package that uses native code):
+```
+<your home dir>/.meteor/packages/meteor-tool/.1.4.1_1.msrh2w++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib/node_modules/fibers/fibers.js:16
+	throw new Error('`'+ modPath+ '.node` is missing. Try reinstalling `node-fibers`?');
+	^
+
+Error: `<your home dir>/.meteor/packages/meteor-tool/.1.4.1_1.msrh2w++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib/node_modules/fibers/bin/darwin-x64-v8-5.0/fibers.node` is missing. Try reinstalling `node-fibers`?
+```
+It means you're trying to run the app with a different version of Node than Meteor 1.4.1 uses, which is okay -- you just have to manually build the fibers binary for your Node version, like this:
+```
+cd <your home dir>/.meteor/packages/meteor-tool/.1.4.1_1.msrh2w++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib
+npm rebuild fibers
+```
+And then retry `npm start`.  Hopefully I can find a more robust way to handle cases like this soon.
 
 ### Prod mode
+Before running prod mode, you need to build the prod version of the app:
 ```
 npm run build
 cd build/meteor/bundle/programs/server
 npm install
 cd <project root>
+```
+(You don't need to repeat the above steps unless you've changed something and need to rebuild.)
+
+Once the app is built, run the following command:
+```
 npm run prod
 ```
-
-Then navigate to `localhost:3000`.
+And open http://localhost:3000 in your browser.
 
 ## Testing
 ```
