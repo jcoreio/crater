@@ -45,6 +45,11 @@ I moved Meteor to port 4000 and put Express on port 3000 by default, so that you
 The client-side code is bundled using Webpack and [meteor-imports-webpack-plugin](https://github.com/luisherranz/meteor-imports-webpack-plugin), and comes with all the usual
 goodies in this skeleton: `react-hot-loader`, `redux`, `react-router`, `react-router-redux`.
 
+## Windows not supported yet
+
+Windows is not yet supported because the npm scripts are all written in bash.  It might work with bash from [Cygwin](https://www.cygwin.com/) or [Windows Subsystem for Linux](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=install%20windows%20subsystem%20for%20linux)
+Until I decide to work on Windows support, you're welcome to make a PR that uses `shelljs` or whatever instead of the bash scripts.
+
 ## Version notes
 * **Node**: < 4.4.7 won't be supported.  So far I've gotten this to work on:
   * 4.5.0 (though the tests don't quite work properly, even though they pass)
