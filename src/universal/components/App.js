@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import {Meteor} from 'meteor/meteor'
 import Counts from '../collections/Counts'
 
+import styles from './App.css'
+
 export default class App extends Component {
   state = {value: 0};
 
@@ -22,7 +24,7 @@ export default class App extends Component {
   }
   render() {
     return (
-      <div>
+      <div className={styles.app}>
         <h1>Welcome to Crater!</h1>
         <h3 className="counter">Counter: {this.state.value}</h3>
       </div>

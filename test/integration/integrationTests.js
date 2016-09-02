@@ -8,29 +8,16 @@ async function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-async function testHomePage() {
-  this.timeout(60000)
-  expect(await browser.getTitle()).to.equal('Crater')
-  expect(await browser.getText('h1')).to.equal('Welcome to Crater!')
-
-  const getCounter = async () => {
-    const text = await browser.getText('h3')
-    console.log(text)
-    const match = /(\d+)/.exec(text)
-    return match && parseInt(match[1])
-  }
-
-  const initCounter = await getCounter()
-  await new Promise(resolve => setTimeout(resolve, 2000))
-  expect(await getCounter()).to.be.above(initCounter)
-}
-
 function sharedTests() {
   it('serves page with correct title', async function () {
     expect(await browser.getTitle()).to.equal('Crater')
   })
   it('serves page with correct header', async function () {
     expect(await browser.getText('h1')).to.equal('Welcome to Crater!')
+  })
+  it('serves up client css', async function () {
+    const color = await browser.getCssProperty('h1', 'color')
+    expect(color.parsed.hex).to.equal('#333333')
   })
   it('updates the counter', async function() {
     const getCounter = async () => {

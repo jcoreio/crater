@@ -1,13 +1,12 @@
 import path from 'path'
 import webpack from 'webpack'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
-import cssModulesValues from 'postcss-modules-values'
 import HappyPack from 'happypack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 
 const root = path.resolve(__dirname, '..')
 const srcDir = path.resolve(root, 'src')
-const globalCSS = path.join(root, 'src', 'styles', 'global')
+const globalCSS = path.join(srcDir, 'styles', 'global')
 
 export default {
   context: root,
@@ -35,11 +34,10 @@ export default {
       callback()
     },
   ],
-  postcss: [cssModulesValues],
   plugins: [
     new webpack.NoErrorsPlugin(),
     new ExtractTextPlugin('[name].css'),
-    // new webpack.optimize.UglifyJsPlugin({compressor: {warnings: false}}),
+    new webpack.optimize.UglifyJsPlugin({compressor: {warnings: false}}),
     new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
     new webpack.DefinePlugin({
       '__CLIENT__': false,
@@ -61,7 +59,10 @@ export default {
       {test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader'},
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract('fake-style', 'css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss'),
+        loader: ExtractTextPlugin.extract(
+          'fake-style',
+          'css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss'
+        ),
         include: srcDir,
         exclude: globalCSS
       },
