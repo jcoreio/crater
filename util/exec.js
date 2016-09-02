@@ -18,7 +18,7 @@ async function exec(command, options = {}) {
       resolve()
     })
     const kill = () => {
-      if (!exited) child.kill('SIGKILL')
+      if (!exited) child.kill()
     }
     process.on('exit', kill)
     process.on('SIGINT', kill)

@@ -22,7 +22,7 @@ async function launchAndWait(command, predicate, options = {}) {
       if (signal) return reject(`'${command}' exited with signal ${signal}`)
     })
     const kill = () => {
-      if (!exited) child.kill('SIGKILL')
+      if (!exited) child.kill()
     }
     process.on('exit', kill)
     process.on('SIGINT', kill)
