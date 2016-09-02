@@ -7,17 +7,18 @@ import {renderToString} from 'react-dom-stream/server'
 // Injects the server rendered state and app into a basic html template
 export default class Html extends Component {
   static propTypes = {
+    __meteor_runtime_config__: PropTypes.object.isRequired,
     store: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
     assets: PropTypes.object,
     env: PropTypes.object,
     settings: PropTypes.object,
-    renderProps: PropTypes.object
+    renderProps: PropTypes.object,
   }
 
   render() {
     const PROD = process.env.NODE_ENV === 'production'
-    const {title, store, assets, renderProps} = this.props
+    const {title, __meteor_runtime_config__, store, assets, renderProps} = this.props
     const {manifest, app, vendor} = assets || {}
     const initialState = `window.__INITIAL_STATE__ = ${JSON.stringify(store.getState())}`
     const root = PROD && renderToString(
@@ -37,6 +38,9 @@ export default class Html extends Component {
           <title>{title}</title>
         </head>
         <body>
+          <script dangerouslySetInnerHTML={{
+            __html: `window.__meteor_runtime_config__ = ${JSON.stringify(__meteor_runtime_config__)}`
+          }} />
           <script dangerouslySetInnerHTML={{__html: initialState}} />
           {PROD ? <div id="root" dangerouslySetInnerHTML={{__html: root}}></div> : <div id="root"></div>}
           {PROD && <script dangerouslySetInnerHTML={{__html: manifest.text}} />}

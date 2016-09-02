@@ -53,11 +53,7 @@ export default {
     }),
     new ProgressBarPlugin(),
     new MeteorImportsPlugin({
-      ROOT_URL,
-      DDP_DEFAULT_CONNECTION_URL: ROOT_URL,
-      PUBLIC_SETTINGS: {},
       meteorFolder: 'meteor',
-      meteorEnv: { NODE_ENV: 'production' },
       exclude: ['ecmascript']
     }),
   ],

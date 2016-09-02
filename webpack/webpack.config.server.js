@@ -25,8 +25,6 @@ export default {
   externals: [
     'es6-promisify',
     (context, request, callback) => {
-      // Every module prefixed with "global-" becomes external
-      // "global-abc" -> abc
       const match = /^meteor\/(.*)$/.exec(request)
       if (match) {
         return callback(null, "var Package." + match[1].replace(/\//g, '.'))

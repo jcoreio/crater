@@ -2,8 +2,7 @@ global.__CLIENT__ = false
 
 var path = require('path')
 
-// load dev environment variables
-require('dotenv').config()
+if (process.env.USE_DOTENV) require('dotenv').config()
 
 if (process.env.NODE_ENV === 'production') {
   start()

@@ -9,6 +9,17 @@ import fs from 'fs'
 import {join, basename} from 'path'
 import promisify from 'es6-promisify'
 import {Map as iMap} from 'immutable'
+import {Meteor} from 'meteor/meteor'
+
+const __meteor_runtime_config__ = {
+  PUBLIC_SETTINGS: {},
+  ROOT_URL: process.env.ROOT_URL,
+  ROOT_URL_PATH_PREFIX: '',
+  meteorEnv: {
+    NODE_ENV: process.env.NODE_ENV,
+  },
+  meteorRelease: Meteor.release,
+}
 
 // https://github.com/systemjs/systemjs/issues/953
 
@@ -21,6 +32,7 @@ function renderApp(res, store, assets, renderProps) {
       title="Crater"
       store={store}
       assets={assets}
+      __meteor_runtime_config__={__meteor_runtime_config__}
       renderProps={renderProps}
     />
   )
@@ -52,7 +64,7 @@ async function createSSR(req, res) {
       })
     } else {
       // just send a cheap html doc + stringified store
-      renderApp(res, store)
+      renderApp(res,  store)
     }
   } catch (error) {
     console.error(error.stack)

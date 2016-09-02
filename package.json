@@ -1,11 +1,11 @@
 {
   "name": "crater",
   "scripts": {
-    "start": "NODE_ENV=development node src/server/index.js",
+    "start": "NODE_ENV=development USE_DOTENV=1 node src/server/index.js",
     "build": "rimraf build && concurrently \"npm run build:client\" \"npm run build:server\"",
     "build:server": "NODE_ENV=production webpack --config ./webpack/server.babel.js && NODE_ENV=production node transpile.babel.js && cd meteor && meteor build ../build/meteor --directory",
     "build:client": "NODE_ENV=production webpack --config ./webpack/prod.babel.js",
-    "prod": "NODE_ENV=production node build/server/index.js",
+    "prod": "NODE_ENV=production USE_DOTENV=1 node build/server/index.js",
     "test": "node run-integration-test.babel.js"
   },
   "dependencies": {
@@ -51,7 +51,7 @@
     "glob": "^7.0.6",
     "happypack": "^2.2.1",
     "json-loader": "^0.5.4",
-    "meteor-imports-webpack-plugin": "^1.0.6",
+    "meteor-imports-webpack-plugin": "github:jedwards1211/meteor-imports-webpack-plugin#no-meteor-runtime-config",
     "mkdirp": "^0.5.1",
     "mocha": "^3.0.2",
     "phantomjs-prebuilt": "^2.1.12",
