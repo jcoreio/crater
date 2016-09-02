@@ -59,6 +59,11 @@ cd ..
 ```
 (You don't need to repeat the above steps again, unless `meteor/.meteor/local/build` gets messed up for some reason.)
 
+Then you need to install the NPM modules specified in package.json:
+```
+npm install
+```
+
 Then after that, run:
 ```
 npm start
