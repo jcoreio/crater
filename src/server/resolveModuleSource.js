@@ -1,7 +1,7 @@
 var path = require('path')
 var fs = require('fs')
 
-const shimDir = path.join(__dirname, 'shims')
+const shimDir = path.resolve(__dirname, '../shims')
 try {
   fs.mkdirSync(shimDir)
 } catch (err) {

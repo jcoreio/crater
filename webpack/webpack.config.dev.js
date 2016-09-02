@@ -69,7 +69,7 @@ export default {
   },
   watch: true,
   devServer: {
-    contentBase: process.env.ROOT_URL,
+    contentBase: ROOT_URL,
     publicPath: '/static/',
     noInfo: true,
     stats: {

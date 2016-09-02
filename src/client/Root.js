@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react'
 import {Router, browserHistory} from 'react-router'
 import {Provider} from 'react-redux'
-import routes from '../routes/index'
+import routes from '../universal/routes/index'
 import {syncHistoryWithStore} from 'react-router-redux'
 
 export default class Root extends Component {

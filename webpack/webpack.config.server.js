@@ -4,9 +4,6 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import cssModulesValues from 'postcss-modules-values'
 import HappyPack from 'happypack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
-import MeteorImportsPlugin from 'meteor-imports-webpack-plugin'
-
-const {ROOT_URL} = process.env
 
 const root = path.resolve(__dirname, '..')
 const srcDir = path.resolve(root, 'src')
@@ -15,7 +12,7 @@ const globalCSS = path.join(root, 'src', 'styles', 'global')
 export default {
   context: root,
   entry: {
-    prerender: './src/routes/index.js'
+    prerender: './src/universal/routes/index.js'
   },
   target: 'node',
   output: {

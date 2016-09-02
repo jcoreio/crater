@@ -1,7 +1,7 @@
 import {createStore, applyMiddleware, compose} from 'redux'
 import {routerMiddleware} from 'react-router-redux'
 import {browserHistory} from 'react-router'
-import makeReducer from '../redux/makeReducer'
+import makeReducer from '../universal/redux/makeReducer'
 
 export default initialState => {
   let store

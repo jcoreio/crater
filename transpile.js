@@ -7,11 +7,13 @@ import {transformFile} from 'babel-core'
 
 ;(async () => {
   try {
-    const shimDir = path.join(__dirname, 'build/server/shims')
+    const shimDir = path.resolve(__dirname, 'build/shims')
     await promisify(mkdirp)(shimDir)
 
-    let files = await promisify(glob)('src/**/*.js')
-    files = files.filter(file => !/^src\/server\/shims/.test(file) && !/^src\/client/.test(file))
+    const files = [
+      ...await promisify(glob)('src/server/**/*.js'),
+      ...await promisify(glob)('src/universal/**/*.js'),
+    ]
     await Promise.all(files.map(async file => {
       const {code} = await promisify(transformFile)(file, {
         resolveModuleSource(source) {

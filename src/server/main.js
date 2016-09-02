@@ -5,7 +5,7 @@ import httpProxy from 'http-proxy'
 import url from 'url'
 import createSSR from './createSSR'
 
-import '../collections/Counts'
+import '../universal/collections/Counts'
 
 const app = express()
 
