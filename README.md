@@ -14,13 +14,26 @@ over 90 upvotes and it's been open since April!)
 * I just want to be in control of the initial entry point, period.
 
 Well, thanks to Babel custom resolvers and [meteor-imports-webpack-plugin](https://github.com/luisherranz/meteor-imports-webpack-plugin),
-now it's possible to run the app in dev mode and prod without using isobuild to build your code!  (It's only needed to
+now it's possible to build and run the app without using isobuild on your userland code!  (It's only needed to
 install and build meteor packages).
 
 This should be a very helpful workaround for [https://github.com/meteor/meteor/issues/4284], because
 **it doesn't output any transpiled files in dev mode**.
 
-And for that and other reasons, it tends to start up faster than running the app through Meteor.
+And for that and other reasons, this skeleton tends to start up faster than running the app through Meteor.
+
+## How it works
+
+**Special thanks to [Meatier](https://github.com/mattkrick/meatier) for the inspiration for a lot of the app structure!**
+
+`src/server/index.js` uses `piping` (to enable server restarts when the code changes) and then uses
+`babel-register` with a custom `resolveModuleSource` that shims Meteor imports.  It then requires Meteor's `boot.js`,
+and continues running its own ES2015 code in `src/server/main.js`, which sets up an Express server.
+
+The Express server is configured to perform React server-side rendering, and proxy SockJS requests to Meteor's internal server so that DDP works.
+
+The client-side code is bundled using Webpack and [meteor-imports-webpack-plugin](https://github.com/luisherranz/meteor-imports-webpack-plugin), and comes with all the usual
+goodies in this skeleton: `react-hot-loader`, `redux`, `react-router`, `react-router-redux`.
 
 ## Obtaining
 ```
@@ -36,6 +49,8 @@ git remote rename origin skeleton
 npm start
 ```
 
+Then navigate to `localhost:9000`.
+
 ### Prod mode
 ```
 npm run build
@@ -44,6 +59,8 @@ npm install
 cd <project root>
 npm run prod
 ```
+
+Then navigate to `localhost:9000`.
 
 ## Testing
 ```
