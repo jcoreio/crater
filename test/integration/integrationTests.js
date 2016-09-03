@@ -48,7 +48,7 @@ describe('dev mode', function () {
   })
 
   after(async function () {
-    if (server) server.kill('SIGINT')
+    if (server) await terminate(server.pid)
   })
 
   sharedTests()
@@ -86,7 +86,7 @@ describe('prod mode', function () {
   })
 
   after(async function () {
-    if (server) server.kill('SIGINT')
+    if (server) await terminate(server.pid)
   })
 
   sharedTests()
