@@ -1,9 +1,12 @@
 import phantomjs from 'phantomjs-prebuilt'
+import exec from './util/exec'
 import launchAndWait from './util/launchAndWait'
 import {spawn} from 'child_process'
 import terminate from 'terminate'
 import fs from 'fs'
 import path from 'path'
+import glob from 'glob'
+import promisify from 'es6-promisify'
 
 phantomjs.run('--webdriver=4444').then(async program => {
   let needToRunMeteor = true
@@ -17,6 +20,16 @@ phantomjs.run('--webdriver=4444').then(async program => {
       cwd: path.join(__dirname, 'meteor')
     })
     meteor.kill('SIGINT')
+
+    const release = await promisify(fs.readFile)(path.join(__dirname, 'meteor', '.meteor', 'release'), 'utf8')
+    const match = /METEOR@(\d+\.\d+\.\d+)(\.(\d+))?/.exec(release)
+    const meteorVersion = match && `${match[1]}${match[3] ? '_' + match[3] : ''}`
+
+    // rebuild native packages used by meteor
+    const paths = await promisify(glob)(path.join(
+      process.env.HOME, '.meteor', 'packages', 'meteor-tool', meteorVersion, 'mt-*', 'dev_bundle', 'server-lib'
+    ))
+    if (paths.length) await exec('npm rebuild', {cwd: paths[0]})
   }
 
   let phantomjsExited = false
