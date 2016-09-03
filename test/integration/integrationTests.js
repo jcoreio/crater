@@ -95,7 +95,7 @@ describe('docker build', function () {
   let server
 
   before(async function () {
-    this.timeout(120000)
+    this.timeout(240000)
     let host
     await exec('which docker-machine', {stdio: 'pipe'})
       .then(() => host = '192.168.99.100')
