@@ -2,7 +2,6 @@ import phantomjs from 'phantomjs-prebuilt'
 import launchAndWait from './util/launchAndWait'
 import {spawn} from 'child_process'
 import terminate from 'terminate'
-import promisify from 'es6-promisify'
 import fs from 'fs'
 import path from 'path'
 
@@ -17,7 +16,7 @@ phantomjs.run('--webdriver=4444').then(async program => {
     const meteor = await launchAndWait('meteor', /App running at: http/i, {
       cwd: path.join(__dirname, 'meteor')
     })
-    await promisify(terminate)(meteor.pid)
+    meteor.kill('SIGINT')
   }
 
   let phantomjsExited = false
