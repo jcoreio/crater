@@ -1,5 +1,6 @@
 import path from 'path'
 import {spawn} from 'child_process'
+import terminate from 'terminate'
 
 async function exec(command, options = {}) {
   const parts = command.split(/\s+/g)
@@ -11,6 +12,7 @@ async function exec(command, options = {}) {
     })
     child.on('error', reject)
     let exited = false
+    child.on('close', () => exited = true)
     child.on('exit', (code, signal) => {
       exited = true
       if (code > 0) return reject(`'${command}' exited with code ${code}`)
@@ -18,7 +20,7 @@ async function exec(command, options = {}) {
       resolve()
     })
     const kill = () => {
-      if (!exited) child.kill()
+      if (!exited) terminate(child.pid)
     }
     process.on('exit', kill)
     process.on('SIGINT', kill)

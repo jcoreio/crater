@@ -1,6 +1,8 @@
 import phantomjs from 'phantomjs-prebuilt'
 import launchAndWait from './util/launchAndWait'
 import {spawn} from 'child_process'
+import terminate from 'terminate'
+import promisify from 'es6-promisify'
 import fs from 'fs'
 import path from 'path'
 
@@ -15,11 +17,11 @@ phantomjs.run('--webdriver=4444').then(async program => {
     const meteor = await launchAndWait('meteor', /App running at: http/i, {
       cwd: path.join(__dirname, 'meteor')
     })
-    meteor.kill()
-    meteor.kill('SIGKILL')
+    await promisify(terminate)(meteor.pid)
   }
 
   let phantomjsExited = false
+  program.on('close', () => phantomjsExited = true)
   program.on('exit', () => phantomjsExited = true)
   console.log('Started PhantomJS.')
 
@@ -31,14 +33,15 @@ phantomjs.run('--webdriver=4444').then(async program => {
     process.exit(1)
   })
   let wdioExited = false
+  wdio.on('close', code => wdioExited = true)
   wdio.on('exit', code => {
     wdioExited = true
     if (code != null) process.exit(code)
     process.exit(1)
   })
   const kill = () => {
-    if (!phantomjsExited) program.kill('SIGKILL')
-    if (!wdioExited) wdio.kill('SIGKILL')
+    if (!phantomjsExited) terminate(program.pid)
+    if (!wdioExited) terminate(wdio.pid)
   }
   process.on('exit', kill)
   process.on('SIGINT', kill)

@@ -5,6 +5,7 @@ import launchAndWait from '../../util/launchAndWait'
 import path from 'path'
 import fs from 'fs'
 import promisify from 'es6-promisify'
+import terminate from 'terminate'
 
 async function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -47,7 +48,7 @@ describe('dev mode', function () {
   })
 
   after(async function () {
-    if (server) server.kill()
+    if (server) terminate(server.pid)
   })
 
   sharedTests()
@@ -85,7 +86,7 @@ describe('prod mode', function () {
   })
 
   after(async function () {
-    if (server) server.kill()
+    if (server) terminate(server.pid)
   })
 
   sharedTests()
