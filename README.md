@@ -1,6 +1,6 @@
 # Crater
 
-[![Build Status](https://travis-ci.org/jedwards1211/crater.svg?branch=master)](https://travis-ci.org/jedwards1211/crater.svg?branch=master)
+[![Build Status](https://travis-ci.org/jedwards1211/crater.svg?branch=master)](https://travis-ci.org/jedwards1211/crater)
 
 ## A new app skeleton for Meteor/React
 
