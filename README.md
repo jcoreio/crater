@@ -11,6 +11,25 @@ It's 2016, and your Meteor app has crash landed in the middle of a more advanced
 
 If you can't start over (i.e. switch to [Meatier](https://github.com/mattkrick/meatier), which I recommend highly) because your codebase is too firmly entrenched in Meteor, then you may find this app skeleton quite useful.
 
+## Features
+
+* All server and client code except for Meteor packages run outside of Meteor's control; they aren't processed by Isobuild
+* Starts faster than `meteor` dev mode
+* Babel 6 with es2015, stage-1 presets by default
+* Server uses `babel-register`
+* Client code is bundled by Webpack
+* Server creates an Express app and generates HTML pages with React SSR
+* Automatic server restart via `piping`
+* react-hot-loader 3 (beta)
+* redux
+* react-router
+* react-router-redux
+* Very customizable
+* Dockerfile included
+* Webdriver.io + Mocha + Chai integration test setup
+
+## Rationale
+
 Ever since I started using Meteor, Isobuild has been my biggest source of frustration with it, for the following
 reasons:
 * It made it more difficult to use Webpack with Meteor
