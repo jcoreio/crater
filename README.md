@@ -58,7 +58,8 @@ Meatier, and copped some of its code for this project**
 `babel-register` with a custom `resolveModuleSource` that shims Meteor imports.  It then requires Meteor's `boot.js`,
 and continues running its own ES2015 code in `src/server/main.js`, which sets up an Express server.
 
-The Express server is configured to perform React server-side rendering, and proxy SockJS requests to Meteor's internal server so that DDP works.
+The Express server is configured to perform React server-side rendering, and proxy SockJS requests to Meteor's internal server so that DDP works. (TODO: Add `WebApp` `rawConnectHandler`s to override most Meteor functionality instead of reverse
+proxying)
 
 I moved Meteor to port 4000 and put Express on port 3000 by default, so that you can still test the page at
 `localhost:3000`.
