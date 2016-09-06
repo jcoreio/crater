@@ -1,9 +1,8 @@
 import express from 'express'
 import path from 'path'
-import compression from 'compression'
-import httpProxy from 'http-proxy'
 import url from 'url'
 import createSSR from './createSSR'
+import {WebApp} from 'meteor/webapp'
 
 import '../universal/collections/Counts'
 
@@ -18,7 +17,6 @@ app.use((req, res, next) => {
 })
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(compression())
   app.use('/static', express.static(path.resolve(__dirname, '../static')))
 } else {
   const webpackConfig = require('../../webpack/webpack.config.dev').default
@@ -27,23 +25,20 @@ if (process.env.NODE_ENV === 'production') {
   app.use(require('webpack-hot-middleware')(compiler))
 }
 
-const server = app.listen(process.env.EXPRESS_PORT)
+const {httpServer} = WebApp
+const listeners = httpServer.listeners('request')
+httpServer.removeAllListeners('request')
 
-const proxy = httpProxy.createProxyServer()
-proxy.on('error', (err) => console.error(err.stack))
-// proxy for Meteor DDP
-app.all('/sockjs/*', (req, res) => {
-  const {pathname, query} = url.parse(req.url)
-  proxy.web(req, res, {target: `http://localhost:${process.env.PORT}${pathname}?${query}`})
-})
-server.on('upgrade', (req, socket, head) => {
-  if (/sockjs\/.*/.test(url.parse(req.url).pathname)) {
-    proxy.ws(req, socket, head, {target: `http://localhost:${process.env.PORT}`})
+app.get('*', (req, res, next) => {
+  const {pathname} = url.parse(req.url)
+  if (pathname.startsWith('/sockjs')) {
+    next()
+    return
   }
+  createSSR(req, res)
 })
+listeners.forEach(listener => app.use(listener))
 
-// server-side rendering
-app.get('*', createSSR)
+httpServer.on('request', app)
 
-console.log(`App is listening on http://0.0.0.0:${process.env.EXPRESS_PORT}`)
-
+console.log(`App is listening on http://0.0.0.0:${process.env.PORT}`)

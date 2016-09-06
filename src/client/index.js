@@ -15,9 +15,11 @@ Meteor.startup(() => {
     router,
   })
 
+  let reloads = 0
+
   const store = makeStore(initialState)
   render(
-    <AppContainer>
+    <AppContainer key={reloads}>
       <Root store={store} />
     </AppContainer>,
     document.getElementById('root')
@@ -28,7 +30,7 @@ Meteor.startup(() => {
     module.hot.accept('./Root', () => {
       const Root = require('./Root').default
       render(
-        <AppContainer>
+        <AppContainer key={++reloads}>
           <Root store={store} />
         </AppContainer>,
         document.getElementById('root')
