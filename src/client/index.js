@@ -15,8 +15,6 @@ Meteor.startup(() => {
     router,
   })
 
-  let reloads = 0
-
   const store = makeStore(initialState)
   render(
     <AppContainer key={0}>
