@@ -19,13 +19,15 @@ Meteor.startup(() => {
 
   const store = makeStore(initialState)
   render(
-    <AppContainer key={reloads}>
+    <AppContainer key={0}>
       <Root store={store} />
     </AppContainer>,
     document.getElementById('root')
   )
 
-// Hot Module Replacement API
+  let reloads = 0
+
+  // Hot Module Replacement API
   if (module.hot) {
     module.hot.accept('./Root', () => {
       const Root = require('./Root').default
