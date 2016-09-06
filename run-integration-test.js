@@ -52,8 +52,14 @@ phantomjs.run('--webdriver=4444').then(async program => {
     process.exit(1)
   })
   const kill = () => {
-    if (!phantomjsExited) terminate(program.pid)
-    if (!wdioExited) terminate(wdio.pid)
+    if (!phantomjsExited) {
+      program.kill()
+      terminate(program.pid)
+    }
+    if (!wdioExited) {
+      wdio.kill()
+      terminate(wdio.pid)
+    }
   }
   process.on('exit', kill)
   process.on('SIGINT', kill)

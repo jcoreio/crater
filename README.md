@@ -94,7 +94,7 @@ Then after that, run:
 ```
 npm start
 ```
-And open http://localhost:3000 in your browser.
+And open http://localhost:4000 in your browser. (The app will redirect from port 3000 to 4000)
 
 ### Prod mode
 Before running prod mode, you need to build the prod version of the app:

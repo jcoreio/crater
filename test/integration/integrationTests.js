@@ -49,7 +49,7 @@ describe('prod mode', function () {
     })
     server = await launchAndWait('npm run prod', /App is listening on http/i)
     await browser.reload()
-    await browser.url('/')
+    await browser.url(process.env.ROOT_URL)
   })
 
   after(async function () {
@@ -102,8 +102,7 @@ describe('dev mode', function () {
     this.timeout(60000)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     server = await launchAndWait('npm start', /webpack built [a-z0-9]+ in \d+ms/i)
-    await browser.reload()
-    await browser.url('/')
+    await browser.url(process.env.ROOT_URL)
   })
 
   after(async function () {
