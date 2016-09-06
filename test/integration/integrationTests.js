@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {spawn, execSync} from 'child_process'
+import {spawn} from 'child_process'
 import exec from '../../util/exec'
 import launchAndWait from '../../util/launchAndWait'
 import path from 'path'
@@ -38,40 +38,6 @@ function sharedTests() {
   })
 }
 
-describe('dev mode', function () {
-  let server
-
-  before(async function () {
-    this.timeout(60000)
-    server = await launchAndWait('npm start', /webpack built [a-z0-9]+ in \d+ms/i)
-    await browser.url('/')
-  })
-
-  after(async function () {
-    if (server) await terminate(server.pid)
-  })
-
-  sharedTests()
-
-  it('supports hot reloading', async function () {
-    this.timeout(40000)
-    const appFile = path.resolve(__dirname, '../../src/universal/components/App.js')
-    const appCode = await promisify(fs.readFile)(appFile, 'utf8')
-    const newHeader = 'Welcome to Crater! with hot reloading'
-    const modified = appCode.replace(/Welcome to Crater!/, newHeader)
-    try {
-      await promisify(fs.writeFile)(appFile, modified, 'utf8')
-      await browser.waitUntil(
-        () => browser.getText('h1') === newHeader,
-        20000,
-        'expected header text to hot update within 10s'
-      )
-    } finally {
-      await promisify(fs.writeFile)(appFile, appCode, 'utf8')
-    }
-  })
-})
-
 describe('prod mode', function () {
   let server
 
@@ -82,7 +48,8 @@ describe('prod mode', function () {
       cwd: path.join(__dirname, '../../build/meteor/bundle/programs/server'),
     })
     server = await launchAndWait('npm run prod', /App is listening on http/i)
-    await browser.url('/')
+    await browser.reload()
+    await browser.url(process.env.ROOT_URL)
   })
 
   after(async function () {
@@ -113,13 +80,48 @@ describe('docker build', function () {
         })
       }
     })
+    await browser.reload()
     await browser.url(`http://${host}:3000/`)
   })
 
   after(async function () {
     this.timeout(20000)
-    execSync('docker-compose down', {stdio: 'inherit'})
+    await exec('docker-compose down')
   })
 
   sharedTests()
+})
+
+describe('dev mode', function () {
+  let server
+
+  const appFile = path.resolve(__dirname, '../../src/universal/components/App.js')
+  let appCode
+
+  before(async function () {
+    this.timeout(60000)
+    appCode = await promisify(fs.readFile)(appFile, 'utf8')
+    server = await launchAndWait('npm start', /webpack built [a-z0-9]+ in \d+ms/i)
+    await browser.url(process.env.ROOT_URL)
+  })
+
+  after(async function () {
+    // restore code in App.js, which (may) have been changed by hot reloading test
+    if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
+    if (server) await terminate(server.pid)
+  })
+
+  sharedTests()
+
+  it('supports hot reloading', async function () {
+    this.timeout(40000)
+    const newHeader = 'Welcome to Crater! with hot reloading'
+    const modified = appCode.replace(/Welcome to Crater!/, newHeader)
+    await promisify(fs.writeFile)(appFile, modified, 'utf8')
+    await browser.waitUntil(
+      () => browser.getText('h1') === newHeader,
+      20000,
+      'expected header text to hot update within 10s'
+    )
+  })
 })
