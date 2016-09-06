@@ -24,17 +24,13 @@ function sharedTests() {
   })
   it('updates the counter', async function () {
     const getCounter = async () => {
-      console.log('getting counter')
       const text = await browser.getText('.counter')
-      console.log('counter: ', text)
       const match = /(\d+)/.exec(text)
       return match && parseInt(match[1])
     }
 
     const initCounter = await getCounter()
-    console.log('waiting')
     await delay(2000)
-    console.log('done waiting')
     expect(await getCounter()).to.be.above(initCounter)
   })
   it('sends Meteor.settings.public to the client', async function () {
