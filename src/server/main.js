@@ -19,26 +19,30 @@ app.use((req, res, next) => {
 if (process.env.NODE_ENV === 'production') {
   app.use('/static', express.static(path.resolve(__dirname, '../static')))
 } else {
+  // suppress compression middleware in meteor/webapp, which comes before rawConnectHandlers
+  // and interferes with webpack-hot-middleware (hopefully they'll accept my PR to move it after rawConnectHandlers)
+  // https://github.com/meteor/meteor/issues/7754
+  app.use((req, res, next) => {
+    res.setHeader('Cache-Control', 'no-transform')
+    next()
+  })
   const webpackConfig = require('../../webpack/webpack.config.dev').default
   const compiler = require('webpack')(webpackConfig)
   app.use(require('webpack-dev-middleware')(compiler, webpackConfig.devServer || {}))
   app.use(require('webpack-hot-middleware')(compiler))
 }
 
-const {httpServer} = WebApp
-const listeners = httpServer.listeners('request')
-httpServer.removeAllListeners('request')
-
 app.get('*', (req, res, next) => {
   const {pathname} = url.parse(req.url)
+  // let sockjs requests fall through to Meteor's handlers for DDP
   if (pathname.startsWith('/sockjs')) {
     next()
     return
   }
+  // otherwise render a page for the given location
   createSSR(req, res)
 })
-listeners.forEach(listener => app.use(listener))
 
-httpServer.on('request', app)
+WebApp.rawConnectHandlers.use(app)
 
 console.log(`App is listening on http://0.0.0.0:${process.env.PORT}`)
