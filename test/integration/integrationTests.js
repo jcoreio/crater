@@ -88,9 +88,13 @@ describe('docker build', function () {
     })
     await stdouted(server, /App is listening on http/i)
     let host
-    await spawnAsync('which', ['docker-machine'], {silent: true})
-      .then(() => host = `192.168.99.100:${process.env.PORT}`)
-      .catch(async () => host = (await execAsync('docker-compose port crater 80', {env})).stdout.trim())
+    if (process.env.CI) host = (await execAsync('docker-compose port crater 80', {env})).stdout.trim()
+    else {
+      await execAsync('which docker-machine', {silent: true})
+        .then(() => host = `192.168.99.100:${process.env.PORT}`)
+        .catch(() => host = `localhost:${process.env.PORT}`)
+    }
+    console.log('Host: ', host)
     await execAsync('docker-compose exec crater curl localhost')
     await execAsync(`curl ${host}`)
     await browser.reload()
