@@ -39,11 +39,12 @@ phantomjs.run('--webdriver=4444').then(async program => {
     if (paths.length) await spawnAsync('npm', ['rebuild'], {timeout: 10 * 60000, cwd: paths[0]})
   }
 
-  const wdio = spawn('node_modules/.bin/wdio', ['wdio.conf.js'], {
+  const wdio = spawn('node_modules/.bin/wdio', [...process.argv.slice(2), 'wdio.conf.js'], {
     stdio: 'inherit'
   })
   join(wdio).then(({code, signal}) => {
     if (code > 0 || signal != null) process.exit(1)
+    else process.exit(0)
   }).catch(error => {
     console.error(error.stack)
     process.exit(1)
