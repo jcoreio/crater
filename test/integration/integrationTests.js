@@ -70,14 +70,10 @@ describe('docker build', function () {
 
   before(async function () {
     this.timeout(480000)
-    let host
     env = {
       ...process.env,
       TAG: (await execAsync('git rev-parse HEAD')).stdout.trim(),
     }
-    await spawnAsync('which', ['docker-machine'], {silent: true})
-      .then(() => host = `192.168.99.100:${process.env.PORT}`)
-      .catch(async () => host = (await spawnAsync('docker-compose', ['port', 'crater', '80'], {env})).stdout.trim())
     await spawnAsync('npm', ['run', 'build'])
     await spawnAsync('npm', ['run', 'build:docker'])
     server = exec('npm run docker', {
@@ -91,6 +87,10 @@ describe('docker build', function () {
       }
     })
     await stdouted(server, /App is listening on http/i)
+    let host
+    await spawnAsync('which', ['docker-machine'], {silent: true})
+      .then(() => host = `192.168.99.100:${process.env.PORT}`)
+      .catch(async () => host = (await spawnAsync('docker-compose', ['port', 'crater', '80'], {env})).stdout.trim())
     await browser.reload()
     await browser.url(`http://${host}`)
   })
