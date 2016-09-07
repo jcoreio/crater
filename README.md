@@ -13,7 +13,7 @@ If you can't start over (i.e. switch to [Meatier](https://github.com/mattkrick/m
 
 ## Features
 
-* All server and client code except for Meteor packages run outside of Meteor's control; they aren't processed by Isobuild
+* You can run any server and client code except Meteor packages outside of Meteor's control (without running it through Isobuild)
 * Starts faster than `meteor` dev mode
 * Babel 6 with es2015, stage-1 presets by default
 * Server uses `babel-register`
@@ -113,7 +113,8 @@ Then after that, run:
 ```
 npm start
 ```
-And open http://localhost:4000 in your browser. (The app will redirect from port 3000 to 4000)
+And open http://localhost:4000 in your browser. (It runs a webpack dev server on port 4000 and proxies to
+the main server)
 
 ### Prod mode
 Before running prod mode, you need to build the prod version of the app:

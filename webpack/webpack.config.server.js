@@ -8,7 +8,7 @@ const root = path.resolve(__dirname, '..')
 const srcDir = path.resolve(root, 'src')
 const globalCSS = path.join(srcDir, 'styles', 'global')
 
-export default {
+const config = {
   context: root,
   entry: {
     prerender: './src/universal/routes/index.js'
@@ -47,7 +47,6 @@ export default {
       loaders: ['babel'],
       threads: 4
     }),
-    new ProgressBarPlugin(),
   ],
   module: {
     loaders: [
@@ -77,3 +76,7 @@ export default {
     ]
   }
 }
+
+if (!process.env.CI) config.plugins.push(new ProgressBarPlugin())
+
+export default config

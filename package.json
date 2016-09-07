@@ -1,12 +1,15 @@
 {
   "name": "crater",
   "scripts": {
-    "start": "NODE_ENV=development USE_DOTENV=1 node src/server/index.js",
-    "build": "rimraf build && concurrently \"npm run build:client\" \"npm run build:server\"",
+    "start": "NODE_ENV=development USE_DOTENV=1 node src/server/devServer.babel.js & NODE_ENV=development USE_DOTENV=1 node src/server/index.js",
+    "build": "rimraf build && npm run build:server && npm run build:client",
     "build:server": "NODE_ENV=production webpack --config ./webpack/server.babel.js && NODE_ENV=production node transpile.babel.js && cd meteor && meteor build ../build/meteor --directory",
     "build:client": "NODE_ENV=production webpack --config ./webpack/prod.babel.js",
     "prod": "NODE_ENV=production USE_DOTENV=1 node build/server/index.js",
     "test": "node run-integration-test.babel.js",
+    "test:dev": "node run-integration-test.babel.js --mochaOpts.grep dev",
+    "test:prod": "node run-integration-test.babel.js --mochaOpts.grep prod",
+    "test:docker": "node run-integration-test.babel.js --mochaOpts.grep docker",
     "build:docker": "docker build -t jedwards1211/crater:$(git rev-parse HEAD) .",
     "docker": "TAG=$(git rev-parse HEAD) ROOT_URL=http://localhost:3000 docker-compose up"
   },
@@ -23,8 +26,7 @@
     "react-router": "^2.7.0",
     "react-router-redux": "^4.0.5",
     "redux": "^3.5.2",
-    "redux-immutablejs": "0.0.8",
-    "url": "^0.11.0"
+    "redux-immutablejs": "0.0.8"
   },
   "version": "1.0.0-alpha.0",
   "main": "index.js",
@@ -44,7 +46,6 @@
     "babel-preset-stage-1": "^6.13.0",
     "babel-register": "^6.14.0",
     "chai": "^3.5.0",
-    "concurrently": "^2.2.0",
     "css-loader": "^0.24.0",
     "dotenv": "^2.0.0",
     "extract-text-webpack-plugin": "^1.0.1",
@@ -66,11 +67,11 @@
     "react-hot-loader": "^3.0.0-beta.2",
     "redux-logger": "^2.6.1",
     "rimraf": "^2.5.4",
-    "shelljs": "^0.7.4",
     "style-loader": "^0.13.1",
     "terminate": "^1.0.8",
     "url-loader": "^0.5.7",
     "wdio-mocha-framework": "^0.4.0",
+    "wdio-spec-reporter": "0.0.3",
     "webdriverio": "^4.2.11",
     "webpack": "^1.13.2",
     "webpack-dev-middleware": "^1.6.1",

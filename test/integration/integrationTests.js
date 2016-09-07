@@ -1,11 +1,14 @@
 import {expect} from 'chai'
 import {spawn} from 'child_process'
 import exec from '../../util/exec'
-import launchAndWait from '../../util/launchAndWait'
+import kill from '../../util/kill'
+import stdouted from '../../util/stdouted'
+import spawnAsync from '../../util/spawnAsync'
+import execAsync from '../../util/execAsync'
 import path from 'path'
 import fs from 'fs'
 import promisify from 'es6-promisify'
-import terminate from 'terminate'
+import webpackConfig from '../../webpack/webpack.config.dev'
 
 async function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -43,17 +46,19 @@ describe('prod mode', function () {
 
   before(async function () {
     this.timeout(240000)
-    await exec('npm run build')
-    await exec('npm install', {
+    await spawnAsync('npm', ['run', 'build'])
+    await spawnAsync('npm', ['install', ...(process.env.CI ? ['--progress=false'] : [])], {
       cwd: path.join(__dirname, '../../build/meteor/bundle/programs/server'),
     })
-    server = await launchAndWait('npm run prod', /App is listening on http/i)
+    server = exec('npm run prod')
+    await stdouted(server, /App is listening on http/i)
     await browser.reload()
     await browser.url(process.env.ROOT_URL)
   })
 
   after(async function () {
-    if (server) await terminate(server.pid)
+    this.timeout(30000)
+    if (server) await kill(server)
   })
 
   sharedTests()
@@ -61,16 +66,17 @@ describe('prod mode', function () {
 
 describe('docker build', function () {
   let server
+  let env
 
   before(async function () {
     this.timeout(480000)
-    let host
-    await exec('which docker-machine', {stdio: 'pipe'})
-      .then(() => host = '192.168.99.100')
-      .catch(() => host = 'localhost')
-    await exec('npm run build')
-    await exec('npm run build:docker')
-    server = await launchAndWait('npm run docker', /App is listening on http/i, {
+    env = {
+      ...process.env,
+      TAG: (await execAsync('git rev-parse HEAD')).stdout.trim(),
+    }
+    await spawnAsync('npm', ['run', 'build'])
+    await spawnAsync('npm', ['run', 'build:docker'])
+    server = exec('npm run docker', {
       env: {
         ...process.env,
         METEOR_SETTINGS: JSON.stringify({
@@ -80,13 +86,21 @@ describe('docker build', function () {
         })
       }
     })
+    await stdouted(server, /App is listening on http/i)
+    let host
+    if (process.env.CI) host = (await execAsync('docker-compose port crater 80', {env})).stdout.trim()
+    else {
+      await execAsync('which docker-machine')
+        .then(() => host = `192.168.99.100:${process.env.PORT}`)
+        .catch(() => host = `localhost:${process.env.PORT}`)
+    }
     await browser.reload()
-    await browser.url(`http://${host}:3000/`)
+    await browser.url(`http://${host}`)
   })
 
   after(async function () {
     this.timeout(20000)
-    await exec('docker-compose down')
+    await spawnAsync('docker-compose', ['down'], {env})
   })
 
   sharedTests()
@@ -101,14 +115,16 @@ describe('dev mode', function () {
   before(async function () {
     this.timeout(60000)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
-    server = await launchAndWait('npm start', /webpack built [a-z0-9]+ in \d+ms/i)
-    await browser.url(process.env.ROOT_URL)
+    server = exec('npm start')
+    await stdouted(server, /webpack built [a-z0-9]+ in \d+ms/i)
+    await browser.url(`http://localhost:${webpackConfig.devServer.port}`)
   })
 
   after(async function () {
+    this.timeout(30000)
     // restore code in App.js, which (may) have been changed by hot reloading test
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
-    if (server) await terminate(server.pid)
+    if (server) await kill(server)
   })
 
   sharedTests()
