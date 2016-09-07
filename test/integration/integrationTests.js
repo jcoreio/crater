@@ -90,7 +90,9 @@ describe('docker build', function () {
     let host
     await spawnAsync('which', ['docker-machine'], {silent: true})
       .then(() => host = `192.168.99.100:${process.env.PORT}`)
-      .catch(async () => host = (await spawnAsync('docker-compose', ['port', 'crater', '80'], {env})).stdout.trim())
+      .catch(async () => host = (await execAsync('docker-compose port crater 80', {env})).stdout.trim())
+    await execAsync('docker-compose exec crater curl localhost')
+    await execAsync(`curl ${host}`)
     await browser.reload()
     await browser.url(`http://${host}`)
   })
