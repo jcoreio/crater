@@ -74,12 +74,7 @@ See explanation [here](https://github.com/luisherranz/meteor-imports-webpack-plu
 A Webpack loader for Spacebars HTML templates could be implemented, but it's not a priority for me.
 
 ## Version notes
-* **Node**: < 4.4.7 won't be supported.  So far I've gotten this to work on:
-  * 4.5.0 (though the tests don't quite work properly, even though they pass)
-  * 5.10.1
-  * 5.12.0
-  * 6.3.0
-  * 6.5.0
+* **Node**: Tested on the latest Node 4, 5, and 6 in Travis CI.  No effort will be made to support Node < 4.4.7.
 * **Webpack**: Webpack 2 is not supported yet by `meteor-imports-webpack-plugin`.
 
 ## Obtaining
