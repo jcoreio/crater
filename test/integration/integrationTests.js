@@ -46,7 +46,7 @@ describe('prod mode', function () {
   before(async function () {
     this.timeout(240000)
     await spawnAsync('npm', ['run', 'build'])
-    await spawnAsync('npm', ['install'], {
+    await spawnAsync('npm', ['install', ...(process.env.CI ? ['--progress=false'] : [])], {
       cwd: path.join(__dirname, '../../build/meteor/bundle/programs/server'),
     })
     server = exec('npm run prod')

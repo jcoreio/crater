@@ -6,8 +6,6 @@ import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import MeteorImportsPlugin from 'meteor-imports-webpack-plugin'
 import cssModulesValues from 'postcss-modules-values'
 
-const {ROOT_URL} = process.env
-
 const root = path.resolve(__dirname, '..')
 const srcDir = path.resolve(root, 'src')
 const globalCSS = path.join(srcDir, 'styles', 'global')
@@ -18,7 +16,7 @@ const vendor = [
   'react-dom',
 ]
 
-export default {
+const config = {
   context: root,
   entry: {
     app: './src/client/index.js',
@@ -51,7 +49,6 @@ export default {
       loaders: ['babel'],
       threads: 4
     }),
-    new ProgressBarPlugin(),
     new MeteorImportsPlugin({
       meteorFolder: 'meteor',
       exclude: ['ecmascript']
@@ -83,3 +80,7 @@ export default {
     ]
   }
 }
+
+if (!process.env.CI) config.plugins.push(new ProgressBarPlugin())
+
+export default config

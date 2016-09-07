@@ -12,7 +12,7 @@ const clientInclude = [srcDir]
 
 const {ROOT_URL} = process.env
 
-export default {
+const config = {
   context: root,
   devtool: 'eval',
   entry: [
@@ -41,7 +41,6 @@ export default {
       loaders: ['babel'],
       threads: 4
     }),
-    new ProgressBarPlugin(),
     new MeteorImportsPlugin({
       meteorFolder: 'meteor',
       exclude: ['ecmascript']
@@ -83,3 +82,8 @@ export default {
     }
   }
 }
+
+if (!process.env.CI) config.plugins.push(new ProgressBarPlugin())
+
+export default config
+
