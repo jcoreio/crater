@@ -77,6 +77,7 @@ export default {
     contentBase: ROOT_URL,
     publicPath: '/static/',
     noInfo: true,
+    port: 4000,
     stats: {
       colors: true,
     }

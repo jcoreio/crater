@@ -2,10 +2,9 @@ import path from 'path'
 import child_process from 'child_process'
 import killOnExit from './killOnExit'
 
-export default function exec(command, options = {}) {
+export default function spawn(command, args = [], options = {}) {
   const {silent, ...otherOptions} = options
-  const parts = command.split(/\s+/g)
-  const child = child_process.exec(command, {
+  const child = child_process.spawn(command, args, {
     cwd: path.resolve(__dirname, '..'),
     ...otherOptions,
   })
