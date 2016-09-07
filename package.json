@@ -7,6 +7,9 @@
     "build:client": "NODE_ENV=production webpack --config ./webpack/prod.babel.js",
     "prod": "NODE_ENV=production USE_DOTENV=1 node build/server/index.js",
     "test": "node run-integration-test.babel.js",
+    "test:dev": "node run-integration-test.babel.js --mochaOpts.grep dev",
+    "test:prod": "node run-integration-test.babel.js --mochaOpts.grep prod",
+    "test:docker": "node run-integration-test.babel.js --mochaOpts.grep docker",
     "build:docker": "docker build -t jedwards1211/crater:$(git rev-parse HEAD) .",
     "docker": "TAG=$(git rev-parse HEAD) ROOT_URL=http://localhost:3000 docker-compose up"
   },
@@ -68,6 +71,7 @@
     "terminate": "^1.0.8",
     "url-loader": "^0.5.7",
     "wdio-mocha-framework": "^0.4.0",
+    "wdio-spec-reporter": "0.0.3",
     "webdriverio": "^4.2.11",
     "webpack": "^1.13.2",
     "webpack-dev-middleware": "^1.6.1",
