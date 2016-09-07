@@ -7,6 +7,7 @@ import spawnAsync from '../../util/spawnAsync'
 import path from 'path'
 import fs from 'fs'
 import promisify from 'es6-promisify'
+import webpackConfig from '../../webpack/webpack.config.dev'
 
 async function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -107,7 +108,7 @@ describe('dev mode', function () {
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     server = exec('npm start')
     await stdouted(server, /webpack built [a-z0-9]+ in \d+ms/i)
-    await browser.url(`http://localhost:${process.env.DEV_SERVER_PORT}`)
+    await browser.url(`http://localhost:${webpackConfig.devServer.port}`)
   })
 
   after(async function () {
