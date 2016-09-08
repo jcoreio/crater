@@ -90,19 +90,13 @@ Crater doesn't start a Mongo dev database, before running, you must start one by
 **Note: if you're *not* using Node 4, you will need to rebuild the fibers binary for your node version -- see the [Troubleshooting](#troubleshooting) section for more details.**
 
 ### Dev mode
-Before running the app for the very first time you need to have isobuild download and build all of the Meteor packages for you.  To do that, run the following:
-```
-cd meteor
-meteor
-Ctrl-C after app starts up (this is just so Isobuild will install and build all the Meteor package deps)
-cd ..
-```
-(You don't need to repeat the above steps again, unless `meteor/.meteor/local/build` gets messed up for some reason.)
 
-Then you need to install the NPM modules specified in package.json:
+Make sure to install deps before running the app for the first time:
 ```
 npm install
 ```
+A postinstall script will run Meteor so that isobuild downloads all of the Meteor packages, then it will make sure the
+binaries (like fibers) are rebuild for your Node version.
 
 Then after that, run:
 ```
@@ -158,12 +152,12 @@ If you see the following error (or likewise for any other package that uses nati
 
 Error: `<your home dir>/.meteor/packages/meteor-tool/.1.4.1_1.msrh2w++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib/node_modules/fibers/bin/darwin-x64-v8-5.0/fibers.node` is missing. Try reinstalling `node-fibers`?
 ```
-It means you're trying to run the app with a different version of Node than Meteor 1.4.1 uses, which is okay -- you just have to manually build the fibers binary for your Node version, like this:
+It means some npm packages used by Meteor are missing binaries for your Node version.
+The `postinstall` script should make sure this doesn't happen, but if it fails for some reason, run:
 ```
-cd <your home dir>/.meteor/packages/meteor-tool/.1.4.1_1.msrh2w++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib
-npm rebuild fibers
+npm run rebuild-meteor-bin
 ```
-And then retry `npm start`.  Hopefully I can find a more robust way to handle cases like this soon.
+After that retry `npm start`.
 
 ## Testing
 ```
