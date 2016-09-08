@@ -11,7 +11,10 @@
     "test:prod": "node run-integration-test.babel.js --mochaOpts.grep prod",
     "test:docker": "node run-integration-test.babel.js --mochaOpts.grep docker",
     "build:docker": "docker build -t jedwards1211/crater:$(git rev-parse HEAD) .",
-    "docker": "TAG=$(git rev-parse HEAD) ROOT_URL=http://localhost:3000 docker-compose up"
+    "docker": "TAG=$(git rev-parse HEAD) ROOT_URL=http://localhost:3000 docker-compose up",
+    "shell": "rc /tmp/repl/$(basename $(pwd)).sock",
+    "rebuild-meteor-bin": "node scripts/rebuild-meteor-bin.js",
+    "postinstall": "node scripts/postinstall.babel.js"
   },
   "dependencies": {
     "babel-runtime": "^6.11.6",
@@ -66,6 +69,8 @@
     "raw-loader": "^0.5.1",
     "react-hot-loader": "^3.0.0-beta.2",
     "redux-logger": "^2.6.1",
+    "repl-client": "^0.3.0",
+    "replify": "^1.2.0",
     "rimraf": "^2.5.4",
     "style-loader": "^0.13.1",
     "terminate": "^1.0.8",

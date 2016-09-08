@@ -25,6 +25,7 @@ if (process.env.NODE_ENV === 'production' || require('piping')({
       // this enables us to import Meteor packages
       resolveModuleSource: require('./resolveModuleSource')
     })
+    require('./repl')
   }
 
   Package.meteor.Meteor.startup(function () {
