@@ -1,11 +1,11 @@
 import asyncScript from '../util/asyncScript'
-import exec from '../util/exec'
+import spawn from '../util/spawn'
 import stdouted from '../util/stdouted'
 import kill from '../util/kill'
 import path from 'path'
 
 asyncScript(async () => {
-  const meteor = exec('meteor', {
+  const meteor = spawn('meteor', {
     cwd: path.resolve(__dirname, '../meteor')
   })
   await stdouted(meteor, /App running at: http/i, 10 * 60000)
