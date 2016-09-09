@@ -3,7 +3,7 @@
   "scripts": {
     "start": "NODE_ENV=development USE_DOTENV=1 node src/server/devServer.babel.js & NODE_ENV=development USE_DOTENV=1 node src/server/index.js",
     "build": "rimraf build && npm run build:server && npm run build:client",
-    "build:server": "NODE_ENV=production webpack --config ./webpack/server.babel.js && NODE_ENV=production node transpile.babel.js && cd meteor && meteor build ../build/meteor --directory",
+    "build:server": "NODE_ENV=production webpack --config ./webpack/server.babel.js && babel src --out-dir build && cd meteor && meteor build ../build/meteor --directory",
     "build:client": "NODE_ENV=production webpack --config ./webpack/prod.babel.js",
     "prod": "NODE_ENV=production USE_DOTENV=1 node build/server/index.js",
     "test": "node run-integration-test.babel.js",
@@ -38,9 +38,11 @@
   "description": "Meteor(/React) app skeleton that runs your app code with pure Webpack/Babel instead of isobuild",
   "devDependencies": {
     "assets-webpack-plugin": "^3.4.0",
+    "babel-cli": "^6.14.0",
     "babel-core": "^6.14.0",
     "babel-loader": "^6.2.5",
     "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-meteor-imports": "^1.0.1",
     "babel-plugin-transform-runtime": "^6.12.0",
     "babel-preset-es2015": "^6.14.0",
     "babel-preset-es2015-node5": "^1.2.0",
