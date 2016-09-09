@@ -16,7 +16,7 @@ app.use((req, res, next) => {
 })
 
 if (process.env.NODE_ENV === 'production') {
-  app.use('/static', express.static(path.resolve(__dirname, '../static')))
+  app.use('/static', express.static(path.resolve(__dirname, 'static')))
 }
 
 // server-side rendering

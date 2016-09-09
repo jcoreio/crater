@@ -63,6 +63,16 @@ The Express server is configured to perform React server-side rendering and adde
 The client-side code is bundled using Webpack and [meteor-imports-webpack-plugin](https://github.com/luisherranz/meteor-imports-webpack-plugin), and comes with all the usual
 goodies in this skeleton: `react-hot-loader`, `redux`, `react-router`, `react-router-redux`.
 
+In production the server-side code is also bundled using Webpack with `extract-text-webpack-plugin` so that it can
+render React modules that require `.css` files.
+
+## Where to put things
+
+All of your server code should go in `src/server/server.js` or a file required by it.  You shouldn't require any app
+code in `src/server/index.js`, because the production build makes a server-side Webpack bundle with
+`src/server/server.js` as the entry point, so anything you require in `src/server/index.js` would be duplicated in the
+Webpack bundle.
+
 ## Windows not supported yet
 
 Windows is not yet supported because the npm scripts are all written in bash.  It might work with bash from [Cygwin](https://www.cygwin.com/) or [Windows Subsystem for Linux](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=install%20windows%20subsystem%20for%20linux)

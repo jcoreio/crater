@@ -25,4 +25,4 @@ ENV MONGO_URL=mongodb://mongo:27017/crater \
     ROOT_URL=http://localhost:80 \
     PORT=80
 
-CMD ["node", "server/index.js"]
+CMD ["node", "index.js"]
