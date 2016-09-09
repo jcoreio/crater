@@ -1,20 +1,19 @@
 {
   "name": "crater",
   "scripts": {
-    "start": "NODE_ENV=development USE_DOTENV=1 node src/server/devServer.babel.js & NODE_ENV=development USE_DOTENV=1 node src/server/index.js",
+    "start": "NODE_ENV=development USE_DOTENV=1 babel-node src/server/devServer.js & NODE_ENV=development USE_DOTENV=1 node src/server/index.js",
     "build": "rimraf build && npm run build:server && npm run build:client",
     "build:server": "NODE_ENV=production webpack --config ./webpack/server.babel.js && babel src/server/index.js -o build/index.js && cd meteor && meteor build ../build/meteor --directory",
     "build:client": "NODE_ENV=production webpack --config ./webpack/prod.babel.js",
     "prod": "NODE_ENV=production USE_DOTENV=1 node build/index.js",
-    "test": "node run-integration-test.babel.js",
-    "test:dev": "node run-integration-test.babel.js --mochaOpts.grep dev",
-    "test:prod": "node run-integration-test.babel.js --mochaOpts.grep prod",
-    "test:docker": "node run-integration-test.babel.js --mochaOpts.grep docker",
+    "test": "babel-node scripts/test.js",
+    "test:dev": "babel-node scripts/test.js --mochaOpts.grep dev",
+    "test:prod": "babel-node scripts/test.js --mochaOpts.grep prod",
+    "test:docker": "babel-node scripts/test.js --mochaOpts.grep docker",
     "build:docker": "docker build -t jedwards1211/crater:$(git rev-parse HEAD) .",
     "docker": "TAG=$(git rev-parse HEAD) ROOT_URL=http://localhost:3000 docker-compose up",
-    "shell": "rc /tmp/repl/$(basename $(pwd)).sock",
     "rebuild-meteor-bin": "node scripts/rebuild-meteor-bin.js",
-    "postinstall": "node scripts/postinstall.babel.js"
+    "postinstall": "babel-node scripts/postinstall.js"
   },
   "dependencies": {
     "babel-runtime": "^6.11.6",

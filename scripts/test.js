@@ -1,7 +1,7 @@
 import phantomjs from 'phantomjs-prebuilt'
-import join from './util/join'
-import killOnExit from './util/killOnExit'
-import spawn from './util/spawn'
+import join from '../util/join'
+import killOnExit from '../util/killOnExit'
+import spawn from '../util/spawn'
 
 phantomjs.run('--webdriver=4444').then(async program => {
   killOnExit(program)
