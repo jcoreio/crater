@@ -5,5 +5,12 @@
       "polyfill": false
     }],
     "meteor-imports"
-  ]
+  ],
+  "env": {
+    "development": {
+      "plugins": [
+        "react-hot-loader/babel"
+      ]
+    }
+  }
 }
