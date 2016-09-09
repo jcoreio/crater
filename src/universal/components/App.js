@@ -8,7 +8,7 @@ export default class App extends Component {
   state = {value: 0};
 
   componentWillMount() {
-    if (__CLIENT__) {
+    if (Meteor.isClient) {
       this.sub = Meteor.subscribe('counts', 'a')
       this.observer = Counts.find({_id: 'a'}).observeChanges({
         added: (id, fields) => this.setState(fields),
@@ -17,7 +17,7 @@ export default class App extends Component {
     }
   }
   componentWillUnmount() {
-    if (__CLIENT__) {
+    if (Meteor.isClient) {
       this.observer.stop()
       this.sub.stop()
     }

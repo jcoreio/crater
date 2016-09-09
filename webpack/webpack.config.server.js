@@ -45,6 +45,9 @@ const config = {
     new webpack.DefinePlugin({
       '__CLIENT__': false,
       '__PRODUCTION__': true,
+      'Meteor.isClient': false,
+      'Meteor.isCordova': false,
+      'Meteor.isServer': true,
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
     new HappyPack({

@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor'
 import {Mongo} from 'meteor/mongo'
 
 let Counts
-if (__CLIENT__) {
+if (Meteor.isClient) {
   Counts = new Mongo.Collection('counts')
 } else {
   Meteor.publish('counts', function counts(countName) {
