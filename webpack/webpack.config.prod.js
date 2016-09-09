@@ -41,6 +41,9 @@ const config = {
     new AssetsPlugin({path: path.join(root, 'build'), filename: 'assets.json'}),
     new webpack.DefinePlugin({
       '__CLIENT__': true,
+      'Meteor.isClient': true,
+      'Meteor.isCordova': false,
+      'Meteor.isServer': false,
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
     new webpack.IgnorePlugin(/\/server\//),
