@@ -3,9 +3,9 @@
   "scripts": {
     "start": "NODE_ENV=development USE_DOTENV=1 node src/server/devServer.babel.js & NODE_ENV=development USE_DOTENV=1 node src/server/index.js",
     "build": "rimraf build && npm run build:server && npm run build:client",
-    "build:server": "NODE_ENV=production webpack --config ./webpack/server.babel.js && babel src --out-dir build && cd meteor && meteor build ../build/meteor --directory",
+    "build:server": "NODE_ENV=production webpack --config ./webpack/server.babel.js && babel src/server/index.js -o build/index.js && cd meteor && meteor build ../build/meteor --directory",
     "build:client": "NODE_ENV=production webpack --config ./webpack/prod.babel.js",
-    "prod": "NODE_ENV=production USE_DOTENV=1 node build/server/index.js",
+    "prod": "NODE_ENV=production USE_DOTENV=1 node build/index.js",
     "test": "node run-integration-test.babel.js",
     "test:dev": "node run-integration-test.babel.js --mochaOpts.grep dev",
     "test:prod": "node run-integration-test.babel.js --mochaOpts.grep prod",
@@ -82,7 +82,8 @@
     "webdriverio": "^4.2.11",
     "webpack": "^1.13.2",
     "webpack-dev-middleware": "^1.6.1",
-    "webpack-hot-middleware": "^2.12.2"
+    "webpack-hot-middleware": "^2.12.2",
+    "webpack-node-externals": "^1.3.3"
   },
   "repository": {
     "type": "git",

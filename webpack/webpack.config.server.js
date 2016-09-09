@@ -3,6 +3,7 @@ import webpack from 'webpack'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import HappyPack from 'happypack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
+import nodeExternals from 'webpack-node-externals'
 
 const root = path.resolve(__dirname, '..')
 const srcDir = path.resolve(root, 'src')
@@ -11,9 +12,13 @@ const globalCSS = path.join(srcDir, 'styles', 'global')
 const config = {
   context: root,
   entry: {
-    prerender: './src/universal/routes/index.js'
+    prerender: './src/server/server'
   },
   target: 'node',
+  node: {
+    __dirname: false,
+    __filename: false,
+  },
   output: {
     path: path.join(root, 'build'),
     chunkFilename: '[name]_[chunkhash].js',
@@ -23,7 +28,7 @@ const config = {
   },
   // ignore anything that throws warnings & doesn't affect the view
   externals: [
-    'es6-promisify',
+    nodeExternals(),
     (context, request, callback) => {
       const match = /^meteor\/(.*)$/.exec(request)
       if (match) {
@@ -34,7 +39,7 @@ const config = {
   ],
   plugins: [
     new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin('[name].css'),
+    new ExtractTextPlugin('/static/[name].css'),
     new webpack.optimize.UglifyJsPlugin({compressor: {warnings: false}}),
     new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
     new webpack.DefinePlugin({

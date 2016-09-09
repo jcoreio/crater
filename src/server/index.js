@@ -2,6 +2,8 @@ global.__CLIENT__ = false
 
 if (process.env.USE_DOTENV) require('dotenv').config()
 
+global.__PRODUCTION__ = process.env.NODE_ENV === 'production'
+
 if (process.env.NODE_ENV === 'production' || require('piping')({
   hook: false,
   ignore: /(\/\.|~$|\.json$)/i
@@ -10,7 +12,7 @@ if (process.env.NODE_ENV === 'production' || require('piping')({
 
   // I'm not super happy about this, but Meteor's boot.js seems to require being run from the directory it's in
   const serverDir = process.env.NODE_ENV === 'production'
-    ? path.resolve(__dirname, '../meteor/bundle/programs/server')
+    ? path.resolve(__dirname, 'meteor/bundle/programs/server')
     : path.resolve(__dirname, '../../meteor/.meteor/local/build/programs/server')
   process.chdir(serverDir)
   var argv = process.argv
@@ -25,6 +27,10 @@ if (process.env.NODE_ENV === 'production' || require('piping')({
   }
 
   Package.meteor.Meteor.startup(function () {
-    require('./server')
+    if (process.env.NODE_ENV === 'production') {
+      require('./prerender')
+    } else {
+      require('./server')
+    }
   })
 }
