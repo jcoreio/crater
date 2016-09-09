@@ -1,9 +1,9 @@
 {
   "name": "crater",
   "scripts": {
-    "start": "NODE_ENV=development USE_DOTENV=1 babel-node src/server/devServer.js & NODE_ENV=development USE_DOTENV=1 node src/server/index.js",
+    "start": "NODE_ENV=development USE_DOTENV=1 babel-node scripts/devServer.js & NODE_ENV=development USE_DOTENV=1 node src/index.js",
     "build": "rimraf build && npm run build:server && npm run build:client",
-    "build:server": "NODE_ENV=production webpack --config ./webpack/server.babel.js && babel src/server/index.js -o build/index.js && cd meteor && meteor build ../build/meteor --directory",
+    "build:server": "NODE_ENV=production webpack --config ./webpack/server.babel.js && babel src/index.js -o build/index.js && cd meteor && meteor build ../build/meteor --directory",
     "build:client": "NODE_ENV=production webpack --config ./webpack/prod.babel.js",
     "prod": "NODE_ENV=production USE_DOTENV=1 node build/index.js",
     "test": "babel-node scripts/test.js",

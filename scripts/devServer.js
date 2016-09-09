@@ -1,6 +1,6 @@
 import express from 'express'
 import url from 'url'
-import webpackConfig from '../../webpack/webpack.config.dev'
+import webpackConfig from '../webpack/webpack.config.dev'
 
 if (process.env.USE_DOTENV) require('dotenv').config()
 

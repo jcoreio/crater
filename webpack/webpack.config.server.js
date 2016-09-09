@@ -12,7 +12,7 @@ const globalCSS = path.join(srcDir, 'styles', 'global')
 const config = {
   context: root,
   entry: {
-    prerender: './src/server/server'
+    prerender: './src/server'
   },
   target: 'node',
   node: {

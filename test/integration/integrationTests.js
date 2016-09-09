@@ -110,11 +110,13 @@ describe('dev mode', function () {
   let server
 
   const appFile = path.resolve(__dirname, '../../src/universal/components/App.js')
-  let appCode
+  const serverFile = path.resolve(__dirname, '../../src/server/index.js')
+  let appCode, serverCode
 
   before(async function () {
     this.timeout(60000)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
+    serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
     server = exec('npm start')
     await stdouted(server, /webpack built [a-z0-9]+ in \d+ms/i)
     await browser.url(`http://localhost:${webpackConfig.devServer.port}`)
@@ -124,6 +126,7 @@ describe('dev mode', function () {
     this.timeout(30000)
     // restore code in App.js, which (may) have been changed by hot reloading test
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
+    if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
     if (server) await kill(server)
   })
 
@@ -139,5 +142,13 @@ describe('dev mode', function () {
       20000,
       'expected header text to hot update within 10s'
     )
+  })
+
+  it('restarts the server when code is changed', async function () {
+    this.timeout(40000)
+    const modified = serverCode.replace(/express\(\)/, 'express()\napp.get("/test", (req, res) => res.send("hello world"))')
+    await promisify(fs.writeFile)(serverFile, modified, 'utf8')
+    await stdouted(server, /changed, reloading/i)
+    await stdouted(server, /App is listening on http/i)
   })
 })

@@ -1,36 +1,34 @@
-global.__CLIENT__ = false
+import express from 'express'
+import path from 'path'
+import createSSR from './createSSR'
+import {WebApp} from 'meteor/webapp'
 
-if (process.env.USE_DOTENV) require('dotenv').config()
+import '../universal/collections/Counts'
 
-global.__PRODUCTION__ = process.env.NODE_ENV === 'production'
+const app = express()
 
-if (process.env.NODE_ENV === 'production' || require('piping')({
-  hook: false,
-  ignore: /(\/\.|~$|\.json$)/i
-})) {
-  var path = require('path')
-
-  // I'm not super happy about this, but Meteor's boot.js seems to require being run from the directory it's in
-  const serverDir = process.env.NODE_ENV === 'production'
-    ? path.resolve(__dirname, 'meteor/bundle/programs/server')
-    : path.resolve(__dirname, '../../meteor/.meteor/local/build/programs/server')
-  process.chdir(serverDir)
-  var argv = process.argv
-  process.argv = argv.slice(0, 2).concat('program.json') //.splice(2, 0, 'program.json')
-  // Launch the usual Meteor server
-  require(path.join(serverDir, 'boot.js'))
-  process.argv = argv
-  process.chdir(__dirname)
-
-  if (process.env.NODE_ENV !== 'production') {
-    require('babel-register')
+app.use((req, res, next) => {
+  if (/\/favicon\.?(jpe?g|png|ico|gif)?$/i.test(req.url)) {
+    res.status(404).end()
+  } else {
+    next()
   }
+})
 
-  Package.meteor.Meteor.startup(function () {
-    if (process.env.NODE_ENV === 'production') {
-      require('./prerender')
-    } else {
-      require('./server')
-    }
-  })
+if (process.env.NODE_ENV === 'production') {
+  app.use('/static', express.static(path.resolve(__dirname, 'static')))
 }
+
+// server-side rendering
+app.get('*', (req, res, next) => {
+  // let Meteor handle sockjs requests so that DDP works
+  if (/sockjs\/.*/.test(req.path)) {
+    next()
+    return
+  }
+  return createSSR(req, res)
+})
+
+WebApp.rawConnectHandlers.use(app)
+
+console.log(`App is listening on http://0.0.0.0:${process.env.PORT}`)
