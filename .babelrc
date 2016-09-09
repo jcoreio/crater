@@ -3,13 +3,7 @@
   "plugins": [
     ["transform-runtime", {
       "polyfill": false
-    }]
-  ],
-  "env": {
-    "development": {
-      "plugins": [
-        "react-hot-loader/babel"
-      ]
-    }
-  }
+    }],
+    "meteor-imports"
+  ]
 }

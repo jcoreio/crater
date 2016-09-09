@@ -21,10 +21,7 @@ if (process.env.NODE_ENV === 'production' || require('piping')({
   process.chdir(__dirname)
 
   if (process.env.NODE_ENV !== 'production') {
-    require('babel-register')({
-      // this enables us to import Meteor packages
-      resolveModuleSource: require('./resolveModuleSource')
-    })
+    require('babel-register')
     require('./repl')
   }
 

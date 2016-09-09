@@ -67,7 +67,7 @@ const config = {
       {
         test: /\.js$/,
         loader: 'happypack/loader',
-        include: clientInclude
+        include: clientInclude,
       }
     ]
   },
