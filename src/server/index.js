@@ -22,7 +22,6 @@ if (process.env.NODE_ENV === 'production' || require('piping')({
 
   if (process.env.NODE_ENV !== 'production') {
     require('babel-register')
-    require('./repl')
   }
 
   Package.meteor.Meteor.startup(function () {
