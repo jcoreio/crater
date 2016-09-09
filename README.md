@@ -54,14 +54,17 @@ And for that and other reasons, this skeleton tends to start up faster than runn
 [Meatier](https://github.com/mattkrick/meatier) -- I learned a lot from
 Meatier, and copped some of its code for this project**
 
-`src/server/index.js` uses `piping` (to enable server restarts when the code changes) and then uses
-`babel-register` with a custom `resolveModuleSource` that shims Meteor imports.  It then requires Meteor's `boot.js`,
-and continues running its own ES2015 code in `src/server/main.js`, which sets up an Express server.
+`src/server/index.js` uses `piping` (to enable server restarts when the code changes) and then requires Meteor's
+`boot.js` to load all of the Meteor packages.  It then requires `babel-register`, which uses `babel-plugin-meteor-imports`
+to rewrite statements like `import {Meteor} from 'meteor/meteor'` to `const {Meteor} = Package.meteor`.  On Meteor
+startup, it requires `src/server/server.js`, which sets up an Express server.
 
 The Express server is configured to perform React server-side rendering and added to `WebApp.rawConnectHandlers`.
 
 The client-side code is bundled using Webpack and [meteor-imports-webpack-plugin](https://github.com/luisherranz/meteor-imports-webpack-plugin), and comes with all the usual
 goodies in this skeleton: `react-hot-loader`, `redux`, `react-router`, `react-router-redux`.
+
+In dev mode a webpack dev server is run on port 4000, with a proxy to the main app on port 3000.
 
 In production the server-side code is also bundled using Webpack with `extract-text-webpack-plugin` so that it can
 render React modules that require `.css` files.
