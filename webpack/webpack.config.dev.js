@@ -39,7 +39,6 @@ const config = {
       'Meteor.isServer': false,
       'process.env.NODE_ENV': JSON.stringify('development')
     }),
-    new webpack.IgnorePlugin(/\/server\//),
     new HappyPack({
       loaders: ['babel'],
       threads: 4
