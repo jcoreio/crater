@@ -145,10 +145,9 @@ describe('dev mode', function () {
   })
 
   it('restarts the server when code is changed', async function () {
-    this.timeout(40000)
+    this.timeout(60000)
     const modified = serverCode.replace(/express\(\)/, 'express()\napp.get("/test", (req, res) => res.send("hello world"))')
     await promisify(fs.writeFile)(serverFile, modified, 'utf8')
-    await stdouted(server, /changed, reloading/i)
     await stdouted(server, /App is listening on http/i)
   })
 })
