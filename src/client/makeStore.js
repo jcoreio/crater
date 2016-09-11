@@ -11,7 +11,7 @@ export default initialState => {
     reduxRouterMiddleware,
   ]
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV === 'production') {
     store = createStore(reducer, initialState, applyMiddleware(...middlewares))
   } else {
     const devtoolsExt = global.devToolsExtension && global.devToolsExtension()
