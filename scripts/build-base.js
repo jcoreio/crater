@@ -17,6 +17,7 @@ asyncScript(async () => {
   await promisify(mkdirp)(build)
   await spawnAsync('babel', [path.join(root, 'src', 'index.js'), '-o', path.join(build, 'index.js')], {stdio: 'inherit'})
   if (await isNewerThan(path.join(root, 'meteor'), path.join(build, 'meteor'))) {
+    console.log('building Meteor packages...')
     await promisify(rimraf)(path.join(build, 'meteor'))
     await spawnAsync('meteor', ['build', path.join('..', 'build', 'meteor'), '--directory'], {
       cwd: path.resolve(__dirname, '..', 'meteor'),
