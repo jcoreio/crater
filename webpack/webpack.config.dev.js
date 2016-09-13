@@ -70,6 +70,11 @@ const config = {
         test: /\.js$/,
         loader: 'happypack/loader',
         include: clientInclude,
+        query: {
+          "plugins": [
+            "react-hot-loader/babel"
+          ]
+        }
       }
     ]
   },
