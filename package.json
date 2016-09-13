@@ -15,7 +15,7 @@
     "test:docker": "babel-node scripts/test.js --mochaOpts.grep docker",
     "build:docker": "babel-node scripts/build-docker.js",
     "docker": "babel-node scripts/docker.js",
-    "rebuild-meteor-bin": "node scripts/rebuild-meteor-bin.js",
+    "reinstall-meteor-deps": "babel-node scripts/reinstall-meteor-deps.js",
     "postinstall": "babel-node scripts/postinstall.js"
   },
   "dependencies": {

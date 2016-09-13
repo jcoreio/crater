@@ -109,7 +109,7 @@ Make sure to install deps before running the app for the first time:
 npm install
 ```
 A postinstall script will run Meteor so that isobuild downloads all of the Meteor packages, then it will make sure the
-binaries (like fibers) are rebuild for your Node version.
+binaries (like fibers) are rebuilt for your Node version.
 
 Then after that, run:
 ```
@@ -150,7 +150,7 @@ Error: `<your home dir>/.meteor/packages/meteor-tool/.1.4.1_1.msrh2w++os.osx.x86
 It means some npm packages used by Meteor are missing binaries for your Node version.
 The `postinstall` script should make sure this doesn't happen, but if it fails for some reason, run:
 ```
-npm run rebuild-meteor-bin
+npm run reinstall-meteor-deps
 ```
 After that retry `npm start`.
 

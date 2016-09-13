@@ -3,6 +3,7 @@ import spawn from '../util/spawn'
 import stdouted from '../util/stdouted'
 import kill from '../util/kill'
 import path from 'path'
+import reinstallMeteorDeps from './reinstall-meteor-deps'
 
 asyncScript(async () => {
   const meteor = spawn('meteor', {
@@ -12,5 +13,5 @@ asyncScript(async () => {
   await kill(meteor, 'SIGINT', 10 * 60000)
 
   // rebuild native packages used by meteor
-  require('./rebuild-meteor-bin')
+  await reinstallMeteorDeps()
 })
