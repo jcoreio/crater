@@ -1,16 +1,7 @@
 {
   "presets": ["es2015", "stage-1", "react", "flow"],
   "plugins": [
-    ["transform-runtime", {
-      "polyfill": false
-    }],
+    "transform-runtime",
     "meteor-imports"
-  ],
-  "env": {
-    "development": {
-      "plugins": [
-        "react-hot-loader/babel"
-      ]
-    }
-  }
+  ]
 }
