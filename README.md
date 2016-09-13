@@ -127,20 +127,15 @@ And open http://localhost:3000 in your browser.
 ## Docker
 **Note: the Dockerfile is configured to use Node 4.5, but feel free to change it in your own project.**
 
-Before running the docker build, you need to build the app:
-```
-npm run build
-```
-Then to build the docker image, run:
+First build the docker image (this is currently set up to tag it as `jedwards1211/crater:$(git rev-parse HEAD)`):
 ```
 npm run build:docker
 ```
-To run the docker image (requires `docker-compose`):
+Then you can run the docker image using: (requires `docker-compose`)
 ```
 npm run docker
 ```
 And open http://localhost:3000 in your browser.
-
 
 ## Troubleshooting
 
