@@ -18,6 +18,7 @@ const build = path.resolve(__dirname, '..', 'build')
 const programsServer = path.join(build, 'meteor', 'bundle', 'programs', 'server')
 
 asyncScript(async () => {
+  await spawnAsync('npm', ['run', 'build'], {stdio: 'inherit'})
   if (!(await isDirectory(path.join(programsServer, 'node_modules')))) {
     console.log('installing Meteor node modules...')
     await spawnAsync('npm', ['install'], {
