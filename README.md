@@ -119,19 +119,6 @@ And open http://localhost:4000 in your browser. (It runs a webpack dev server on
 the main server)
 
 ### Prod mode
-Before running prod mode, you need to build the prod version of the app:
-```
-npm run build
-```
-Then you need to install Meteor's npm dependencies:
-```
-cd build/meteor/bundle/programs/server
-npm install
-cd <project root>
-```
-(You don't need to repeat the above steps unless you've changed something and need to rebuild.)
-
-Once the app is built, run the following command:
 ```
 npm run prod
 ```
