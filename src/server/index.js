@@ -22,7 +22,7 @@ if (process.env.NODE_ENV === 'production') {
 // server-side rendering
 app.get('*', (req, res, next) => {
   // let Meteor handle sockjs requests so that DDP works
-  if (/sockjs\/.*/.test(req.path)) {
+  if (/^\/sockjs/.test(req.path)) {
     next()
     return
   }
