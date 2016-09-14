@@ -1,16 +1,14 @@
-import {compose} from 'redux'
+// @flow
+
 import {combineReducers} from 'redux-immutablejs'
 import {routerReducer} from 'react-router-redux'
+import type {Reducer} from '../flowtypes/redux'
 
-const currentReducers = {
+const currentReducers: {[key: string]: Reducer} = {
   router: routerReducer,
 }
 
-export default (newReducers, reducerEnhancers) => {
+export default (newReducers?: {[key: string]: Reducer} = {}): Reducer => {
   Object.assign(currentReducers, newReducers)
-  const reducer = combineReducers({...currentReducers})
-  if (reducerEnhancers) {
-    return Array.isArray(reducerEnhancers) ? compose(...reducerEnhancers)(reducer) : reducerEnhancers(reducer)
-  }
-  return reducer
+  return combineReducers(currentReducers)
 }

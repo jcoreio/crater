@@ -1,8 +1,12 @@
+// @flow
+
 import path from 'path'
 import {spawn as _spawn} from 'cross-spawn'
 import killOnExit from './killOnExit'
 
-export default function spawn(command, args = [], options = {}) {
+import type {ChildProcess} from 'child_process'
+
+export default function spawn(command: string, args?: Array<string> = [], options?: Object = {}): ChildProcess {
   const {silent, ...otherOptions} = options
   const child = _spawn(command, args, {
     cwd: path.resolve(__dirname, '..'),
