@@ -1,9 +1,9 @@
 import phantomjs from 'phantomjs-prebuilt'
-import join from '../util/join'
-import killOnExit from '../util/killOnExit'
-import spawn from '../util/spawn'
-import spawnAsync from '../util/spawnAsync'
-import paht from 'path'
+import join from './util/join'
+import killOnExit from './util/killOnExit'
+import spawn from './util/spawn'
+import spawnAsync from './util/spawnAsync'
+import path from 'path'
 
 const opts = {
   cwd: path.resolve(__dirname, '..'),

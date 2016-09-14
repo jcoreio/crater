@@ -3,9 +3,9 @@
 import path from 'path'
 import rimraf from 'rimraf'
 import mkdirp from 'mkdirp'
-import asyncScript from '../util/asyncScript'
-import isNewerThan from '../util/isNewerThan'
-import spawnAsync from '../util/spawnAsync'
+import asyncScript from './util/asyncScript'
+import isNewerThan from './util/isNewerThan'
+import spawnAsync from './util/spawnAsync'
 import promisify from 'es6-promisify'
 
 const root = path.resolve(__dirname, '..')

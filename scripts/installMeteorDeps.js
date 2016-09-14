@@ -1,7 +1,7 @@
 #!/usr/bin/env babel-node
 
-import spawnAsync from '../util/spawnAsync'
-import isDirectory from '../util/isDirectory'
+import spawnAsync from './util/spawnAsync'
+import isDirectory from './util/isDirectory'
 import path from 'path'
 
 const build = path.resolve(__dirname, '..', 'build')

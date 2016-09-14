@@ -1,8 +1,8 @@
 #!/usr/bin/env babel-node
 
-import asyncScript from '../util/asyncScript'
-import execAsync from '../util/execAsync'
-import spawnAsync from '../util/spawnAsync'
+import asyncScript from './util/asyncScript'
+import execAsync from './util/execAsync'
+import spawnAsync from './util/spawnAsync'
 import path from 'path'
 
 require('dotenv').config()

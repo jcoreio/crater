@@ -1,9 +1,9 @@
 #!/usr/bin/env babel-node
 
 import path from 'path'
-import asyncScript from '../util/asyncScript'
-import isNewerThan from '../util/isNewerThan'
-import spawnAsync from '../util/spawnAsync'
+import asyncScript from './util/asyncScript'
+import isNewerThan from './util/isNewerThan'
+import spawnAsync from './util/spawnAsync'
 
 process.on('SIGINT', () => process.exit(1))
 

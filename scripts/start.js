@@ -1,7 +1,7 @@
 #!/usr/bin/env babel-node
 
-import asyncScript from '../util/asyncScript'
-import spawn from '../util/spawn'
+import asyncScript from './util/asyncScript'
+import spawn from './util/spawn'
 import path from 'path'
 import buildMeteor from './build-meteor'
 import installMeteorDeps from './installMeteorDeps'
