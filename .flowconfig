@@ -1,0 +1,16 @@
+[ignore]
+.*/node_modules/fbjs/.*
+.*/node_modules/react/.*
+.*/node_modules/meteor-imports-webpack-plugin/meteor-config.json
+
+[include]
+
+[libs]
+./flowlib
+
+[options]
+module.system=haste
+module.name_mapper='.*\.css$' -> 'empty/object'
+module.name_mapper='^meteor\/.*' -> 'empty/object'
+esproposal.class_static_fields=enable
+esproposal.class_instance_fields=enable

@@ -1,4 +1,5 @@
 #!/usr/bin/env babel-node
+// @flow
 
 import asyncScript from './util/asyncScript'
 import spawn from './util/spawn'
@@ -17,7 +18,7 @@ const src = path.join(root, 'src')
 
 const opts = {cwd: root, env, stdio: 'inherit'}
 
-async function start(options = {}) {
+async function start(options?: {supervisorOpts?: Array<any>} = {}): Promise<any> {
   await buildMeteor()
   await installMeteorDeps()
   spawn('babel-node', [path.join(__dirname, 'devServer.js')], opts)
@@ -30,7 +31,7 @@ async function start(options = {}) {
 export default start
 
 if (!module.parent) {
-  process.on('SIGINT', () => process.exit(1))
+  process.on('SIGINT', (): any => process.exit(1))
   asyncScript(start, {
     exitOnSuccess: false,
   })

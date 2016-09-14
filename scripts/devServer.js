@@ -1,8 +1,12 @@
+// @flow
+
 import express from 'express'
 import url from 'url'
 import webpackConfig from '../webpack/webpack.config.dev'
 
 if (process.env.USE_DOTENV) require('dotenv').config()
+const {PORT} = process.env
+if (PORT == null) throw new Error("Missing process.env.PORT")
 
 const app = express()
 
@@ -11,15 +15,17 @@ app.use(require('webpack-dev-middleware')(compiler, webpackConfig.devServer || {
 app.use(require('webpack-hot-middleware')(compiler))
 
 const proxy = require('http-proxy').createProxyServer()
-proxy.on('error', err => console.error(err.stack))
+proxy.on('error', (err: Error): any => console.error(err.stack))
 
-const target = `http://localhost:${process.env.PORT}`
+const target = `http://localhost:${PORT}`
 
-app.all('*', (req, res) => proxy.web(req, res, { target }))
+app.all('*', (req: Object, res: Object): any => proxy.web(req, res, { target }))
 
 const server = app.listen(webpackConfig.devServer.port)
-server.on('upgrade', (req, socket, head) => {
-  if (/^\/sockjs/.test(url.parse(req.url).pathname)) {
+
+server.on('upgrade', (req: Object, socket: any, head: any) => {
+  const parsed = url.parse(req.url)
+  if (parsed && parsed.pathname && /^\/sockjs/.test(parsed.pathname)) {
     proxy.ws(req, socket, head, { target })
   }
 })
