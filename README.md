@@ -117,11 +117,11 @@ the main server)
 
 ### Debug mode
 ```
-npm debug
+npm run debug
 ```
 or
 ```
-npm debug-brk
+npm run debug-brk
 ```
 And then go to the usual `node-inspector` URL, which will be printed in the console.
 
