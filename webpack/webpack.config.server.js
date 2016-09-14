@@ -1,3 +1,5 @@
+// @flow
+
 import path from 'path'
 import webpack from 'webpack'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
@@ -29,7 +31,7 @@ const config = {
   // ignore anything that throws warnings & doesn't affect the view
   externals: [
     nodeExternals(),
-    (context, request, callback) => {
+    (context: string, request: string, callback: (error?: ?Error, result?: ?string) => any): any => {
       const match = /^meteor\/(.*)$/.exec(request)
       if (match) {
         return callback(null, 'var Package.' + match[1].replace(/\//g, '.'))

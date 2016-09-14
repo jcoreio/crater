@@ -1,4 +1,5 @@
 #!/usr/bin/env babel-node
+// @flow
 
 import asyncScript from '../util/asyncScript'
 import execAsync from '../util/execAsync'
@@ -7,7 +8,7 @@ import path from 'path'
 
 require('dotenv').config()
 
-asyncScript(async () => {
+asyncScript(async (): Promise<any> => {
   const commitHash = (await execAsync('git rev-parse HEAD', {silent: true})).stdout.trim()
   await spawnAsync('docker-compose', ['up'], {
     env: {

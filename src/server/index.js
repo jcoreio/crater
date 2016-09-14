@@ -1,3 +1,5 @@
+/* @flow */
+
 import express from 'express'
 import path from 'path'
 import createSSR from './createSSR'
@@ -7,7 +9,7 @@ import '../universal/collections/Counts'
 
 const app = express()
 
-app.use((req, res, next) => {
+app.use((req: Object, res: Object, next: Function) => {
   if (/\/favicon\.?(jpe?g|png|ico|gif)?$/i.test(req.url)) {
     res.status(404).end()
   } else {
@@ -20,15 +22,17 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // server-side rendering
-app.get('*', (req, res, next) => {
+app.get('*', (req: Object, res: Object, next: Function) => {
   // let Meteor handle sockjs requests so that DDP works
   if (/sockjs\/.*/.test(req.path)) {
     next()
     return
   }
-  return createSSR(req, res)
+  createSSR(req, res)
 })
 
 WebApp.rawConnectHandlers.use(app)
 
-console.log(`App is listening on http://0.0.0.0:${process.env.PORT}`) // eslint-disable-line no-console
+if (process.env.PORT != null) {
+  console.log(`App is listening on http://0.0.0.0:${process.env.PORT}`) // eslint-disable-line no-console
+}

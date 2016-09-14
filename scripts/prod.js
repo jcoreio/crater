@@ -1,4 +1,5 @@
 #!/usr/bin/env babel-node
+// @flow
 
 import spawn from '../util/spawn'
 import spawnAsync from '../util/spawnAsync'
@@ -6,7 +7,7 @@ import asyncScript from '../util/asyncScript'
 import installMeteorDeps from './installMeteorDeps'
 import path from 'path'
 
-process.on('SIGINT', () => process.exit(1))
+process.on('SIGINT', (): any => process.exit(1))
 
 const env = {
   ...process.env,
@@ -16,7 +17,7 @@ const env = {
 
 const build = path.resolve(__dirname, '..', 'build')
 
-asyncScript(async () => {
+asyncScript(async (): Promise<any> => {
   await spawnAsync('npm', ['run', 'build'], {stdio: 'inherit'})
   await installMeteorDeps()
   spawn('supervisor', ['-w', build, path.join(build, 'index.js')], {env, stdio: 'inherit'})

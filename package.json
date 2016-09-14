@@ -15,11 +15,13 @@
     "test:docker": "babel-node scripts/test.js --mochaOpts.grep docker",
     "build:docker": "babel-node scripts/build-docker.js",
     "docker": "babel-node scripts/docker.js",
-    "flow": "flow status",
-    "flow:watch": "supervisor -q -n exit -w scripts,src,test,util,webpack -x flow -- status",
+    "flow": "flow",
+    "flow:0": "flow status; exit 0",
+    "flow:watch": "supervisor -q -n exit -w .flowconfig,scripts,src,test,util,webpack -x babel-node scripts/flow-for-watch.js",
     "lint": "eslint *.js src scripts test util webpack",
+    "lint:0": "eslint *.js src scripts test util webpack; exit 0",
     "lint:fix": "eslint --fix *.js src scripts test util webpack",
-    "lint:watch": "supervisor -q -n exit -w scripts,src,test,util,webpack -x npm -- run lint"
+    "lint:watch": "supervisor -q -n exit -w .eslintrc,scripts,src,test,util,webpack -x babel-node scripts/lint-for-watch.js"
   },
   "dependencies": {
     "babel-runtime": "^6.11.6",
@@ -63,6 +65,7 @@
     "empty": "^0.10.1",
     "eslint": "^3.5.0",
     "eslint-plugin-babel": "^3.3.0",
+    "eslint-plugin-flowtype": "^2.17.1",
     "eslint-plugin-jsx-a11y": "^2.2.2",
     "eslint-plugin-react": "^6.2.1",
     "extract-text-webpack-plugin": "^1.0.1",
