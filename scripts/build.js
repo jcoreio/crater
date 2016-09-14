@@ -1,15 +1,16 @@
 #!/usr/bin/env babel-node
+// @flow
 
 import asyncScript from '../util/asyncScript'
 import spawnAsync from '../util/spawnAsync'
 
-process.on('SIGINT', () => process.exit(1))
+process.on('SIGINT', (): any => process.exit(1))
 
 const opts = {
   stdio: 'inherit',
 }
 
-asyncScript(async () => {
+asyncScript(async (): Promise<void> => {
   await spawnAsync('npm', ['run', 'build:meteor'], opts)
   await spawnAsync('npm', ['run', 'build:server'], opts)
   await spawnAsync('npm', ['run', 'build:client'], opts)

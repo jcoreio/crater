@@ -1,3 +1,5 @@
+// @flow
+
 import path from 'path'
 import webpack from 'webpack'
 import AssetsPlugin from 'assets-webpack-plugin'

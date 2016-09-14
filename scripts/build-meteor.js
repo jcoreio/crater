@@ -1,4 +1,5 @@
 #!/usr/bin/env babel-node
+// @flow
 
 import path from 'path'
 import rimraf from 'rimraf'
@@ -12,7 +13,7 @@ const root = path.resolve(__dirname, '..')
 const meteor = path.join(root, 'meteor')
 const build = path.join(root, 'build')
 
-async function buildMeteor() {
+async function buildMeteor(): Promise<void> {
   await promisify(mkdirp)(build)
   if (await isNewerThan(meteor, path.join(build, 'meteor'))) {
     console.log('building Meteor packages...')
@@ -29,6 +30,6 @@ async function buildMeteor() {
 export default buildMeteor
 
 if (!module.parent) {
-  process.on('SIGINT', () => process.exit(1))
+  process.on('SIGINT', (): any => process.exit(1))
   asyncScript(buildMeteor)
 }

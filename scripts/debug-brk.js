@@ -1,9 +1,10 @@
 #!/usr/bin/env babel-node
+// @flow
 
 import start from './start'
 import spawn from '../util/spawn'
 
-process.on('SIGINT', () => process.exit(1))
+process.on('SIGINT', (): any => process.exit(1))
 
 start({
   supervisorOpts: ['--debug-brk'],

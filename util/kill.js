@@ -1,11 +1,15 @@
+// @flow
+
 import terminate from 'terminate'
 
-function kill(child, signal, timeout) {
+import type {ChildProcess} from 'child_process'
+
+function kill(child: ChildProcess, signal?: string, timeout?: number): Promise<void> {
   if (typeof signal === 'number') {
     timeout = signal
     signal = undefined
   }
-  return new Promise((_resolve, _reject) => {
+  return new Promise((_resolve: Function, _reject: Function) => {
     let timeoutId
     function unlisten() {
       if (timeoutId != null) clearTimeout(timeoutId)
@@ -16,13 +20,13 @@ function kill(child, signal, timeout) {
       unlisten()
       _resolve()
     }
-    function reject(error) {
+    function reject(error: Error) {
       unlisten()
       _reject(error)
     }
     child.on('exit', resolve)
     child.on('error', reject)
-    if (timeout) setTimeout(() => reject(new Error('kill timed out')), timeout)
+    if (timeout) setTimeout((): any => reject(new Error('kill timed out')), timeout)
     if (signal) child.kill(signal)
     else terminate(child.pid)
   })

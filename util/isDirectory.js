@@ -1,9 +1,12 @@
-import fs from 'fs'
+// @flow
 
-function isDirectory(path) {
-  return new Promise(resolve => {
-    fs.stat(path, (err, stats) => {
-      resolve(err ? false : stats.isDirectory())
+import fs from 'fs'
+import type {Stats} from 'fs'
+
+function isDirectory(path: string): Promise<boolean> {
+  return new Promise((resolve: (result: boolean) => any) => {
+    fs.stat(path, (err: ?Error, stats: ?Stats) => {
+      resolve(err || stats == null ? false : stats.isDirectory())
     })
   })
 }

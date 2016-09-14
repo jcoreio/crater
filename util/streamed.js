@@ -1,37 +1,47 @@
-function streamed(child, stream, predicate, timeout) {
-  return new Promise((_resolve, _reject) => {
+// @flow
+
+import type {ChildProcess} from 'child_process'
+import type {Readable} from 'stream'
+
+function streamed(
+  child: ChildProcess,
+  stream: Readable,
+  predicate: (output: string) => boolean | RegExp,
+  timeout?: number
+): Promise<string> {
+  return new Promise((_resolve: Function, _reject: Function) => {
     let timeoutId
 
     function unlisten() {
       if (timeoutId != null) clearTimeout(timeoutId)
       stream.removeListener('data', onData)
-      stream.removeListener('close', onClose)
-      stream.removeListener('exit', onExit)
-      stream.removeListener('error', reject)
+      child.removeListener('close', onClose)
+      child.removeListener('exit', onExit)
+      child.removeListener('error', reject)
     }
 
-    function resolve(data) {
+    function resolve(data: string) {
       unlisten()
       _resolve(data)
     }
 
-    function reject(error) {
+    function reject(error: Error) {
       unlisten()
       _reject(error)
     }
 
-    function onData(data) {
+    function onData(data: Buffer) {
       const message = data.toString()
-      if (predicate instanceof RegExp ? predicate.test(message) : predicate(message)) resolve(data)
+      if (predicate instanceof RegExp ? predicate.test(message) : predicate(message)) resolve(data.toString())
     }
 
-    const onClose = () => reject(new Error('stream closed'))
-    const onExit = () => reject(new Error('process exited'))
+    const onClose = (): any => reject(new Error('stream closed'))
+    const onExit = (): any => reject(new Error('process exited'))
     child.on('error', reject)
     child.on('exit', onExit)
     child.on('close', onClose)
     stream.on('data', onData)
-    if (timeout) timeoutId = setTimeout(() => reject(new Error('waitForStream timed out')), timeout)
+    if (timeout) timeoutId = setTimeout((): any => reject(new Error('waitForStream timed out')), timeout)
   })
 }
 

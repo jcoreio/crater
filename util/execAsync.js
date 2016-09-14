@@ -1,11 +1,15 @@
+// @flow
+
 import {exec} from 'child_process'
 
-function execAsync(command, options = {}) {
+export type Result = {stdout: string, stderr: string}
+
+function execAsync(command: string, options?: Object = {}): Promise<Result> {
   const {silent, ...otherOptions} = options
-  return new Promise((resolve, reject) => {
-    const child = exec(command, otherOptions, (error, stdout, stderr) => {
+  return new Promise((resolve: Function, reject: Function) => {
+    const child = exec(command, otherOptions, (error: ?Error, stdout: Buffer, stderr: Buffer) => {
       if (error) reject(error)
-      else resolve({stdout, stderr})
+      else resolve({stdout: stdout.toString(), stderr: stderr.toString()})
     })
     process.stdin.pipe(child.stdin)
     if (!silent) {
