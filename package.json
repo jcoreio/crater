@@ -9,6 +9,7 @@
     "build:server": "babel-node scripts/build-server.js",
     "build:client": "babel-node scripts/build-client.js",
     "prod": "babel-node scripts/prod.js",
+    "pretest": "babel-node scripts/pretest.js",
     "test": "babel-node scripts/test.js",
     "test:dev": "babel-node scripts/test.js --mochaOpts.grep dev",
     "test:prod": "babel-node scripts/test.js --mochaOpts.grep prod",
