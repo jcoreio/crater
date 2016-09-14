@@ -13,8 +13,9 @@ const build = path.join(root, 'build')
 asyncScript(async () => {
   await spawnAsync('babel', [path.join(root, 'src', 'index.js'), '-o', path.join(build, 'index.js')], {stdio: 'inherit'})
   if (await isNewerThan(path.join(root, 'src'), path.join(root, 'build', 'prerender.js'))) {
+    console.log('building server bundle...')
     await spawnAsync('webpack', ['--config', path.join(root, 'webpack', 'server.babel.js')], {stdio: 'inherit'})
   } else {
-    console.log('build/prerender.js is up to date')
+    console.log('server assets are up to date')
   }
 })
