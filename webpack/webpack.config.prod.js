@@ -21,37 +21,37 @@ const config = {
   context: root,
   entry: {
     app: './src/client/index.js',
-    vendor
+    vendor,
   },
   output: {
     filename: '[name]_[chunkhash].js',
     chunkFilename: '[name]_[chunkhash].js',
     path: path.join(root, 'build', 'static'),
-    publicPath: '/static/'
+    publicPath: '/static/',
   },
   plugins: [
     new webpack.NamedModulesPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendor', 'manifest'],
-      minChunks: Infinity
+      minChunks: Infinity,
     }),
     new webpack.optimize.AggressiveMergingPlugin(),
-    new webpack.optimize.MinChunkSizePlugin({minChunkSize: 50000}),
-    new webpack.optimize.UglifyJsPlugin({compressor: {warnings: false}, comments: /(?:)/}),
+    new webpack.optimize.MinChunkSizePlugin({ minChunkSize: 50000 }),
+    new webpack.optimize.UglifyJsPlugin({ compressor: { warnings: false }, comments: /(?:)/ }),
     new webpack.NoErrorsPlugin(),
-    new AssetsPlugin({path: path.join(root, 'build'), filename: 'assets.json'}),
+    new AssetsPlugin({ path: path.join(root, 'build'), filename: 'assets.json' }),
     new webpack.DefinePlugin({
       '__CLIENT__': true,
       'Meteor.isClient': true,
       'Meteor.isCordova': false,
       'Meteor.isServer': false,
-      'process.env.NODE_ENV': JSON.stringify('production')
+      'process.env.NODE_ENV': JSON.stringify('production'),
     }),
     new webpack.IgnorePlugin(/\/server\//),
     new HappyPack({
       cache: false,
       loaders: ['babel'],
-      threads: 4
+      threads: 4,
     }),
     new MeteorImportsPlugin({
       meteorProgramsFolder: path.resolve(__dirname, '..', 'build', 'meteor', 'bundle', 'programs'),
@@ -62,28 +62,28 @@ const config = {
   postcss: [cssModulesValues],
   module: {
     loaders: [
-      {test: /\.json$/, loader: 'json-loader', include: [...clientInclude, 'node_modules']},
-      {test: /\.txt$/, loader: 'raw-loader'},
-      {test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/, loader: 'url-loader?limit=10000'},
-      {test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader'},
+      { test: /\.json$/, loader: 'json-loader', include: [...clientInclude, 'node_modules'] },
+      { test: /\.txt$/, loader: 'raw-loader' },
+      { test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/, loader: 'url-loader?limit=10000' },
+      { test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader' },
       {
         test: /\.css$/,
         loader: 'style!css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss',
         exclude: globalCSS,
-        include: clientInclude
+        include: clientInclude,
       },
       {
         test: /\.css$/,
         loader: 'style!css',
-        include: globalCSS
+        include: globalCSS,
       },
       {
         test: /\.js$/,
         loader: 'happypack/loader',
-        include: clientInclude
-      }
-    ]
-  }
+        include: clientInclude,
+      },
+    ],
+  },
 }
 
 if (!process.env.CI) config.plugins.push(new ProgressBarPlugin())

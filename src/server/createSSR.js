@@ -1,5 +1,5 @@
 import React from 'react'
-import {createStore, applyMiddleware} from 'redux'
+import {createStore} from 'redux'
 import makeReducer from '../universal/redux/makeReducer'
 import {match} from 'react-router'
 import Html from './Html'
@@ -7,7 +7,7 @@ import {push} from 'react-router-redux'
 import {renderToStaticMarkup} from 'react-dom-stream/server'
 import fs from 'fs'
 import path from 'path'
-import {join, basename} from 'path'
+import {join} from 'path'
 import promisify from 'es6-promisify'
 import {Map as iMap} from 'immutable'
 import {Meteor} from 'meteor/meteor'
@@ -69,7 +69,7 @@ async function createSSR(req, res) {
       renderApp(res,  store)
     }
   } catch (error) {
-    console.error(error.stack)
+    console.error(error.stack) // eslint-disable-line no-console
   }
 }
 

@@ -6,6 +6,6 @@ import spawn from '../util/spawn'
 process.on('SIGINT', () => process.exit(1))
 
 start({
-  supervisorOpts: ['--debug']
+  supervisorOpts: ['--debug'],
 })
-spawn('node-inspector', [], {stdio: 'inherit'})
+spawn('node-inspector', [], { stdio: 'inherit' })

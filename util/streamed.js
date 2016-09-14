@@ -1,4 +1,4 @@
-async function streamed(child, stream, predicate, timeout) {
+function streamed(child, stream, predicate, timeout) {
   return new Promise((_resolve, _reject) => {
     let timeoutId
 

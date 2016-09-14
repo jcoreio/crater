@@ -1,4 +1,4 @@
-async function join(child, timeout) {
+function join(child, timeout) {
   return new Promise((_resolve, _reject) => {
     let timeoutId
     function unlisten() {

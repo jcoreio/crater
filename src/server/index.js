@@ -1,7 +1,7 @@
 import express from 'express'
 import path from 'path'
 import createSSR from './createSSR'
-import {WebApp} from 'meteor/webapp'
+import { WebApp } from 'meteor/webapp'
 
 import '../universal/collections/Counts'
 
@@ -31,4 +31,4 @@ app.get('*', (req, res, next) => {
 
 WebApp.rawConnectHandlers.use(app)
 
-console.log(`App is listening on http://0.0.0.0:${process.env.PORT}`)
+console.log(`App is listening on http://0.0.0.0:${process.env.PORT}`) // eslint-disable-line no-console

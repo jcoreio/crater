@@ -1,14 +1,13 @@
 import terminate from 'terminate'
 
-async function kill(child, signal, timeout) {
+function kill(child, signal, timeout) {
   if (typeof signal === 'number') {
     timeout = signal
     signal = undefined
   }
   return new Promise((_resolve, _reject) => {
-    let timeoutId, ignoreResult
+    let timeoutId
     function unlisten() {
-      ignoreResult = true
       if (timeoutId != null) clearTimeout(timeoutId)
       child.removeListener('exit', resolve)
       child.removeListener('error', reject)

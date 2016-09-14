@@ -1,9 +1,9 @@
-import {createStore, applyMiddleware, compose} from 'redux'
-import {routerMiddleware} from 'react-router-redux'
-import {browserHistory} from 'react-router'
+import { createStore, applyMiddleware, compose } from 'redux'
+import { routerMiddleware } from 'react-router-redux'
+import { browserHistory } from 'react-router'
 import makeReducer from '../universal/redux/makeReducer'
 
-export default initialState => {
+export default (initialState) => {
   let store
   const reducer = makeReducer()
   const reduxRouterMiddleware = routerMiddleware(browserHistory)
@@ -20,7 +20,7 @@ export default initialState => {
       const createLogger = require('redux-logger')
       const logger = createLogger({
         level: 'info',
-        collapsed: true
+        collapsed: true,
       })
       middlewares.push(logger)
     }
