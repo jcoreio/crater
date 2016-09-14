@@ -57,7 +57,7 @@ function unlinkIfExists(path, callback) {
 describe('build scripts', function () {
   describe('build:meteor', async function () {
     it('only rebuilds when necessary', async function () {
-      this.timeout(120000)
+      this.timeout(480000)
 
       await promisify(rimraf)(path.join(build, 'meteor'))
       expect(/building meteor packages/i.test((await execAsync('npm run build:meteor')).stdout)).to.be.true
@@ -77,7 +77,7 @@ describe('build scripts', function () {
   })
   describe('build:client', function () {
     it('only rebuilds when necessary', async function () {
-      this.timeout(120000)
+      this.timeout(480000)
 
       await spawnAsync('npm', ['run', 'build:meteor'], {stdio: 'inherit'})
 
@@ -107,7 +107,7 @@ describe('build scripts', function () {
   })
   describe('build:server', function () {
     it('only rebuilds when necessary', async function () {
-      this.timeout(120000)
+      this.timeout(480000)
 
       await spawnAsync('npm', ['run', 'build:meteor'], {stdio: 'inherit'})
 
