@@ -15,4 +15,4 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
   - curl https://install.meteor.com/ | sh
-  - docker run --rm -p 27017:27017 --detach mongo:3.2.8
+  - docker run -p 27017:27017 --detach mongo:3.2.8
