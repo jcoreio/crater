@@ -14,7 +14,6 @@ const clientInclude = [srcDir]
 const vendor = [
   'react',
   'react-dom',
-  'meteor-imports',
 ]
 
 const config = {
@@ -22,6 +21,7 @@ const config = {
   entry: {
     app: './src/client/index.js',
     vendor,
+    meteor: ['meteor-imports'],
   },
   output: {
     filename: '[name]_[chunkhash].js',
@@ -35,9 +35,17 @@ const config = {
       names: ['vendor', 'manifest'],
       minChunks: Infinity,
     }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'meteor',
+      chunks: ['meteor']
+    }),
     new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.optimize.MinChunkSizePlugin({ minChunkSize: 50000 }),
-    new webpack.optimize.UglifyJsPlugin({ compressor: { warnings: false }, comments: /(?:)/ }),
+    new webpack.optimize.UglifyJsPlugin({
+      compressor: { warnings: false },
+      // don't minify the meteor commons chunk
+      exclude: /meteor.*\.js$/,
+    }),
     new webpack.NoErrorsPlugin(),
     new AssetsPlugin({ path: path.join(root, 'build'), filename: 'assets.json' }),
     new webpack.DefinePlugin({
