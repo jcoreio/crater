@@ -8,6 +8,7 @@ phantomjs.run('--webdriver=4444').then(async program => {
   killOnExit(program)
   console.log('Started PhantomJS.')
 
+  await spawnAsync('npm', ['run', 'flow'], {stdio: 'inherit'})
   await spawnAsync('npm', ['run', 'lint'], {stdio: 'inherit'})
 
   const wdio = spawn('node_modules/.bin/wdio', [...process.argv.slice(2), 'wdio.conf.js'], {
