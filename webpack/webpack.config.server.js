@@ -28,7 +28,9 @@ const config = {
   },
   // ignore anything that throws warnings & doesn't affect the view
   externals: [
-    nodeExternals(),
+    nodeExternals({
+      modulesDir: path.join(root, 'node_modules'),
+    }),
     (context, request, callback) => {
       const match = /^meteor\/(.*)$/.exec(request)
       if (match) {
