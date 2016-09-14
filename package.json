@@ -68,7 +68,6 @@
     "happypack": "^2.2.1",
     "http-proxy": "^1.14.0",
     "json-loader": "^0.5.4",
-    "lodash.some": "^4.6.0",
     "meteor-imports-webpack-plugin": "^1.1.0",
     "mkdirp": "^0.5.1",
     "mocha": "^3.0.2",
