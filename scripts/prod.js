@@ -17,9 +17,9 @@ const env = {
 const build = path.resolve(__dirname, '..', 'build')
 
 asyncScript(async () => {
-  await spawnAsync('npm', ['run', 'build'], {stdio: 'inherit'})
+  await spawnAsync('npm', ['run', 'build'], {cwd: root, stdio: 'inherit'})
   await installMeteorDeps()
-  spawn('supervisor', ['-w', build, path.join(build, 'index.js')], {env, stdio: 'inherit'})
+  spawn('supervisor', ['-w', build, path.join(build, 'index.js')], {cwd: root, env, stdio: 'inherit'})
 }, {
   exitOnSuccess: false,
 })
