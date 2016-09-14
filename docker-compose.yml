@@ -1,8 +1,10 @@
 version: "2"
 services:
   mongo:
-    image: mongo:3.2.4
+    image: mongo:3.2.8
     restart: always
+    ports:
+      - "27017"
   crater:
     image: jedwards1211/crater:$TAG
     ports:
