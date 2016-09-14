@@ -15,7 +15,8 @@
     "test:docker": "babel-node scripts/test.js --mochaOpts.grep docker",
     "build:docker": "babel-node scripts/build-docker.js",
     "docker": "babel-node scripts/docker.js",
-    "lint:fix": "eslint --fix *.js src scripts test util webpack; exit 0"
+    "lint": "eslint *.js src scripts test util webpack",
+    "lint:fix": "eslint --fix *.js src scripts test util webpack"
   },
   "dependencies": {
     "babel-runtime": "^6.11.6",
