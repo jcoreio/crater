@@ -19,7 +19,7 @@ app.all('*', (req, res) => proxy.web(req, res, { target }))
 
 const server = app.listen(webpackConfig.devServer.port)
 server.on('upgrade', (req, socket, head) => {
-  if (/sockjs\/.*/.test(url.parse(req.url).pathname)) {
+  if (/^\/sockjs/.test(url.parse(req.url).pathname)) {
     proxy.ws(req, socket, head, { target })
   }
 })
