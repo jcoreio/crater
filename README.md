@@ -71,15 +71,14 @@ render React modules that require `.css` files.
 
 ## Where to put things
 
-All of your server code should go in `src/server/server.js` or a file required by it.  You shouldn't require any app
-code in `src/server/index.js`, because the production build makes a server-side Webpack bundle with
-`src/server/server.js` as the entry point, so anything you require in `src/server/index.js` would be duplicated in the
+All of your server code should go in `src/server/index.js` or a file required by it.  You shouldn't require any app
+code in `src/index.js`, because the production build makes a server-side Webpack bundle with
+`src/server/index.js` as the entry point, so anything you require in `src/index.js` would be duplicated in the
 Webpack bundle.
 
-## Windows not supported yet
-
-Windows is not yet supported because the npm scripts are all written in bash.  It might work with bash from [Cygwin](https://www.cygwin.com/) or [Windows Subsystem for Linux](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&ie=UTF-8#q=install%20windows%20subsystem%20for%20linux)
-Until I decide to work on Windows support, you're welcome to make a PR that uses `shelljs` or whatever instead of the bash scripts.
+Put anything shared between client and server in `src/universal`.  Many Meteor methods are not
+actually isomorphic (e.g. `Meteor.user()`, `Meteor.subscribe()`, `Mongo.Collection.find()`, etc) so you should probably
+wrap those `Meteor.isClient`/`Meteor.isServer` blocks in any code shared between client and server.
 
 ## Blaze is not supported
 
@@ -108,8 +107,6 @@ Make sure to install deps before running the app for the first time:
 ```
 npm install
 ```
-A postinstall script will run Meteor so that isobuild downloads all of the Meteor packages, then it will make sure the
-binaries (like fibers) are rebuilt for your Node version.
 
 Then after that, run:
 ```
@@ -118,11 +115,29 @@ npm start
 And open http://localhost:4000 in your browser. (It runs a webpack dev server on port 4000 and proxies to
 the main server)
 
+### Debug mode
+```
+npm debug
+```
+or
+```
+npm debug-brk
+```
+And then go to the usual `node-inspector` URL, which will be printed in the console.
+
 ### Prod mode
 ```
 npm run prod
 ```
 And open http://localhost:3000 in your browser.
+
+### Build
+```
+npm run build
+```
+Everything is output to the `build` directory.
+Note that `npm run prod` runs this before starting the app.
+`npm start` runs the `build:meteor` script, which partially populates this folder, before starting the app.
 
 ## Docker
 **Note: the Dockerfile is configured to use Node 4.5, but feel free to change it in your own project.**
@@ -136,23 +151,6 @@ Then you can run the docker image using: (requires `docker-compose`)
 npm run docker
 ```
 And open http://localhost:3000 in your browser.
-
-## Troubleshooting
-
-If you see the following error (or likewise for any other package that uses native code):
-```
-<your home dir>/.meteor/packages/meteor-tool/.1.4.1_1.msrh2w++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib/node_modules/fibers/fibers.js:16
-	throw new Error('`'+ modPath+ '.node` is missing. Try reinstalling `node-fibers`?');
-	^
-
-Error: `<your home dir>/.meteor/packages/meteor-tool/.1.4.1_1.msrh2w++os.osx.x86_64+web.browser+web.cordova/mt-os.osx.x86_64/dev_bundle/server-lib/node_modules/fibers/bin/darwin-x64-v8-5.0/fibers.node` is missing. Try reinstalling `node-fibers`?
-```
-It means some npm packages used by Meteor are missing binaries for your Node version.
-The `postinstall` script should make sure this doesn't happen, but if it fails for some reason, run:
-```
-npm run reinstall-meteor-deps
-```
-After that retry `npm start`.
 
 ## Testing
 ```

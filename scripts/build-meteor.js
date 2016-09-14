@@ -8,22 +8,27 @@ import isNewerThan from '../util/isNewerThan'
 import spawnAsync from '../util/spawnAsync'
 import promisify from 'es6-promisify'
 
-process.on('SIGINT', () => process.exit(1))
-
 const root = path.resolve(__dirname, '..')
+const meteor = path.join(root, 'meteor')
 const build = path.join(root, 'build')
 
-asyncScript(async () => {
+async function buildMeteor() {
   await promisify(mkdirp)(build)
-  await spawnAsync('babel', [path.join(root, 'src', 'index.js'), '-o', path.join(build, 'index.js')], {stdio: 'inherit'})
-  if (await isNewerThan(path.join(root, 'meteor'), path.join(build, 'meteor'))) {
+  if (await isNewerThan(meteor, path.join(build, 'meteor'))) {
     console.log('building Meteor packages...')
     await promisify(rimraf)(path.join(build, 'meteor'))
     await spawnAsync('meteor', ['build', path.join('..', 'build', 'meteor'), '--directory'], {
-      cwd: path.resolve(__dirname, '..', 'meteor'),
+      cwd: meteor,
       stdio: 'inherit'
     })
   } else {
     console.log('build/meteor is up to date')
   }
-})
+}
+
+export default buildMeteor
+
+if (!module.parent) {
+  process.on('SIGINT', () => process.exit(1))
+  asyncScript(buildMeteor)
+}

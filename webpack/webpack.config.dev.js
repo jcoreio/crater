@@ -44,8 +44,9 @@ const config = {
       threads: 4
     }),
     new MeteorImportsPlugin({
-      meteorFolder: 'meteor',
-      exclude: ['ecmascript']
+      meteorProgramsFolder: path.resolve(__dirname, '..', 'build', 'meteor', 'bundle', 'programs'),
+      exclude: ['ecmascript'],
+      injectMeteorRuntimeConfig: false,
     }),
   ],
   postcss: [cssModulesValues],

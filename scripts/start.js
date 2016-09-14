@@ -1,7 +1,10 @@
 #!/usr/bin/env babel-node
 
+import asyncScript from '../util/asyncScript'
 import spawn from '../util/spawn'
 import path from 'path'
+import buildMeteor from './build-meteor'
+import installMeteorDeps from './installMeteorDeps'
 
 const env = {
   ...process.env,
@@ -9,9 +12,12 @@ const env = {
   USE_DOTENV: 1,
 }
 
-const src = path.resolve(__dirname, '..', 'src')
+const root = path.resolve(__dirname, '..')
+const src = path.join(root, 'src')
 
-export default function start(options = {}) {
+async function start(options = {}) {
+  await buildMeteor()
+  await installMeteorDeps()
   spawn('babel-node', [path.join(__dirname, 'devServer.js')], {env, stdio: 'inherit'})
   spawn('supervisor', [
     ...options.supervisorOpts || [],
@@ -19,8 +25,12 @@ export default function start(options = {}) {
   ], {env, stdio: 'inherit'})
 }
 
+export default start
+
 if (!module.parent) {
   process.on('SIGINT', () => process.exit(1))
-  start()
+  asyncScript(start, {
+    exitOnSuccess: false,
+  })
 }
 

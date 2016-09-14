@@ -10,7 +10,7 @@ const opts = {
 }
 
 asyncScript(async () => {
-  await spawnAsync('npm', ['run', 'build:base'], opts)
+  await spawnAsync('npm', ['run', 'build:meteor'], opts)
   await spawnAsync('npm', ['run', 'build:server'], opts)
   await spawnAsync('npm', ['run', 'build:client'], opts)
 })
