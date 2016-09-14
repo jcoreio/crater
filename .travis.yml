@@ -6,6 +6,7 @@ node_js:
 sudo: required
 services:
   - docker
+  - mongodb
 env:
   DOCKER_COMPOSE_VERSION: 1.8.0
 before_install:
