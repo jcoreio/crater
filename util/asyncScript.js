@@ -1,7 +1,7 @@
-async function asyncScript(run) {
+async function asyncScript(run, options = {}) {
   try {
     await run()
-    process.exit(0)
+    if (options.exitOnSuccess !== false) process.exit(0)
   } catch (error) {
     console.error(error.stack)
     process.exit(1)

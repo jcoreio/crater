@@ -1,10 +1,10 @@
 import path from 'path'
-import child_process from 'child_process'
+import {spawn as _spawn} from 'cross-spawn'
 import killOnExit from './killOnExit'
 
 export default function spawn(command, args = [], options = {}) {
   const {silent, ...otherOptions} = options
-  const child = child_process.spawn(command, args, {
+  const child = _spawn(command, args, {
     cwd: path.resolve(__dirname, '..'),
     ...otherOptions,
   })
