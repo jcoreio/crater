@@ -40,7 +40,7 @@ function sharedTests() {
     }
 
     const initCounter = await getCounter()
-    await delay(2000)
+    await delay(5000)
     expect(await getCounter()).to.be.above(initCounter)
   })
   it('sends Meteor.settings.public to the client', async function () {
