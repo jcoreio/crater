@@ -46,10 +46,6 @@ describe('prod mode', function () {
 
   before(async function () {
     this.timeout(240000)
-    await spawnAsync('npm', ['run', 'build'])
-    await spawnAsync('npm', ['install', ...(process.env.CI ? ['--progress=false'] : [])], {
-      cwd: path.join(__dirname, '../../build/meteor/bundle/programs/server'),
-    })
     server = exec('npm run prod')
     await stdouted(server, /App is listening on http/i)
     await browser.reload()
@@ -74,7 +70,6 @@ describe('docker build', function () {
       ...process.env,
       TAG: (await execAsync('git rev-parse HEAD')).stdout.trim(),
     }
-    await spawnAsync('npm', ['run', 'build'])
     await spawnAsync('npm', ['run', 'build:docker'])
     server = exec('npm run docker', {
       env: {
