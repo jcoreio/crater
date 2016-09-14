@@ -14,6 +14,7 @@ const clientInclude = [srcDir]
 const vendor = [
   'react',
   'react-dom',
+  'meteor-imports',
 ]
 
 const config = {

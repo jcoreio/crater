@@ -7,8 +7,14 @@ import spawnAsync from '../../util/spawnAsync'
 import execAsync from '../../util/execAsync'
 import path from 'path'
 import fs from 'fs'
+import rimraf from 'rimraf'
 import promisify from 'es6-promisify'
 import webpackConfig from '../../webpack/webpack.config.dev'
+
+const root = path.resolve(__dirname, '..', '..')
+const src = path.join(root, 'src')
+const build = path.join(root, 'build')
+const webpack = path.join(root, 'webpack')
 
 async function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -40,6 +46,96 @@ function sharedTests() {
     expect(await browser.getText('.settings-test')).to.equal('success')
   })
 }
+
+function unlinkIfExists(path, callback) {
+  return fs.unlink(path, (err, result) => {
+    if (err && /ENOENT/.test(err.message)) err = null
+    return callback(err, result)
+  })
+}
+
+describe('build scripts', function () {
+  describe('build:meteor', async function () {
+    it('only rebuilds when necessary', async function () {
+      this.timeout(480000)
+
+      await promisify(rimraf)(path.join(build, 'meteor'))
+      expect(/building meteor packages/i.test((await execAsync('npm run build:meteor')).stdout)).to.be.true
+
+      expect(/build\/meteor is up to date/i.test((await execAsync('npm run build:meteor')).stdout)).to.be.true
+
+      await delay(1000)
+      await promisify(fs.utimes)(
+        path.resolve(root, 'meteor', '.meteor', 'packages'),
+        NaN,
+        NaN,
+      )
+      expect(/building meteor packages/i.test((await execAsync('npm run build:meteor')).stdout)).to.be.true
+
+      expect(/build\/meteor is up to date/i.test((await execAsync('npm run build:meteor')).stdout)).to.be.true
+    })
+  })
+  describe('build:client', function () {
+    it('only rebuilds when necessary', async function () {
+      this.timeout(480000)
+
+      await spawnAsync('npm', ['run', 'build:meteor'], {stdio: 'inherit'})
+
+      await promisify(unlinkIfExists)(path.join(build, 'assets.json'))
+      expect(/building client bundle/.test((await execAsync('npm run build:client')).stdout)).to.be.true
+
+      expect(/client assets are up to date/.test((await execAsync('npm run build:client')).stdout)).to.be.true
+
+      await delay(1000)
+      await promisify(fs.utimes)(
+        path.resolve(webpack, 'webpack.config.prod.js'),
+        NaN,
+        NaN
+      )
+      expect(/building client bundle/.test((await execAsync('npm run build:client')).stdout)).to.be.true
+
+      await delay(1000)
+      await promisify(fs.utimes)(
+        path.resolve(src, 'client', 'index.js'),
+        NaN,
+        NaN
+      )
+      expect(/building client bundle/.test((await execAsync('npm run build:client')).stdout)).to.be.true
+
+      expect(/client assets are up to date/.test((await execAsync('npm run build:client')).stdout)).to.be.true
+    })
+  })
+  describe('build:server', function () {
+    it('only rebuilds when necessary', async function () {
+      this.timeout(480000)
+
+      await spawnAsync('npm', ['run', 'build:meteor'], {stdio: 'inherit'})
+
+      await promisify(unlinkIfExists)(path.join(build, 'prerender.js'))
+      expect(/building server bundle/.test((await execAsync('npm run build:server')).stdout)).to.be.true
+
+      expect(/server assets are up to date/.test((await execAsync('npm run build:server')).stdout)).to.be.true
+
+      await delay(1000)
+      await promisify(fs.utimes)(
+        path.resolve(webpack, 'webpack.config.server.js'),
+        NaN,
+        NaN
+      )
+      expect(/building server bundle/.test((await execAsync('npm run build:server')).stdout)).to.be.true
+
+      await delay(1000)
+      await promisify(fs.utimes)(
+        path.resolve(src, 'server', 'index.js'),
+        NaN,
+        NaN
+      )
+      expect(/building server bundle/.test((await execAsync('npm run build:server')).stdout)).to.be.true
+
+      expect(/server assets are up to date/.test((await execAsync('npm run build:server')).stdout)).to.be.true
+    })
+  })
+})
 
 describe('prod mode', function () {
   let server
@@ -104,8 +200,8 @@ describe('docker build', function () {
 describe('dev mode', function () {
   let server
 
-  const appFile = path.resolve(__dirname, '../../src/universal/components/App.js')
-  const serverFile = path.resolve(__dirname, '../../src/server/index.js')
+  const appFile = path.join(src, 'universal', 'components', 'App.js')
+  const serverFile = path.join(src, 'server', 'index.js')
   let appCode, serverCode
 
   before(async function () {
