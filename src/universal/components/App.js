@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {Meteor} from 'meteor/meteor'
 import Counts from '../collections/Counts'
@@ -6,23 +8,25 @@ import styles from './App.css'
 
 export default class App extends Component {
   state = {value: 0};
+  observer: ?{stop: Function};
+  sub: ?{stop: Function};
 
   componentWillMount() {
     if (Meteor.isClient) {
       this.sub = Meteor.subscribe('counts', 'a')
       this.observer = Counts.find({_id: 'a'}).observeChanges({
-        added: (id, fields) => this.setState(fields),
-        changed: (id, fields) => this.setState(fields),
+        added: (id: string, fields: Object): any => this.setState(fields),
+        changed: (id: string, fields: Object): any => this.setState(fields),
       })
     }
   }
   componentWillUnmount() {
     if (Meteor.isClient) {
-      this.observer.stop()
-      this.sub.stop()
+      if (this.observer != null) this.observer.stop()
+      if (this.sub != null) this.sub.stop()
     }
   }
-  render() {
+  render(): React.Element<any> {
     return (
       <div className={styles.app}>
         <h1>Welcome to Crater!</h1>
