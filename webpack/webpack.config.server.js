@@ -12,7 +12,7 @@ const globalCSS = path.join(srcDir, 'styles', 'global')
 const config = {
   context: root,
   entry: {
-    prerender: './src/server'
+    prerender: './src/server',
   },
   target: 'node',
   node: {
@@ -24,7 +24,7 @@ const config = {
     chunkFilename: '[name]_[chunkhash].js',
     filename: '[name].js',
     libraryTarget: 'commonjs2',
-    publicPath: '/static/'
+    publicPath: '/static/',
   },
   // ignore anything that throws warnings & doesn't affect the view
   externals: [
@@ -32,7 +32,7 @@ const config = {
     (context, request, callback) => {
       const match = /^meteor\/(.*)$/.exec(request)
       if (match) {
-        return callback(null, "var Package." + match[1].replace(/\//g, '.'))
+        return callback(null, 'var Package.' + match[1].replace(/\//g, '.'))
       }
       callback()
     },
@@ -40,28 +40,28 @@ const config = {
   plugins: [
     new webpack.NoErrorsPlugin(),
     new ExtractTextPlugin('/static/[name].css'),
-    new webpack.optimize.UglifyJsPlugin({compressor: {warnings: false}}),
-    new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
+    new webpack.optimize.UglifyJsPlugin({ compressor: { warnings: false } }),
+    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.DefinePlugin({
       '__CLIENT__': false,
       '__PRODUCTION__': true,
       'Meteor.isClient': false,
       'Meteor.isCordova': false,
       'Meteor.isServer': true,
-      'process.env.NODE_ENV': JSON.stringify('production')
+      'process.env.NODE_ENV': JSON.stringify('production'),
     }),
     new HappyPack({
       cache: false,
       loaders: ['babel'],
-      threads: 4
+      threads: 4,
     }),
   ],
   module: {
     loaders: [
-      {test: /\.json$/, loader: 'json-loader'},
-      {test: /\.txt$/, loader: 'raw-loader'},
-      {test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/, loader: 'url-loader?limit=10000'},
-      {test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader'},
+      { test: /\.json$/, loader: 'json-loader' },
+      { test: /\.txt$/, loader: 'raw-loader' },
+      { test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/, loader: 'url-loader?limit=10000' },
+      { test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader' },
       {
         test: /\.css$/,
         loader: ExtractTextPlugin.extract(
@@ -69,20 +69,20 @@ const config = {
           'css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss'
         ),
         include: srcDir,
-        exclude: globalCSS
+        exclude: globalCSS,
       },
       {
         test: /\.css$/,
         loader: ExtractTextPlugin.extract('fake-style', 'css'),
-        include: globalCSS
+        include: globalCSS,
       },
       {
         test: /\.js$/,
         loader: 'happypack/loader',
         include: srcDir,
-      }
-    ]
-  }
+      },
+    ],
+  },
 }
 
 if (!process.env.CI) config.plugins.push(new ProgressBarPlugin())

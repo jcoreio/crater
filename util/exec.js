@@ -4,7 +4,6 @@ import killOnExit from './killOnExit'
 
 export default function exec(command, options = {}) {
   const {silent, ...otherOptions} = options
-  const parts = command.split(/\s+/g)
   const child = child_process.exec(command, {
     cwd: path.resolve(__dirname, '..'),
     ...otherOptions,

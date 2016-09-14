@@ -3,7 +3,7 @@ async function asyncScript(run, options = {}) {
     await run()
     if (options.exitOnSuccess !== false) process.exit(0)
   } catch (error) {
-    console.error(error.stack)
+    console.error(error.stack) // eslint-disable-line no-console
     process.exit(1)
   }
 }

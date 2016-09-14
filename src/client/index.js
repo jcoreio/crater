@@ -1,14 +1,14 @@
 import 'meteor-imports'
-import {Meteor} from 'meteor/meteor'
-import {render} from 'react-dom'
+import { Meteor } from 'meteor/meteor'
+import { render } from 'react-dom'
 import React from 'react'
-import {AppContainer} from 'react-hot-loader'
-import {Map as iMap} from 'immutable'
+import { AppContainer } from 'react-hot-loader'
+import { Map as iMap } from 'immutable'
 import makeStore from './makeStore'
 import Root from './Root'
 
 Meteor.startup(() => {
-  const {router} = window.__INITIAL_STATE__
+  const { router } = window.__INITIAL_STATE__
 
   // routing is currently a regualr JS object. This may change in the future
   const initialState = iMap({

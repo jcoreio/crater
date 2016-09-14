@@ -1,5 +1,5 @@
-import {Meteor} from 'meteor/meteor'
-import {Mongo} from 'meteor/mongo'
+import { Meteor } from 'meteor/meteor'
+import { Mongo } from 'meteor/mongo'
 
 let Counts
 if (Meteor.isClient) {
@@ -7,11 +7,11 @@ if (Meteor.isClient) {
 } else {
   Meteor.publish('counts', function counts(countName) {
     let value = 0
-    this.added('counts', countName, {value})
+    this.added('counts', countName, { value })
     this.ready()
     const interval = Meteor.setInterval(() => {
       value++
-      this.changed('counts', countName, {value})
+      this.changed('counts', countName, { value })
     }, 1000)
     this.onStop(() => Meteor.clearInterval(interval))
   })

@@ -1,5 +1,4 @@
 import {expect} from 'chai'
-import {spawn} from 'child_process'
 import exec from '../../util/exec'
 import kill from '../../util/kill'
 import stdouted from '../../util/stdouted'
@@ -16,7 +15,9 @@ const src = path.join(root, 'src')
 const build = path.join(root, 'build')
 const webpack = path.join(root, 'webpack')
 
-async function delay(ms) {
+/* global browser: false */
+
+function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
@@ -55,7 +56,7 @@ function unlinkIfExists(path, callback) {
 }
 
 describe('build scripts', function () {
-  describe('build:meteor', async function () {
+  describe('build:meteor', function () {
     it('only rebuilds when necessary', async function () {
       this.timeout(480000)
 

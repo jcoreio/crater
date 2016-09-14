@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 exports.config = {
-    
+
     //
     // ==================
     // Specify Test Files
@@ -11,13 +11,13 @@ exports.config = {
     // NPM script (see https://docs.npmjs.com/cli/run-script) then the current working
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
-    specs: [
-        './test/integration/**/*.js'
-    ],
+  specs: [
+    './test/integration/**/*.js',
+  ],
     // Patterns to exclude.
-    exclude: [
+  exclude: [
         // 'path/to/excluded/files'
-    ],
+  ],
     //
     // ============
     // Capabilities
@@ -34,20 +34,20 @@ exports.config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: 10,
+  maxInstances: 10,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://docs.saucelabs.com/reference/platforms-configurator
     //
-    capabilities: [{
+  capabilities: [{
         // maxInstances can get overwritten per capability. So if you have an in-house Selenium
         // grid with only 5 firefox instance available you can make sure that not more than
         // 5 instance gets started at a time.
-        maxInstances: 5,
+    maxInstances: 5,
         //
-        browserName: 'phantomjs'
-    }],
+    browserName: 'phantomjs',
+  }],
     //
     // ===================
     // Test Configurations
@@ -57,30 +57,30 @@ exports.config = {
     // By default WebdriverIO commands are executed in a synchronous way using
     // the wdio-sync package. If you still want to run your tests in an async way
     // e.g. using promises you can set the sync option to false.
-    sync: true,
+  sync: true,
     //
     // Level of logging verbosity: silent | verbose | command | data | result | error
-    logLevel: 'command',
+  logLevel: 'command',
     //
     // Enables colors for log output.
-    coloredLogs: true,
+  coloredLogs: true,
     //
     // Saves a screenshot to a given path if a command fails.
-    screenshotPath: './errorShots/',
+  screenshotPath: './errorShots/',
     //
     // Set a base URL in order to shorten url command calls. If your url parameter starts
     // with "/", then the base url gets prepended.
-    baseUrl: process.env.ROOT_URL,
+  baseUrl: process.env.ROOT_URL,
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: 10000,
+  waitforTimeout: 10000,
     //
     // Default timeout in milliseconds for request
     // if Selenium Grid doesn't send response
-    connectionRetryTimeout: 90000,
+  connectionRetryTimeout: 90000,
     //
     // Default request retries count
-    connectionRetryCount: 3,
+  connectionRetryCount: 3,
     //
     // Initialize the browser instance with a WebdriverIO plugin. The object should have the
     // plugin name as key and the desired plugin options as properties. Make sure you have
@@ -111,27 +111,27 @@ exports.config = {
     //
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
-    framework: 'mocha',
+  framework: 'mocha',
     //
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: http://webdriver.io/guide/testrunner/reporters.html
-    reporters: ['spec'],
+  reporters: ['spec'],
     //
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/
-    mochaOpts: {
-        ui: 'bdd',
-        compilers: ['js:babel-core/register'],
-    },
+  mochaOpts: {
+    ui: 'bdd',
+    compilers: ['js:babel-core/register'],
+  },
     //
     // =====
     // Hooks
     // =====
-    // WebdriverIO provides several hooks you can use to interfere with the test process in order to enhance
-    // it and to build services around it. You can either apply a single function or an array of
-    // methods to it. If one of them returns with a promise, WebdriverIO will wait until that promise got
-    // resolved to continue.
+    // WebdriverIO provides several hooks you can use to interfere with the test process in order to
+    // enhance it and to build services around it. You can either apply a single function or an
+    // array of methods to it. If one of them returns with a promise, WebdriverIO will wait until
+    // that promise got resolved to continue.
     //
     // Gets executed once before all workers get launched.
     // onPrepare: function (config, capabilities) {

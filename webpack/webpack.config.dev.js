@@ -10,7 +10,7 @@ const srcDir = path.join(root, 'src')
 const globalCSS = path.join(srcDir, 'styles', 'global')
 const clientInclude = [srcDir]
 
-const {ROOT_URL} = process.env
+const { ROOT_URL } = process.env
 
 const config = {
   context: root,
@@ -25,7 +25,7 @@ const config = {
     filename: 'app.js',
     chunkFilename: '[name]_[chunkhash].js',
     path: path.join(root, 'build', 'static'),
-    publicPath: '/static/'
+    publicPath: '/static/',
   },
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin(),
@@ -37,11 +37,11 @@ const config = {
       'Meteor.isClient': true,
       'Meteor.isCordova': false,
       'Meteor.isServer': false,
-      'process.env.NODE_ENV': JSON.stringify('development')
+      'process.env.NODE_ENV': JSON.stringify('development'),
     }),
     new HappyPack({
       loaders: ['babel'],
-      threads: 4
+      threads: 4,
     }),
     new MeteorImportsPlugin({
       meteorProgramsFolder: path.resolve(__dirname, '..', 'build', 'meteor', 'bundle', 'programs'),
@@ -52,15 +52,15 @@ const config = {
   postcss: [cssModulesValues],
   module: {
     loaders: [
-      {test: /\.json$/, loader: 'json-loader', include: [...clientInclude, 'node_modules']},
-      {test: /\.txt$/, loader: 'raw-loader'},
-      {test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/, loader: 'url-loader?limit=10000'},
-      {test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader'},
+      { test: /\.json$/, loader: 'json-loader', include: [...clientInclude, 'node_modules'] },
+      { test: /\.txt$/, loader: 'raw-loader' },
+      { test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/, loader: 'url-loader?limit=10000' },
+      { test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader' },
       {
         test: /\.css$/,
         loader: 'style!css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss',
         exclude: globalCSS,
-        include: clientInclude
+        include: clientInclude,
       },
       {
         test: /\.css$/,
@@ -72,12 +72,12 @@ const config = {
         loader: 'happypack/loader',
         include: clientInclude,
         query: {
-          "plugins": [
-            "react-hot-loader/babel"
-          ]
-        }
-      }
-    ]
+          'plugins': [
+            'react-hot-loader/babel',
+          ],
+        },
+      },
+    ],
   },
   watch: true,
   devServer: {
@@ -87,8 +87,8 @@ const config = {
     port: 4000,
     stats: {
       colors: true,
-    }
-  }
+    },
+  },
 }
 
 if (!process.env.CI) config.plugins.push(new ProgressBarPlugin())
