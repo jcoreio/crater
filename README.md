@@ -131,6 +131,12 @@ npm run prod
 ```
 And open http://localhost:3000 in your browser.
 
+### Eslint/Flow
+```
+npm run check
+```
+Starts a `supervisor` watcher that reruns `eslint` and `flow` when you change anything.
+
 ### Build
 ```
 npm run build
