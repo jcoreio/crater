@@ -152,6 +152,12 @@ npm run docker
 ```
 And open http://localhost:3000 in your browser.
 
+## Multiple targets
+
+If you need to build multiple targets, read the comments in `buildDir.js` and change it accordingly.  Then run any
+commands with the `TARGET` environment variable set to the name of the build target.  You can use
+`process.env.TARGET` in your code.
+
 ## Testing
 ```
 npm test

@@ -6,6 +6,7 @@ import HappyPack from 'happypack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import MeteorImportsPlugin from 'meteor-imports-webpack-plugin'
 import cssModulesValues from 'postcss-modules-values'
+import buildDir from '../buildDir'
 
 const root = path.resolve(__dirname, '..')
 const srcDir = path.join(root, 'src')
@@ -26,7 +27,7 @@ const config = {
     // https://github.com/webpack/webpack/issues/1752
     filename: 'app.js',
     chunkFilename: '[name]_[chunkhash].js',
-    path: path.join(root, 'build', 'static'),
+    path: path.join(buildDir, 'static'),
     publicPath: '/static/',
   },
   plugins: [
@@ -39,6 +40,7 @@ const config = {
       'Meteor.isClient': true,
       'Meteor.isCordova': false,
       'Meteor.isServer': false,
+      'process.env.TARGET': JSON.stringify(process.env.TARGET),
       'process.env.NODE_ENV': JSON.stringify('development'),
     }),
     new HappyPack({
@@ -47,7 +49,7 @@ const config = {
       threads: 4,
     }),
     new MeteorImportsPlugin({
-      meteorProgramsFolder: path.resolve(__dirname, '..', 'build', 'meteor', 'bundle', 'programs'),
+      meteorProgramsFolder: path.resolve(buildDir, 'meteor', 'bundle', 'programs'),
       exclude: ['ecmascript'],
       injectMeteorRuntimeConfig: false,
     }),

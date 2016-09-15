@@ -2,32 +2,24 @@
 // @flow
 
 import phantomjs from 'phantomjs-prebuilt'
-import join from './util/join'
+import asyncScript from './util/asyncScript'
 import killOnExit from './util/killOnExit'
-import spawn from './util/spawn'
+import spawnAsync from './util/spawnAsync'
 import path from 'path'
 
 import type {ChildProcess} from 'child_process'
-import type {Result} from './util/join'
 
 const opts = {
   cwd: path.resolve(__dirname, '..'),
   stdio: 'inherit'
 }
 
-phantomjs.run('--webdriver=4444').then(async (program: ChildProcess): Promise<any> => {
+phantomjs.run('--webdriver=4444').then((program: ChildProcess) => {
   killOnExit(program)
   console.log('Started PhantomJS.')
 
-  const wdio = spawn('node_modules/.bin/wdio', [...process.argv.slice(2), 'wdio.conf.js'], opts)
-  join(wdio).then(({code, signal}: Result) => {
-    if ((code != null && code > 0) || signal != null) process.exit(1)
-    else process.exit(0)
-  }).catch((error: Error) => {
-    console.error(error.stack)
-    process.exit(1)
+  asyncScript(async (): Promise<void> => {
+    const {code, signal} = await spawnAsync('node_modules/.bin/wdio', [...process.argv.slice(2), 'wdio.conf.js'], opts)
+    if ((code != null && code > 0) || signal != null) throw new Error("test exited with: ", {code, signal})
   })
-}).catch((error: Error) => {
-  console.error(error.stack)
-  process.exit(1)
 })

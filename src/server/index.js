@@ -33,6 +33,4 @@ app.get('*', (req: Object, res: Object, next: Function) => {
 
 WebApp.rawConnectHandlers.use(app)
 
-if (process.env.PORT != null) {
-  console.log(`App is listening on http://0.0.0.0:${process.env.PORT}`) // eslint-disable-line no-console
-}
+console.log(`App is listening on http://0.0.0.0:${process.env.PORT || '80'}`) // eslint-disable-line no-console

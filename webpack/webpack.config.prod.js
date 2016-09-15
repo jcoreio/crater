@@ -7,6 +7,7 @@ import HappyPack from 'happypack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import MeteorImportsPlugin from 'meteor-imports-webpack-plugin'
 import cssModulesValues from 'postcss-modules-values'
+import buildDir from '../buildDir'
 
 const root = path.resolve(__dirname, '..')
 const srcDir = path.resolve(root, 'src')
@@ -28,7 +29,7 @@ const config = {
   output: {
     filename: '[name]_[chunkhash].js',
     chunkFilename: '[name]_[chunkhash].js',
-    path: path.join(root, 'build', 'static'),
+    path: path.join(buildDir, 'static'),
     publicPath: '/static/',
   },
   plugins: [
@@ -49,12 +50,13 @@ const config = {
       exclude: /meteor.*\.js$/,
     }),
     new webpack.NoErrorsPlugin(),
-    new AssetsPlugin({ path: path.join(root, 'build'), filename: 'assets.json' }),
+    new AssetsPlugin({ path: buildDir, filename: 'assets.json' }),
     new webpack.DefinePlugin({
       '__CLIENT__': true,
       'Meteor.isClient': true,
       'Meteor.isCordova': false,
       'Meteor.isServer': false,
+      'process.env.TARGET': JSON.stringify(process.env.TARGET),
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),
     new webpack.IgnorePlugin(/\/server\//),
@@ -65,7 +67,7 @@ const config = {
       threads: 4,
     }),
     new MeteorImportsPlugin({
-      meteorProgramsFolder: path.resolve(__dirname, '..', 'build', 'meteor', 'bundle', 'programs'),
+      meteorProgramsFolder: path.resolve(buildDir, 'meteor', 'bundle', 'programs'),
       exclude: ['ecmascript'],
       injectMeteorRuntimeConfig: false,
     }),

@@ -6,6 +6,7 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import HappyPack from 'happypack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import nodeExternals from 'webpack-node-externals'
+import buildDir from '../buildDir'
 
 const root = path.resolve(__dirname, '..')
 const srcDir = path.resolve(root, 'src')
@@ -22,7 +23,7 @@ const config = {
     __filename: false,
   },
   output: {
-    path: path.join(root, 'build'),
+    path: buildDir,
     chunkFilename: '[name]_[chunkhash].js',
     filename: '[name].js',
     libraryTarget: 'commonjs2',
@@ -52,6 +53,7 @@ const config = {
       'Meteor.isClient': false,
       'Meteor.isCordova': false,
       'Meteor.isServer': true,
+      'process.env.TARGET': JSON.stringify(process.env.TARGET),
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),
     new HappyPack({
