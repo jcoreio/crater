@@ -50,7 +50,6 @@ const config = {
     }),
     new MeteorImportsPlugin({
       meteorProgramsFolder: path.resolve(buildDir, 'meteor', 'bundle', 'programs'),
-      exclude: ['ecmascript'],
       injectMeteorRuntimeConfig: false,
     }),
   ],
