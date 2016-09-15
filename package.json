@@ -21,7 +21,7 @@
     "lint": "eslint *.js src scripts test util webpack",
     "lint:0": "eslint *.js src scripts test util webpack; exit 0",
     "lint:fix": "eslint --fix *.js src scripts test util webpack",
-    "check": "supervisor -q -n exit -w .flowconfig,.eslintrc,scripts,src,test,util,webpack -x babel-node scripts/check.js"
+    "check": "supervisor -q -n exit -w .flowconfig,.eslintrc,.babelrc,scripts,src,test,util,webpack -e flowconfig,eslintrc,babelrc,node,js -x babel-node scripts/check.js"
   },
   "dependencies": {
     "babel-runtime": "^6.11.6",
