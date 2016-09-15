@@ -1,30 +1,33 @@
+#!/usr/bin/env babel-node
+// @flow
+
 import phantomjs from 'phantomjs-prebuilt'
 import join from './util/join'
 import killOnExit from './util/killOnExit'
 import spawn from './util/spawn'
-import spawnAsync from './util/spawnAsync'
 import path from 'path'
+
+import type {ChildProcess} from 'child_process'
+import type {Result} from './util/join'
 
 const opts = {
   cwd: path.resolve(__dirname, '..'),
   stdio: 'inherit'
 }
 
-phantomjs.run('--webdriver=4444').then(async program => {
+phantomjs.run('--webdriver=4444').then(async (program: ChildProcess): Promise<any> => {
   killOnExit(program)
   console.log('Started PhantomJS.')
 
-  await spawnAsync('npm', ['run', 'lint'], opts)
-
   const wdio = spawn('node_modules/.bin/wdio', [...process.argv.slice(2), 'wdio.conf.js'], opts)
-  join(wdio).then(({code, signal}) => {
-    if (code > 0 || signal != null) process.exit(1)
+  join(wdio).then(({code, signal}: Result) => {
+    if ((code != null && code > 0) || signal != null) process.exit(1)
     else process.exit(0)
-  }).catch(error => {
+  }).catch((error: Error) => {
     console.error(error.stack)
     process.exit(1)
   })
-}).catch(error => {
+}).catch((error: Error) => {
   console.error(error.stack)
   process.exit(1)
 })

@@ -1,20 +1,22 @@
+/* @flow */
+
 import { Meteor } from 'meteor/meteor'
 import { Mongo } from 'meteor/mongo'
 
-let Counts
-if (Meteor.isClient) {
-  Counts = new Mongo.Collection('counts')
-} else {
-  Meteor.publish('counts', function counts(countName) {
-    let value = 0
-    this.added('counts', countName, { value })
-    this.ready()
-    const interval = Meteor.setInterval(() => {
-      value++
-      this.changed('counts', countName, { value })
-    }, 1000)
-    this.onStop(() => Meteor.clearInterval(interval))
-  })
-}
+const Counts = new Mongo.Collection('counts')
 
 export default Counts
+
+if (Meteor.isServer) {
+  Meteor.publish({
+    counts(_id: string): Mongo.Cursor {
+      Counts.upsert({_id}, {$set: {value: 0}})
+      this.ready()
+      const interval = Meteor.setInterval(() => {
+        Counts.update({_id}, {$inc: {value: 1}})
+      }, 1000)
+      this.onStop((): any => Meteor.clearInterval(interval))
+      return Counts.find({_id})
+    }
+  })
+}

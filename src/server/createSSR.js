@@ -13,6 +13,8 @@ import {Map as iMap} from 'immutable'
 import {Meteor} from 'meteor/meteor'
 import makeRoutes from '../universal/routes'
 import url from 'url'
+import type {IncomingMessage, ServerResponse} from 'http'
+import type {Store} from '../universal/flowtypes/redux'
 
 const __meteor_runtime_config__ = {
   PUBLIC_SETTINGS: Meteor.settings.public || {},
@@ -26,7 +28,7 @@ const __meteor_runtime_config__ = {
   meteorRelease: Meteor.release,
 }
 
-function renderApp(res, store, assets, renderProps) {
+function renderApp(res: ServerResponse, store: Store, assets?: Object, renderProps?: Object) {
   const location = renderProps && renderProps.location && renderProps.location.pathname || '/'
   // Needed so some components can render based on location
   store.dispatch(push(location))
@@ -41,10 +43,10 @@ function renderApp(res, store, assets, renderProps) {
   )
   res.write('<!DOCTYPE html>')
   htmlStream.pipe(res, {end: false})
-  htmlStream.on('end', () => res.end())
+  htmlStream.on('end', (): void => res.end())
 }
 
-async function createSSR(req, res) {
+async function createSSR(req: IncomingMessage, res: ServerResponse): Promise<void> {
   try {
     const store = createStore(makeReducer(), iMap())
     if (process.env.NODE_ENV === 'production') {
@@ -53,7 +55,7 @@ async function createSSR(req, res) {
       assets.manifest.text = await
       readFile(join(__dirname, assets.manifest.js), 'utf-8')
       const routes = makeRoutes(store)
-      match({routes, location: req.url}, (error, redirectLocation, renderProps) => {
+      match({routes, location: req.url}, (error: ?Error, redirectLocation: {pathname: string, search: string}, renderProps: ?Object) => {
         if (error) {
           res.status(500).send(error.message)
         } else if (redirectLocation) {

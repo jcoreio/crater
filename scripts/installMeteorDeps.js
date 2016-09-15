@@ -1,4 +1,5 @@
 #!/usr/bin/env babel-node
+// @flow
 
 import spawnAsync from './util/spawnAsync'
 import isDirectory from './util/isDirectory'
@@ -7,7 +8,7 @@ import path from 'path'
 const build = path.resolve(__dirname, '..', 'build')
 const programsServer = path.join(build, 'meteor', 'bundle', 'programs', 'server')
 
-async function installMeteorDeps() {
+async function installMeteorDeps(): Promise<any> {
   if (!(await isDirectory(path.join(programsServer, 'node_modules')))) {
     console.log('installing Meteor npm dependencies...')
     await spawnAsync('npm', ['install'], {

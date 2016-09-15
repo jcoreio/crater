@@ -1,9 +1,13 @@
+/* @flow */
+
 import { createStore, applyMiddleware, compose } from 'redux'
+import { Map as iMap } from 'immutable'
 import { routerMiddleware } from 'react-router-redux'
 import { browserHistory } from 'react-router'
 import makeReducer from '../universal/redux/makeReducer'
+import type {Store} from '../universal/flowtypes/redux'
 
-export default (initialState) => {
+export default (initialState: iMap<string, any>): Store => {
   let store
   const reducer = makeReducer()
   const reduxRouterMiddleware = routerMiddleware(browserHistory)
@@ -26,7 +30,7 @@ export default (initialState) => {
     }
     store = createStore(reducer, initialState, compose(
       applyMiddleware(...middlewares),
-      devtoolsExt || (f => f)
+      devtoolsExt || ((f: any): any => f)
     ))
   }
   return store
