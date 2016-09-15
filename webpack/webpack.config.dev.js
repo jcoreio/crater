@@ -42,6 +42,7 @@ const config = {
       'process.env.NODE_ENV': JSON.stringify('development'),
     }),
     new HappyPack({
+      id: '1', // https://github.com/amireh/happypack/issues/88
       loaders: ['babel'],
       threads: 4,
     }),

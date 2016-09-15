@@ -2,30 +2,25 @@
 // @flow
 
 import asyncScript from './util/asyncScript'
-import spawn from './util/spawn'
+import {run as supervisor} from 'supervisor'
 import path from 'path'
 import buildMeteor from './build-meteor'
 import installMeteorDeps from './installMeteorDeps'
 
-const env = {
-  ...process.env,
-  NODE_ENV: 'development',
-  USE_DOTENV: 1,
-}
+process.env.NODE_ENV = 'development'
+process.env.USE_DOTENV = '1'
 
 const root = path.resolve(__dirname, '..')
 const src = path.join(root, 'src')
 
-const opts = {cwd: root, env, stdio: 'inherit'}
-
 async function start(options?: {supervisorOpts?: Array<any>} = {}): Promise<any> {
   await buildMeteor()
   await installMeteorDeps()
-  spawn('babel-node', [path.join(__dirname, 'devServer.js')], opts)
-  spawn('supervisor', [
+  require('./devServer')
+  supervisor([
     ...options.supervisorOpts || [],
     '-w', path.resolve(src, 'server'), path.join(src, 'universal'), path.join(src, 'index.js')
-  ], opts)
+  ])
 }
 
 export default start

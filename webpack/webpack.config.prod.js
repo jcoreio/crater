@@ -59,6 +59,7 @@ const config = {
     }),
     new webpack.IgnorePlugin(/\/server\//),
     new HappyPack({
+      id: '1', // https://github.com/amireh/happypack/issues/88
       cache: false,
       loaders: ['babel'],
       threads: 4,
