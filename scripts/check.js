@@ -10,5 +10,6 @@ const opts = {stdio: 'inherit'}
 asyncScript(async (): Promise<any> => {
   await execAsync('clear', opts)
   await execAsync("printf '\\e[3J'", opts)
+  await spawnAsync("npm", ['run', 'lint:0'], opts)
   await spawnAsync("npm", ['run', 'flow:0'], opts)
 })

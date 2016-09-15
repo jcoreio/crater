@@ -8,6 +8,8 @@ const path = require('path')
 
 const buildDir = process.env.NODE_ENV === 'production' ? __dirname : path.resolve(__dirname, '..', 'build')
 
+const cwd = process.cwd()
+
 // I'm not super happy about this, but Meteor's boot.js seems to require being run from the directory it's in
 const serverDir = path.join(buildDir, 'meteor', 'bundle', 'programs', 'server')
 process.chdir(serverDir)
@@ -16,7 +18,7 @@ process.argv = argv.slice(0, 2).concat('program.json') // .splice(2, 0, 'program
 // Launch the usual Meteor server
 require(path.join(serverDir, 'boot.js'))
 process.argv = argv
-process.chdir(__dirname)
+process.chdir(cwd)
 
 if (process.env.NODE_ENV !== 'production') require('babel-register')
 

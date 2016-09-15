@@ -2,6 +2,7 @@
 // @flow
 
 import path from 'path'
+import glob from 'glob'
 import rimraf from 'rimraf'
 import mkdirp from 'mkdirp'
 import asyncScript from './util/asyncScript'
@@ -15,7 +16,13 @@ const build = path.join(root, 'build')
 
 async function buildMeteor(): Promise<void> {
   await promisify(mkdirp)(build)
-  if (await isNewerThan(meteor, path.join(build, 'meteor'))) {
+  if (await isNewerThan([
+    ...await promisify(glob)(path.join(meteor, '**')),
+    path.join(meteor, '.meteor', 'packages'),
+    path.join(meteor, '.meteor', 'platforms'),
+    path.join(meteor, '.meteor', 'release'),
+    path.join(meteor, '.meteor', 'versions'),
+  ], path.join(build, 'meteor'))) {
     console.log('building Meteor packages...')
     await promisify(rimraf)(path.join(build, 'meteor'))
     await spawnAsync('meteor', ['build', path.join('..', 'build', 'meteor'), '--directory'], {

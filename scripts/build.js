@@ -2,18 +2,18 @@
 // @flow
 
 import asyncScript from './util/asyncScript'
-import spawnAsync from './util/spawnAsync'
-import path from 'path'
+import buildMeteor from './build-meteor'
+import buildServer from './build-server'
+import buildClient from './build-client'
 
-process.on('SIGINT', (): any => process.exit(1))
-
-const opts = {
-  cwd: path.resolve(__dirname, '..'),
-  stdio: 'inherit',
+async function build(): Promise<void> {
+  await buildMeteor()
+  await Promise.all([buildClient(), buildServer()])
 }
 
-asyncScript(async (): Promise<void> => {
-  await spawnAsync('npm', ['run', 'build:meteor'], opts)
-  await spawnAsync('npm', ['run', 'build:server'], opts)
-  await spawnAsync('npm', ['run', 'build:client'], opts)
-})
+export default build
+
+if (!module.parent) {
+  process.on('SIGINT', (): any => process.exit(1))
+  asyncScript(build)
+}
