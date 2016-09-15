@@ -21,6 +21,7 @@ const vendor = [
 
 const config = {
   context: root,
+  devtool: 'source-map',
   entry: {
     app: './src/client/index.js',
     vendor,
