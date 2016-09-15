@@ -1,0 +1,36 @@
+environment:
+  matrix:
+    - nodejs_version: "4"
+    - nodejs_version: "5"
+    - nodejs_version: "6"
+
+install:
+  # Get the latest stable version of Node.js or io.js
+  - ps: Install-Product node $env:nodejs_version
+  # disable npm progress bar
+  - npm config set progress false
+  # install modules
+  - npm install
+  - choco install -y virtualbox
+  - choco install docker
+  - choco install docker-machine
+  - choco install docker-compose
+  # build the daemon image
+  - docker-machine.exe create -d virtualbox dev
+  - ps: docker-machine.exe env dev --shell powershell | Invoke-Expression
+  # Download Meteor
+  - ps: Start-FileDownload 'https://s3.amazonaws.com/meteor-windows/InstallMeteor.exe'
+  # Install meteor
+  - .\installMeteor.exe /passive
+  # Restart
+  - ps: Start-Sleep -s 5
+  - ps: Restart-Computer -Force
+
+test_script:
+  # Output useful info for debugging.
+  - node --version
+  - npm --version
+  # run tests
+  - npm test
+
+build: off
