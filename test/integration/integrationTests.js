@@ -159,7 +159,6 @@ describe('prod mode', function () {
 
 describe('docker build', function () {
   let server
-  let env
 
   before(async function () {
     this.timeout(480000)
