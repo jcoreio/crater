@@ -9,23 +9,23 @@ import asyncScript from './util/asyncScript'
 import isNewerThan from './util/isNewerThan'
 import spawnAsync from './util/spawnAsync'
 import promisify from 'es6-promisify'
+import buildDir from '../buildDir'
 
 const root = path.resolve(__dirname, '..')
 const meteor = path.join(root, 'meteor')
-const build = path.join(root, 'build')
 
 async function buildMeteor(): Promise<void> {
-  await promisify(mkdirp)(build)
+  await promisify(mkdirp)(buildDir)
   if (await isNewerThan([
     ...await promisify(glob)(path.join(meteor, '**')),
     path.join(meteor, '.meteor', 'packages'),
     path.join(meteor, '.meteor', 'platforms'),
     path.join(meteor, '.meteor', 'release'),
     path.join(meteor, '.meteor', 'versions'),
-  ], path.join(build, 'meteor'))) {
+  ], path.join(buildDir, 'meteor'))) {
     console.log('building Meteor packages...')
-    await promisify(rimraf)(path.join(build, 'meteor'))
-    await spawnAsync('meteor', ['build', path.join('..', 'build', 'meteor'), '--directory'], {
+    await promisify(rimraf)(path.join(buildDir, 'meteor'))
+    await spawnAsync('meteor', ['build', path.join(path.relative(meteor, buildDir), 'meteor'), '--directory'], {
       cwd: meteor,
       stdio: 'inherit'
     })

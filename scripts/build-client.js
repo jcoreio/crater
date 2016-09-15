@@ -7,9 +7,10 @@ import isNewerThan from './util/isNewerThan'
 import webpack from 'webpack'
 import webpackConfig from '../webpack/webpack.config.prod'
 import promisify from 'es6-promisify'
+import buildDir from '../buildDir'
 
 const root = path.resolve(__dirname, '..')
-const assets = path.join(root, 'build', 'assets.json')
+const assets = path.join(buildDir, 'assets.json')
 
 async function buildClient(): Promise<void> {
   if (await isNewerThan(path.join(root, 'webpack', 'webpack.config.prod.js'), assets) ||

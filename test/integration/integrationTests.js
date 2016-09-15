@@ -163,10 +163,6 @@ describe('docker build', function () {
 
   before(async function () {
     this.timeout(480000)
-    env = {
-      ...process.env,
-      TAG: (await execAsync('git rev-parse HEAD')).stdout.trim(),
-    }
     await spawnAsync('npm', ['run', 'build:docker'])
     server = exec('npm run docker', {
       env: {
@@ -180,7 +176,7 @@ describe('docker build', function () {
     })
     await stdouted(server, /App is listening on http/i)
     let host
-    if (process.env.CI) host = (await execAsync('docker-compose port crater 80', {env})).stdout.trim()
+    if (process.env.CI) host = (await execAsync('docker-compose port crater 80')).stdout.trim()
     else {
       await execAsync('which docker-machine')
         .then(() => host = `192.168.99.100:${process.env.PORT}`)
@@ -192,7 +188,7 @@ describe('docker build', function () {
 
   after(async function () {
     this.timeout(20000)
-    await spawnAsync('docker-compose', ['down'], {env})
+    await spawnAsync('docker-compose', ['down'])
   })
 
   sharedTests()

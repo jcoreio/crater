@@ -4,9 +4,9 @@
 import spawnAsync from './util/spawnAsync'
 import isDirectory from './util/isDirectory'
 import path from 'path'
+import buildDir from '../buildDir'
 
-const build = path.resolve(__dirname, '..', 'build')
-const programsServer = path.join(build, 'meteor', 'bundle', 'programs', 'server')
+const programsServer = path.join(buildDir, 'meteor', 'bundle', 'programs', 'server')
 
 async function installMeteorDeps(): Promise<any> {
   if (!(await isDirectory(path.join(programsServer, 'node_modules')))) {
