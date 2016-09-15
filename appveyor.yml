@@ -15,9 +15,9 @@ install:
   # install modules
   - npm install
   - choco install -y virtualbox
-  - choco install docker
-  - choco install docker-machine
-  - choco install docker-compose
+  - choco install -y docker
+  - choco install -y docker-machine
+  - choco install -y docker-compose
   # build the daemon image
   - docker-machine.exe create -d virtualbox dev
   - ps: docker-machine.exe env dev --shell powershell | Invoke-Expression
