@@ -8,15 +8,6 @@ platform:
   - x64
 
 install:
-  # Output useful info for debugging.
-  - node --version
-  - npm --version
-  # Get the latest stable version of Node.js or io.js
-  - ps: Install-Product node $env:nodejs_version
-  # disable npm progress bar
-  - npm config set progress false
-  # install modules
-  - npm install
   - choco install -y virtualbox
   - choco install -y docker
   - choco install -y docker-machine
@@ -31,6 +22,15 @@ install:
   # Restart
   - ps: Start-Sleep -s 5
   - ps: Restart-Computer -Force
+  # Output useful info for debugging.
+  - node --version
+  - npm --version
+  # Get the latest stable version of Node.js or io.js
+  - ps: Install-Product node $env:nodejs_version
+  # disable npm progress bar
+  - npm config set progress false
+  # install modules
+  - npm install
 
 test_script:
   # run tests
