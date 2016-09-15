@@ -5,6 +5,9 @@ environment:
     - nodejs_version: "6"
 
 install:
+  # Output useful info for debugging.
+  - node --version
+  - npm --version
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
   # disable npm progress bar
@@ -27,9 +30,6 @@ install:
   - ps: Restart-Computer -Force
 
 test_script:
-  # Output useful info for debugging.
-  - node --version
-  - npm --version
   # run tests
   - npm test
 
