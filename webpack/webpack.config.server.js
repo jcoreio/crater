@@ -72,7 +72,6 @@ const config = {
       {
         test: /\.css$/,
         loader: ExtractTextPlugin.extract(
-          'fake-style',
           'css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss'
         ),
         include: srcDir,
@@ -80,7 +79,7 @@ const config = {
       },
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract('fake-style', 'css'),
+        loader: ExtractTextPlugin.extract('css'),
         include: globalCSS,
       },
       {
