@@ -13,7 +13,7 @@ install:
 #  - docker-machine.exe create -d virtualbox dev
 #  - ps: docker-machine.exe env dev --shell powershell | Invoke-Expression
 #  # Download Meteor
-#  - ps: Start-FileDownload 'https://s3.amazonaws.com/meteor-windows/InstallMeteor.exe'
+  - ps: Start-FileDownload 'https://s3.amazonaws.com/meteor-windows/InstallMeteor.exe'
   # Install meteor
   - .\installMeteor.exe /passive
   # Restart
