@@ -26,10 +26,8 @@ install:
   - ps: Install-Product node $env:nodejs_version
   # disable npm progress bar
   - npm config set progress false
-  # https://github.com/npm/npm/issues/9696
-  - npm config set force true
   # install modules
-  - npm install
+  - npm install --force
 
 test_script:
   # run tests
