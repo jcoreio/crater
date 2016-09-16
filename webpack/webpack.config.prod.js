@@ -21,6 +21,7 @@ const vendor = [
 
 const config = {
   context: root,
+  devtool: 'source-map',
   entry: {
     app: './src/client/index.js',
     vendor,
@@ -44,11 +45,7 @@ const config = {
     }),
     new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.optimize.MinChunkSizePlugin({ minChunkSize: 50000 }),
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: { warnings: false },
-      // don't minify the meteor commons chunk
-      exclude: /meteor.*\.js$/,
-    }),
+    new webpack.optimize.UglifyJsPlugin({compressor: { warnings: false }}),
     new webpack.NoErrorsPlugin(),
     new AssetsPlugin({ path: buildDir, filename: 'assets.json' }),
     new webpack.DefinePlugin({
@@ -68,7 +65,6 @@ const config = {
     }),
     new MeteorImportsPlugin({
       meteorProgramsFolder: path.resolve(buildDir, 'meteor', 'bundle', 'programs'),
-      exclude: ['ecmascript'],
       injectMeteorRuntimeConfig: false,
     }),
   ],
