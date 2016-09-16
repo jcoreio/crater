@@ -215,6 +215,7 @@ describe('dev mode', function () {
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
     if (server) await kill(server)
+    console.log(await browser.log('browser'))
   })
 
   sharedTests()
@@ -227,7 +228,7 @@ describe('dev mode', function () {
     await browser.waitUntil(
       () => browser.getText('h1') === newHeader,
       20000,
-      'expected header text to hot update within 10s'
+      'expected header text to hot update within 20s'
     )
   })
 
