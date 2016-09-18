@@ -11,13 +11,6 @@ install:
 #  # build the daemon image
 #  - docker-machine.exe create -d virtualbox dev
 #  - ps: docker-machine.exe env dev --shell powershell | Invoke-Expression
-#  # Download Meteor
-  - ps: Start-FileDownload 'https://s3.amazonaws.com/meteor-windows/InstallMeteor.exe'
-  # Install meteor
-  - .\installMeteor.exe /passive
-  # Restart
-  - ps: Start-Sleep -s 5
-  - ps: Restart-Computer -Force
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
   # Output useful info for debugging.
@@ -29,6 +22,13 @@ install:
   - npm cache clean
   # install modules
   - npm install --force
+  # Download Meteor
+  - ps: Start-FileDownload 'https://s3.amazonaws.com/meteor-windows/InstallMeteor.exe'
+  # Install meteor
+  - .\installMeteor.exe /passive
+  # Restart
+  - ps: Start-Sleep -s 5
+  - ps: Restart-Computer -Force
 
 test_script:
   # run tests
