@@ -10,6 +10,7 @@ import isNewerThan from './util/isNewerThan'
 import spawnAsync from './util/spawnAsync'
 import promisify from 'es6-promisify'
 import buildDir from '../buildDir'
+import fs from 'fs'
 
 const root = path.resolve(__dirname, '..')
 const meteor = path.join(root, 'meteor')
@@ -29,6 +30,9 @@ async function buildMeteor(): Promise<void> {
       cwd: meteor,
       stdio: 'inherit'
     })
+    console.log(await promisify(fs.readFile)(
+      path.join(buildDir, 'meteor', 'bundle', 'programs', 'server', 'npm-rebuilds.json'), 'utf8')
+    )
   } else {
     console.log('build/meteor is up to date')
   }
