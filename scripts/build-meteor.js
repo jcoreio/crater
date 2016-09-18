@@ -33,6 +33,7 @@ async function buildMeteor(): Promise<void> {
     console.log(await promisify(fs.readFile)(
       path.join(buildDir, 'meteor', 'bundle', 'programs', 'server', 'npm-rebuilds.json'), 'utf8')
     )
+    console.log(await promisify(glob)(path.join(buildDir, '**')))
   } else {
     console.log('build/meteor is up to date')
   }
