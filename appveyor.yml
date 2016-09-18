@@ -26,6 +26,8 @@ install:
   - ps: Install-Product node $env:nodejs_version
   # disable npm progress bar
   - npm config set progress false
+  # maybe this will fix npm install rename file permissions errors
+  - npm cache clean
   # install modules
   - npm install --force
 
