@@ -45,7 +45,6 @@ const config = {
     }),
     new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.optimize.MinChunkSizePlugin({ minChunkSize: 50000 }),
-    new webpack.optimize.UglifyJsPlugin({compressor: { warnings: false }}),
     new webpack.NoErrorsPlugin(),
     new AssetsPlugin({ path: buildDir, filename: 'assets.json' }),
     new webpack.DefinePlugin({
@@ -96,5 +95,10 @@ const config = {
 }
 
 if (!process.env.CI) config.plugins.push(new ProgressBarPlugin())
+if (process.argv.indexOf('--no-uglify') < 0) {
+  config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+    compressor: { warnings: false }
+  }))
+}
 
 export default config
