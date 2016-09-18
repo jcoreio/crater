@@ -87,13 +87,17 @@ A Webpack loader for Spacebars HTML templates could be implemented, but it's not
 
 ## Version notes
 * **Node**: Tested on the latest Node 4, 5, and 6 in Travis CI.  No effort will be made to support Node < 4.4.7.
-* **Webpack**: Webpack 2 is not supported yet by `meteor-imports-webpack-plugin`.
+* **Webpack**: The `master` branch currently works only with Webpack 1.  If you want to use Webpack 2, check out the [`webpack2` branch](https://github.com/jedwards1211/crater/tree/webpack2).
 
 ## Obtaining
 ```
 git clone https://github.com/jedwards1211/crater
 cd crater
 git remote rename origin skeleton
+```
+Again, if you want to use webpack 2:
+```
+git checkout webpack2
 ```
 
 ## Running
