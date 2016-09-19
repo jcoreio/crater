@@ -49,11 +49,12 @@ async function createSSR(req: IncomingMessage, res: ServerResponse): Promise<voi
   try {
     const store = createStore(makeReducer(), iMap())
     if (process.env.NODE_ENV === 'production') {
+      const routes = require('../universal/routes').default
       const readFile = promisify(fs.readFile)
       const assets = JSON.parse(await readFile(path.resolve(__dirname, 'assets.json'), 'utf8'))
       assets.manifest.text = await
       readFile(join(__dirname, assets.manifest.js), 'utf-8')
-      const routes = require('../universal/routes')(store)
+      const routes = makeRoutes(store)
       match({routes, location: req.url}, (error: ?Error, redirectLocation: {pathname: string, search: string}, renderProps: ?Object) => {
         if (error) {
           res.status(500).send(error.message)
