@@ -11,7 +11,6 @@ import {join} from 'path'
 import promisify from 'es6-promisify'
 import {Map as iMap} from 'immutable'
 import {Meteor} from 'meteor/meteor'
-import makeRoutes from '../universal/routes'
 import url from 'url'
 import type {IncomingMessage, ServerResponse} from 'http'
 import type {Store} from '../universal/flowtypes/redux'
@@ -54,7 +53,7 @@ async function createSSR(req: IncomingMessage, res: ServerResponse): Promise<voi
       const assets = JSON.parse(await readFile(path.resolve(__dirname, 'assets.json'), 'utf8'))
       assets.manifest.text = await
       readFile(join(__dirname, assets.manifest.js), 'utf-8')
-      const routes = makeRoutes(store)
+      const routes = require('../universal/routes')(store)
       match({routes, location: req.url}, (error: ?Error, redirectLocation: {pathname: string, search: string}, renderProps: ?Object) => {
         if (error) {
           res.status(500).send(error.message)
