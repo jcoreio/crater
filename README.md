@@ -19,7 +19,7 @@ If you can't start over (i.e. switch to [Meatier](https://github.com/mattkrick/m
 * Server uses `babel-register`
 * Client code is bundled by Webpack
 * Server creates an Express app and generates HTML pages with React SSR
-* Automatic server restart via `piping`
+* Automatic server restart via `smart-restart`
 * react-hot-loader 3 (beta)
 * redux
 * react-router
@@ -27,6 +27,7 @@ If you can't start over (i.e. switch to [Meatier](https://github.com/mattkrick/m
 * Very customizable
 * Dockerfile included
 * Webdriver.io + Mocha + Chai integration test setup
+* Thoroughly integration-tested
 
 ## Rationale
 
@@ -37,9 +38,11 @@ reasons:
 * It's been horribly slow for me in recent versions
 ([Meteor build time/refresh time after file save is VERY slow](https://github.com/meteor/meteor/issues/4284) --
 over 90 upvotes and it's been open since April!)
+* I want more control over my app structure
 * I just want to be in control of the initial entry point, period.
 
-Well, thanks to Babel custom resolvers and [meteor-imports-webpack-plugin](https://github.com/luisherranz/meteor-imports-webpack-plugin),
+Well, thanks to [babel-plugin-meteor-imports](https://github.com/jedwards1211/babel-plugin-meteor-imports) and
+[meteor-imports-webpack-plugin](https://github.com/luisherranz/meteor-imports-webpack-plugin),
 now it's possible to build and run the app without using isobuild on your userland code!  (It's only needed to
 install and build meteor packages).
 
@@ -54,10 +57,10 @@ And for that and other reasons, this skeleton tends to start up faster than runn
 [Meatier](https://github.com/mattkrick/meatier) -- I learned a lot from
 Meatier, and copped some of its code for this project**
 
-`src/server/index.js` uses `piping` (to enable server restarts when the code changes) and then requires Meteor's
-`boot.js` to load all of the Meteor packages.  It then requires `babel-register`, which uses `babel-plugin-meteor-imports`
-to rewrite statements like `import {Meteor} from 'meteor/meteor'` to `const {Meteor} = Package.meteor`.  On Meteor
-startup, it requires `src/server/server.js`, which sets up an Express server.
+`src/server/index.js` requires Meteor's `boot.js` to load all of the Meteor packages.  It then requires
+`babel-register`, which uses `babel-plugin-meteor-imports` to rewrite statements like `import {Meteor} from
+'meteor/meteor'` to `const {Meteor} = Package.meteor`.  On Meteor startup, it requires `src/server/server.js`,
+which sets up an Express server.
 
 The Express server is configured to perform React server-side rendering and added to `WebApp.rawConnectHandlers`.
 
@@ -79,6 +82,8 @@ Webpack bundle.
 Put anything shared between client and server in `src/universal`.  Many Meteor methods are not
 actually isomorphic (e.g. `Meteor.user()`, `Meteor.subscribe()`, `Mongo.Collection.find()`, etc) so you should probably
 wrap those `Meteor.isClient`/`Meteor.isServer` blocks in any code shared between client and server.
+
+If you want a different folder structure, it's perfectly possible to customize the run an build scripts to your liking.
 
 ## Blaze is not supported
 
@@ -107,6 +112,8 @@ Crater doesn't start a Mongo dev database, before running, you must start one by
 
 ### Dev mode
 
+*Note*: dev mode only renders a basic page on the server side; only prod mode and the built app render your routes
+on the server side.
 Make sure to install deps before running the app for the first time:
 ```
 npm install
@@ -119,7 +126,7 @@ npm start
 And open http://localhost:4000 in your browser. (It runs a webpack dev server on port 4000 and proxies to
 the main server)
 
-### Debug mode
+### Dev Debug mode
 ```
 npm run debug
 ```
@@ -134,6 +141,16 @@ And then go to the usual `node-inspector` URL, which will be printed in the cons
 npm run prod
 ```
 And open http://localhost:3000 in your browser.
+
+### Prod Debug mode
+```
+npm run prod:debug
+```
+or
+```
+npm run prod:debug-brk
+```
+And then go to the usual `node-inspector` URL, which will be printed in the console.
 
 ### Eslint/Flow
 ```
