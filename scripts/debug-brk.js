@@ -8,6 +8,6 @@ import path from 'path'
 process.on('SIGINT', (): any => process.exit(1))
 
 start({
-  nodeOpts: ['--debug-brk'],
+  commandOptions: ['--debug-brk'],
 })
 spawn('node-inspector', [], {cwd: path.resolve(__dirname, '..'), stdio: 'inherit'})
