@@ -56,7 +56,7 @@ const config = {
   postcss: [cssModulesValues],
   module: {
     loaders: [
-      { test: /\.json$/, loader: 'json-loader', include: [...clientInclude, 'node_modules'] },
+      { test: /\.json$/, loader: 'json-loader', include: [...clientInclude, path.join(root, 'node_modules')], exclude: [/meteor-config/] },
       { test: /\.txt$/, loader: 'raw-loader' },
       { test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/, loader: 'url-loader?limit=10000' },
       { test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader' },
