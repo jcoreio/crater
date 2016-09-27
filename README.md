@@ -4,8 +4,7 @@
 
 ## A new app skeleton for Meteor/React
 
-**Note: this is not for beginners!**
-(and it's still somewhat experimental)
+**Note: this is experimental, doesn't work with all Meteor packages, and you may run into issues that can only be solved by deep investigation of what Isobuild, Babel, and Webpack do (or by cloning code from Meteor packages straight into your project).**  If you're not willing to get your hands dirty, using Crater may not be worthwhile.  Please pressure MDG to refactor all core Meteor packages as pure NPM packages.
 
 It's 2016, and your Meteor app has crash landed in the middle of a more advanced JavaScript civilization, leaving a crater full of mangled and poorly forked npm packages and antique build tools.  You climb out of the ruins of your Celestial-Body-as-a-Service and wonder, how can I pick up the pieces and keep going in this new ecosystem?
 
