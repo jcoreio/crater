@@ -3,7 +3,7 @@
 
 import launch from 'smart-restart'
 import asyncScript from './util/asyncScript'
-import buildMeteor from './build-meteor'
+import build from './build'
 import installMeteorDeps from './installMeteorDeps'
 import path from 'path'
 import buildDir from '../buildDir'
@@ -15,7 +15,7 @@ process.env.NODE_ENV = 'production'
 process.env.USE_DOTENV = '1'
 
 async function prod(options?: {commandOptions?: Array<string>} = {}): Promise<any> {
-  await buildMeteor()
+  await build()
   await installMeteorDeps()
 
   function launchWebpack(config: Object): Promise<void> {
