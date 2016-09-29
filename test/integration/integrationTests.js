@@ -146,6 +146,7 @@ describe('prod mode', function () {
 
   before(async function () {
     this.timeout(240000)
+    await promisify(rimraf)(build)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
     server = exec('npm run prod')
@@ -182,6 +183,7 @@ describe('docker build', function () {
 
   before(async function () {
     this.timeout(15 * 60000)
+    await promisify(rimraf)(build)
     await spawnAsync('npm', ['run', 'build:docker'])
     server = exec('npm run docker', {
       env: {
@@ -222,6 +224,7 @@ describe('dev mode', function () {
 
   before(async function () {
     this.timeout(60000)
+    await promisify(rimraf)(build)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
     server = exec('npm start')
