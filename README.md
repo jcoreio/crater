@@ -4,8 +4,7 @@
 
 ## A new app skeleton for Meteor/React
 
-**Note: this is not for beginners!**
-(and it's still somewhat experimental)
+**Note: this is experimental, doesn't work with all Meteor packages, and you may run into issues that can only be solved by deep investigation of what Isobuild, Babel, and Webpack do (or by cloning code from Meteor packages straight into your project).**  If you're not willing to get your hands dirty, using Crater may not be worthwhile.  Please pressure MDG to refactor all core Meteor packages as pure NPM packages.
 
 It's 2016, and your Meteor app has crash landed in the middle of a more advanced JavaScript civilization, leaving a crater full of mangled and poorly forked npm packages and antique build tools.  You climb out of the ruins of your Celestial-Body-as-a-Service and wonder, how can I pick up the pieces and keep going in this new ecosystem?
 
@@ -19,7 +18,7 @@ If you can't start over (i.e. switch to [Meatier](https://github.com/mattkrick/m
 * Server uses `babel-register`
 * Client code is bundled by Webpack
 * Server creates an Express app and generates HTML pages with React SSR
-* Automatic server restart via `piping`
+* Automatic server restart via `smart-restart`
 * react-hot-loader 3 (beta)
 * redux
 * react-router
@@ -27,6 +26,7 @@ If you can't start over (i.e. switch to [Meatier](https://github.com/mattkrick/m
 * Very customizable
 * Dockerfile included
 * Webdriver.io + Mocha + Chai integration test setup
+* Thoroughly integration-tested
 
 ## Rationale
 
@@ -37,9 +37,11 @@ reasons:
 * It's been horribly slow for me in recent versions
 ([Meteor build time/refresh time after file save is VERY slow](https://github.com/meteor/meteor/issues/4284) --
 over 90 upvotes and it's been open since April!)
+* I want more control over my app structure
 * I just want to be in control of the initial entry point, period.
 
-Well, thanks to Babel custom resolvers and [meteor-imports-webpack-plugin](https://github.com/luisherranz/meteor-imports-webpack-plugin),
+Well, thanks to [babel-plugin-meteor-imports](https://github.com/jedwards1211/babel-plugin-meteor-imports) and
+[meteor-imports-webpack-plugin](https://github.com/luisherranz/meteor-imports-webpack-plugin),
 now it's possible to build and run the app without using isobuild on your userland code!  (It's only needed to
 install and build meteor packages).
 
@@ -54,10 +56,10 @@ And for that and other reasons, this skeleton tends to start up faster than runn
 [Meatier](https://github.com/mattkrick/meatier) -- I learned a lot from
 Meatier, and copped some of its code for this project**
 
-`src/server/index.js` uses `piping` (to enable server restarts when the code changes) and then requires Meteor's
-`boot.js` to load all of the Meteor packages.  It then requires `babel-register`, which uses `babel-plugin-meteor-imports`
-to rewrite statements like `import {Meteor} from 'meteor/meteor'` to `const {Meteor} = Package.meteor`.  On Meteor
-startup, it requires `src/server/server.js`, which sets up an Express server.
+`src/server/index.js` requires Meteor's `boot.js` to load all of the Meteor packages.  It then requires
+`babel-register`, which uses `babel-plugin-meteor-imports` to rewrite statements like `import {Meteor} from
+'meteor/meteor'` to `const {Meteor} = Package.meteor`.  On Meteor startup, it requires `src/server/server.js`,
+which sets up an Express server.
 
 The Express server is configured to perform React server-side rendering and added to `WebApp.rawConnectHandlers`.
 
@@ -80,6 +82,8 @@ Put anything shared between client and server in `src/universal`.  Many Meteor m
 actually isomorphic (e.g. `Meteor.user()`, `Meteor.subscribe()`, `Mongo.Collection.find()`, etc) so you should probably
 wrap those `Meteor.isClient`/`Meteor.isServer` blocks in any code shared between client and server.
 
+If you want a different folder structure, it's perfectly possible to customize the run an build scripts to your liking.
+
 ## Blaze is not supported
 
 See explanation [here](https://github.com/luisherranz/meteor-imports-webpack-plugin#the-bad-things).
@@ -87,13 +91,17 @@ A Webpack loader for Spacebars HTML templates could be implemented, but it's not
 
 ## Version notes
 * **Node**: Tested on the latest Node 4, 5, and 6 in Travis CI.  No effort will be made to support Node < 4.4.7.
-* **Webpack**: Webpack 2 is not supported yet by `meteor-imports-webpack-plugin`.
+* **Webpack**: The `master` branch currently works only with Webpack 1.  If you want to use Webpack 2, check out the [`webpack2` branch](https://github.com/jedwards1211/crater/tree/webpack2).
 
 ## Obtaining
 ```
 git clone https://github.com/jedwards1211/crater
 cd crater
 git remote rename origin skeleton
+```
+Again, if you want to use webpack 2:
+```
+git checkout webpack2
 ```
 
 ## Running
@@ -103,6 +111,8 @@ Crater doesn't start a Mongo dev database, before running, you must start one by
 
 ### Dev mode
 
+*Note*: dev mode only renders a basic page on the server side; only prod mode and the built app render your routes
+on the server side.
 Make sure to install deps before running the app for the first time:
 ```
 npm install
@@ -115,7 +125,7 @@ npm start
 And open http://localhost:4000 in your browser. (It runs a webpack dev server on port 4000 and proxies to
 the main server)
 
-### Debug mode
+### Dev Debug mode
 ```
 npm run debug
 ```
@@ -130,6 +140,16 @@ And then go to the usual `node-inspector` URL, which will be printed in the cons
 npm run prod
 ```
 And open http://localhost:3000 in your browser.
+
+### Prod Debug mode
+```
+npm run prod:debug
+```
+or
+```
+npm run prod:debug-brk
+```
+And then go to the usual `node-inspector` URL, which will be printed in the console.
 
 ### Eslint/Flow
 ```
