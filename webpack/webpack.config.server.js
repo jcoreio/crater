@@ -3,7 +3,7 @@
 import path from 'path'
 import webpack from 'webpack'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
-import HappyPack from 'happypack'
+// import HappyPack from 'happypack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import nodeExternals from 'webpack-node-externals'
 import buildDir from '../buildDir'
@@ -56,12 +56,13 @@ const config = {
       'process.env.TARGET': JSON.stringify(process.env.TARGET),
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),
-    new HappyPack({
-      id: '1', // https://github.com/amireh/happypack/issues/88
-      cache: false,
-      loaders: ['babel'],
-      threads: 4,
-    }),
+    // disable HappyPack until it becomes compatible with webpack2 https://github.com/amireh/happypack/issues/91
+    // new HappyPack({
+    //   id: '1', // https://github.com/amireh/happypack/issues/88
+    //   cache: false,
+    //   loaders: ['babel'],
+    //   threads: 4,
+    // }),
   ],
   module: {
     loaders: [
@@ -84,7 +85,7 @@ const config = {
       },
       {
         test: /\.js$/,
-        loader: 'happypack/loader',
+        loader: 'babel',
         include: srcDir,
       },
     ],
