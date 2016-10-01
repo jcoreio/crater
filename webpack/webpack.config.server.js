@@ -3,7 +3,7 @@
 import path from 'path'
 import webpack from 'webpack'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
-import HappyPack from 'happypack'
+// import HappyPack from 'happypack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import nodeExternals from 'webpack-node-externals'
 import buildDir from '../buildDir'
@@ -14,6 +14,7 @@ const globalCSS = path.join(srcDir, 'styles', 'global')
 
 const config = {
   context: root,
+  devtool: 'source-map',
   entry: {
     prerender: './src/server',
   },
@@ -45,7 +46,6 @@ const config = {
   plugins: [
     new webpack.NoErrorsPlugin(),
     new ExtractTextPlugin('/static/[name].css'),
-    new webpack.optimize.UglifyJsPlugin({ compressor: { warnings: false } }),
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.DefinePlugin({
       '__CLIENT__': false,
@@ -56,12 +56,13 @@ const config = {
       'process.env.TARGET': JSON.stringify(process.env.TARGET),
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),
-    new HappyPack({
-      id: '1', // https://github.com/amireh/happypack/issues/88
-      cache: false,
-      loaders: ['babel'],
-      threads: 4,
-    }),
+    // disable HappyPack until it becomes compatible with webpack2 https://github.com/amireh/happypack/issues/91
+    // new HappyPack({
+    //   id: '1', // https://github.com/amireh/happypack/issues/88
+    //   cache: false,
+    //   loaders: ['babel'],
+    //   threads: 4,
+    // }),
   ],
   module: {
     loaders: [
@@ -84,7 +85,7 @@ const config = {
       },
       {
         test: /\.js$/,
-        loader: 'happypack/loader',
+        loader: 'babel',
         include: srcDir,
       },
     ],
@@ -92,5 +93,10 @@ const config = {
 }
 
 if (!process.env.CI) config.plugins.push(new ProgressBarPlugin())
+if (process.argv.indexOf('--no-uglify') < 0) {
+  config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+    compressor: { warnings: false }
+  }))
+}
 
 export default config

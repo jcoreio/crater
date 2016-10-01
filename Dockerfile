@@ -14,7 +14,7 @@ ARG BUILD_DIR=build
 # I install the meteor deps first because I assume those will change less often
 
 COPY $BUILD_DIR/meteor/bundle/programs/server/package.json \
-    # $BUILD_DIR/meteor/bundle/programs/server/npm-shrinkwrap.json \
+    $BUILD_DIR/meteor/bundle/programs/server/npm-shrinkwrap.json \
     /usr/app/meteor/bundle/programs/server/
 RUN cd meteor/bundle/programs/server && npm install
 
