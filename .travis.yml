@@ -8,6 +8,20 @@ services:
   - docker
 env:
   DOCKER_COMPOSE_VERSION: 1.8.0
+  CXX: g++-4.8
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+      - libgnome-keyring-dev
+
+cache:
+  directories:
+    - node_modules
+
 before_install:
   - npm config set progress false
   - sudo rm /usr/local/bin/docker-compose
