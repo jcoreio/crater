@@ -23,6 +23,8 @@ If you can't start over (i.e. switch to [Meatier](https://github.com/mattkrick/m
 * redux
 * react-router
 * react-router-redux
+* eslint, eslint-watch
+* flow, flow-watch
 * Very customizable
 * Dockerfile included
 * Webdriver.io + Mocha + Chai integration test setup
@@ -106,8 +108,6 @@ git checkout webpack2
 
 ## Running
 Crater doesn't start a Mongo dev database, before running, you must start one by running `mongod` in a separate shell.
-
-**Note: if you're *not* using Node 4, you will need to rebuild the fibers binary for your node version -- see the [Troubleshooting](#troubleshooting) section for more details.**
 
 ### Dev mode
 
