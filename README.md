@@ -152,10 +152,12 @@ npm run prod:debug-brk
 And then go to the usual `node-inspector` URL, which will be printed in the console.
 
 ### Eslint/Flow
-```
-npm run check
-```
-Starts a `supervisor` watcher that reruns `eslint` and `flow` when you change anything.
+The following scripts are available:
+- `npm run lint`
+- `npm run lint:fix`
+- `npm run lint:watch`
+- `npm run flow`
+- `npm run flow:watch`
 
 ### Build
 ```
