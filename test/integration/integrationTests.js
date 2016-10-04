@@ -140,9 +140,15 @@ describe('build scripts', function () {
 
 describe('prod mode', function () {
   let server
+  const appFile = path.join(src, 'universal', 'components', 'App.js')
+  const serverFile = path.join(src, 'server', 'index.js')
+  let appCode, serverCode
 
   before(async function () {
     this.timeout(240000)
+    await promisify(rimraf)(build)
+    appCode = await promisify(fs.readFile)(appFile, 'utf8')
+    serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
     server = exec('npm run prod')
     await stdouted(server, /App is listening on http/i)
     await browser.reload()
@@ -151,17 +157,33 @@ describe('prod mode', function () {
 
   after(async function () {
     this.timeout(30000)
+    // restore code in App.js, which (may) have been changed by hot reloading test
+    if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
+    if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
     if (server) await kill(server)
   })
 
   sharedTests()
+
+  it('restarts the server when code is changed', async function () {
+    this.timeout(60000)
+    const serverModified = serverCode.replace(/express\(\)/, 'express()\napp.get("/test", (req, res) => res.send("hello world"))')
+    await promisify(fs.writeFile)(serverFile, serverModified, 'utf8')
+    await stdouted(server, /App is listening on http/i)
+
+    const newHeader = 'Welcome to Crater! with hot reloading'
+    const appModified = appCode.replace(/Welcome to Crater!/, newHeader)
+    await promisify(fs.writeFile)(appFile, appModified, 'utf8')
+    await stdouted(server, /App is listening on http/i)
+  })
 })
 
 describe('docker build', function () {
   let server
 
   before(async function () {
-    this.timeout(480000)
+    this.timeout(15 * 60000)
+    await promisify(rimraf)(build)
     await spawnAsync('npm', ['run', 'build:docker'])
     server = exec('npm run docker', {
       env: {
@@ -201,7 +223,8 @@ describe('dev mode', function () {
   let appCode, serverCode
 
   before(async function () {
-    this.timeout(60000)
+    this.timeout(240000)
+    await promisify(rimraf)(build)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
     server = exec('npm start')

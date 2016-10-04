@@ -11,7 +11,6 @@ import {join} from 'path'
 import promisify from 'es6-promisify'
 import {Map as iMap} from 'immutable'
 import {Meteor} from 'meteor/meteor'
-import makeRoutes from '../universal/routes'
 import url from 'url'
 import type {IncomingMessage, ServerResponse} from 'http'
 import type {Store} from '../universal/flowtypes/redux'
@@ -50,6 +49,7 @@ async function createSSR(req: IncomingMessage, res: ServerResponse): Promise<voi
   try {
     const store = createStore(makeReducer(), iMap())
     if (process.env.NODE_ENV === 'production') {
+      const makeRoutes = require('../universal/routes').default
       const readFile = promisify(fs.readFile)
       const assets = JSON.parse(await readFile(path.resolve(__dirname, 'assets.json'), 'utf8'))
       assets.manifest.text = await

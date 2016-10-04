@@ -31,6 +31,7 @@ async function buildServer(): Promise<void> {
       chunks: true,
       errorDetails: true,
     }) + "\n")
+    if (stats.toJson().errors.length) throw new Error("webpack build had errors")
   } else {
     console.log('server assets are up to date')
   }

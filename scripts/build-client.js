@@ -25,6 +25,7 @@ async function buildClient(): Promise<void> {
       chunks: true,
       errorDetails: true,
     }) + "\n")
+    if (stats.toJson().errors.length) throw new Error("webpack build had errors")
   } else {
     console.log('client assets are up to date')
   }
