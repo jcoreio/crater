@@ -12,6 +12,9 @@ import clientConfig from '../webpack/webpack.config.prod'
 import serverConfig from '../webpack/webpack.config.server'
 import '../getenv'
 import buildDir from '../buildDir'
+import webpack from 'webpack'
+import clientConfig from '../webpack/webpack.config.prod'
+import serverConfig from '../webpack/webpack.config.server'
 
 const root = path.resolve(__dirname, '..')
 

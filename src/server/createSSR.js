@@ -85,6 +85,7 @@ const createSSR = Meteor.bindEnvironment(async (req: IncomingMessage, res: Serve
   try {
     const store = makeStore(iMap())
     if (process.env.NODE_ENV === 'production') {
+      const makeRoutes = require('../universal/routes').default
       const readFile = promisify(fs.readFile)
       const assets = JSON.parse(await readFile(path.resolve(__dirname, 'assets.json'), 'utf8'))
       assets.manifest.text = await readFile(join(__dirname, assets.manifest.js), 'utf-8')
