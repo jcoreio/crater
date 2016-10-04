@@ -97,6 +97,10 @@ Currently the Meteor package doesn't work with Crater.  As a superior alternativ
 ```
 npm install --save-dev react-meteor-data react-addons-pure-render-mixin
 ```
+Then import it like this:
+```es6
+import {ReactMeteorData} from 'react-meteor-data'
+```
 
 ## Version notes
 * **Node**: Tested on the latest Node 4, 5, and 6 in Travis CI.  No effort will be made to support Node < 4.4.7.
