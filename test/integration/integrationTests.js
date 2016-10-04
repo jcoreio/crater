@@ -223,7 +223,7 @@ describe('dev mode', function () {
   let appCode, serverCode
 
   before(async function () {
-    this.timeout(60000)
+    this.timeout(240000)
     await promisify(rimraf)(build)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
