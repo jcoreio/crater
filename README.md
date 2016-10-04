@@ -91,6 +91,13 @@ If you want a different folder structure, it's perfectly possible to customize t
 See explanation [here](https://github.com/luisherranz/meteor-imports-webpack-plugin#the-bad-things).
 A Webpack loader for Spacebars HTML templates could be implemented, but it's not a priority for me.
 
+## react-meteor-data
+
+Currently the Meteor package doesn't work with Crater.  As a superior alternative, use the version I published as a true NPM package:
+```
+npm install --save-dev react-meteor-data react-addons-pure-render-mixin
+```
+
 ## Version notes
 * **Node**: Tested on the latest Node 4, 5, and 6 in Travis CI.  No effort will be made to support Node < 4.4.7.
 * **Webpack**: The `master` branch currently works only with Webpack 1.  If you want to use Webpack 2, check out the [`webpack2` branch](https://github.com/jedwards1211/crater/tree/webpack2).
