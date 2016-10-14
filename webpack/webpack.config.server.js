@@ -46,7 +46,6 @@ const config = {
   plugins: [
     new webpack.NoErrorsPlugin(),
     new ExtractTextPlugin('/static/[name].css'),
-    new webpack.optimize.UglifyJsPlugin({ compressor: { warnings: false } }),
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.DefinePlugin({
       '__CLIENT__': false,
@@ -94,5 +93,10 @@ const config = {
 }
 
 if (!process.env.CI) config.plugins.push(new ProgressBarPlugin())
+if (process.argv.indexOf('--no-uglify') < 0) {
+  config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+    compressor: { warnings: false }
+  }))
+}
 
 export default config

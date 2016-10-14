@@ -45,7 +45,6 @@ const config = {
     }),
     new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.optimize.MinChunkSizePlugin({ minChunkSize: 50000 }),
-    new webpack.optimize.UglifyJsPlugin({compressor: { warnings: false }}),
     new webpack.NoErrorsPlugin(),
     new AssetsPlugin({ path: buildDir, filename: 'assets.json' }),
     new webpack.DefinePlugin({
@@ -71,7 +70,10 @@ const config = {
   postcss: [cssModulesValues],
   module: {
     loaders: [
-      { test: /\.json$/, loader: 'json-loader', include: [...clientInclude, 'node_modules'] },
+      { test: /\.json$/, loader: 'json-loader', exclude: [
+        path.join(root, 'node_modules', 'meteor-imports-webpack-plugin'),
+        path.join(root, 'build', 'meteor', 'bundle', 'programs'),
+      ]},
       { test: /\.txt$/, loader: 'raw-loader' },
       { test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/, loader: 'url-loader?limit=10000' },
       { test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader' },
@@ -96,5 +98,10 @@ const config = {
 }
 
 if (!process.env.CI) config.plugins.push(new ProgressBarPlugin())
+if (process.argv.indexOf('--no-uglify') < 0) {
+  config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+    compressor: { warnings: false }
+  }))
+}
 
 export default config
