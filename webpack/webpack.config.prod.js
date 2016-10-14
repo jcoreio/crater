@@ -21,6 +21,11 @@ const vendor = [
 
 const config = {
   context: root,
+  resolve: {
+    alias: {
+      '~': srcDir,
+    }
+  },
   devtool: 'source-map',
   entry: {
     app: './src/client/index.js',

@@ -3,6 +3,16 @@
   "plugins": [
     "transform-runtime",
     "meteor-imports",
-    ["resolver", {"resolveDirs": ["src"]}]
-  ]
+  ],
+  "env": {
+    "development": {
+      "plugins": [
+        ["module-resolver", {
+          "alias": {
+            "~": "./src"
+          }
+        }]
+      ]
+    }
+  }
 }
