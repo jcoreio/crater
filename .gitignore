@@ -2,3 +2,5 @@
 node_modules
 build
 errorShots
+coverage
+.nyc-output

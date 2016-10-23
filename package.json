@@ -13,6 +13,7 @@
     "prod:debug-brk": "babel-node scripts/prod-debug-brk.js",
     "pretest": "babel-node scripts/pretest.js",
     "test": "wdio wdio.conf.js",
+    "coverage": "BABEL_ENV=coverage nyc --reporter=lcov --reporter=text npm test",
     "test:dev": "wdio wdio.conf.js --mochaOpts.grep dev",
     "test:prod": "wdio wdio.conf.js --mochaOpts.grep prod",
     "test:docker": "wdio wdio.conf.js --mochaOpts.grep docker",
@@ -52,6 +53,7 @@
     "babel-eslint": "^6.1.2",
     "babel-loader": "^6.2.5",
     "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-istanbul": "^2.0.3",
     "babel-plugin-meteor-imports": "^1.0.3",
     "babel-plugin-transform-runtime": "^6.12.0",
     "babel-preset-es2015": "^6.14.0",
@@ -79,11 +81,13 @@
     "glob": "^7.0.6",
     "happypack": "^2.2.1",
     "http-proxy": "^1.14.0",
+    "istanbul": "^0.4.5",
     "json-loader": "^0.5.4",
     "meteor-imports-webpack-plugin": "^1.1.0",
     "mkdirp": "^0.5.1",
     "mocha": "^3.0.2",
     "node-inspector": "^0.12.8",
+    "nyc": "^8.3.2",
     "phantomjs-prebuilt": "^2.1.12",
     "postcss-loader": "^0.9.1",
     "postcss-modules-values": "^1.2.2",
@@ -119,5 +123,13 @@
   "bugs": {
     "url": "https://github.com/jedwards1211/crater/issues"
   },
-  "homepage": "https://github.com/jedwards1211/crater#readme"
+  "homepage": "https://github.com/jedwards1211/crater#readme",
+  "nyc": {
+    "include": [
+      "src/**/*.js",
+      "scripts/**/*.js"
+    ],
+    "sourceMap": false,
+    "instrument": false
+  }
 }

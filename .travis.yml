@@ -30,3 +30,6 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
   - curl https://install.meteor.com/ | sh
   - docker run -p 27017:27017 --detach mongo:3.2.8
+
+script:
+  - npm run coverage

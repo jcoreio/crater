@@ -3,5 +3,16 @@
   "plugins": [
     "transform-runtime",
     "meteor-imports"
-  ]
+  ],
+  "env": {
+    "coverage": {
+      "plugins": [
+        ["istanbul", {
+          "exclude": [
+            "build/meteor/**/*.js"
+          ]
+        }]
+      ]
+    }
+  }
 }
