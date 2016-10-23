@@ -3,4 +3,4 @@ node_modules
 build
 errorShots
 coverage
-.nyc-output
+.nyc_output

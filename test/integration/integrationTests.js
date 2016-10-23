@@ -62,17 +62,11 @@ describe('build scripts', function () {
 
       await promisify(rimraf)(path.join(build, 'meteor'))
       expect(/building meteor packages/i.test((await execAsync('npm run build:meteor')).stdout)).to.be.true
-
       expect(/build\/meteor is up to date/i.test((await execAsync('npm run build:meteor')).stdout)).to.be.true
 
       await delay(1000)
-      await promisify(fs.utimes)(
-        path.resolve(root, 'meteor', '.meteor', 'packages'),
-        NaN,
-        NaN,
-      )
+      await promisify(fs.utimes)(path.resolve(root, 'meteor', '.meteor', 'packages'), NaN, NaN)
       expect(/building meteor packages/i.test((await execAsync('npm run build:meteor')).stdout)).to.be.true
-
       expect(/build\/meteor is up to date/i.test((await execAsync('npm run build:meteor')).stdout)).to.be.true
     })
   })
@@ -84,25 +78,11 @@ describe('build scripts', function () {
 
       await promisify(unlinkIfExists)(path.join(build, 'assets.json'))
       expect(/building client bundle/.test((await execAsync('npm run build:client')).stdout)).to.be.true
-
       expect(/client assets are up to date/.test((await execAsync('npm run build:client')).stdout)).to.be.true
 
       await delay(1000)
-      await promisify(fs.utimes)(
-        path.resolve(webpack, 'webpack.config.prod.js'),
-        NaN,
-        NaN
-      )
+      await promisify(fs.utimes)(path.resolve(webpack, 'webpack.config.prod.js'), NaN, NaN)
       expect(/building client bundle/.test((await execAsync('npm run build:client')).stdout)).to.be.true
-
-      await delay(1000)
-      await promisify(fs.utimes)(
-        path.resolve(src, 'client', 'index.js'),
-        NaN,
-        NaN
-      )
-      expect(/building client bundle/.test((await execAsync('npm run build:client')).stdout)).to.be.true
-
       expect(/client assets are up to date/.test((await execAsync('npm run build:client')).stdout)).to.be.true
     })
   })
@@ -114,25 +94,11 @@ describe('build scripts', function () {
 
       await promisify(unlinkIfExists)(path.join(build, 'prerender.js'))
       expect(/building server bundle/.test((await execAsync('npm run build:server')).stdout)).to.be.true
-
       expect(/server assets are up to date/.test((await execAsync('npm run build:server')).stdout)).to.be.true
 
       await delay(1000)
-      await promisify(fs.utimes)(
-        path.resolve(webpack, 'webpack.config.server.js'),
-        NaN,
-        NaN
-      )
+      await promisify(fs.utimes)(path.resolve(webpack, 'webpack.config.server.js'), NaN, NaN)
       expect(/building server bundle/.test((await execAsync('npm run build:server')).stdout)).to.be.true
-
-      await delay(1000)
-      await promisify(fs.utimes)(
-        path.resolve(src, 'server', 'index.js'),
-        NaN,
-        NaN
-      )
-      expect(/building server bundle/.test((await execAsync('npm run build:server')).stdout)).to.be.true
-
       expect(/server assets are up to date/.test((await execAsync('npm run build:server')).stdout)).to.be.true
     })
   })
@@ -223,7 +189,7 @@ describe('dev mode', function () {
   let appCode, serverCode
 
   before(async function () {
-    this.timeout(60000)
+    this.timeout(600000)
     await promisify(rimraf)(build)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
