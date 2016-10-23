@@ -131,17 +131,19 @@ describe('prod mode', function () {
 
   sharedTests()
 
-  it('restarts the server when code is changed', async function () {
-    this.timeout(60000)
-    const serverModified = serverCode.replace(/express\(\)/, 'express()\napp.get("/test", (req, res) => res.send("hello world"))')
-    await promisify(fs.writeFile)(serverFile, serverModified, 'utf8')
-    await stdouted(server, /App is listening on http/i)
+  if (process.env.BABEL_ENV !== 'coverage') {
+    it('restarts the server when code is changed', async function () {
+      this.timeout(60000)
+      const serverModified = serverCode.replace(/express\(\)/, 'express()\napp.get("/test", (req, res) => res.send("hello world"))')
+      await promisify(fs.writeFile)(serverFile, serverModified, 'utf8')
+      await stdouted(server, /App is listening on http/i)
 
-    const newHeader = 'Welcome to Crater! with hot reloading'
-    const appModified = appCode.replace(/Welcome to Crater!/, newHeader)
-    await promisify(fs.writeFile)(appFile, appModified, 'utf8')
-    await stdouted(server, /App is listening on http/i)
-  })
+      const newHeader = 'Welcome to Crater! with hot reloading'
+      const appModified = appCode.replace(/Welcome to Crater!/, newHeader)
+      await promisify(fs.writeFile)(appFile, appModified, 'utf8')
+      await stdouted(server, /App is listening on http/i)
+    })
+  }
 })
 
 describe('docker build', function () {
@@ -208,22 +210,24 @@ describe('dev mode', function () {
 
   sharedTests()
 
-  it('supports hot reloading', async function () {
-    this.timeout(40000)
-    const newHeader = 'Welcome to Crater! with hot reloading'
-    const modified = appCode.replace(/Welcome to Crater!/, newHeader)
-    await promisify(fs.writeFile)(appFile, modified, 'utf8')
-    await browser.waitUntil(
-      () => browser.getText('h1') === newHeader,
-      20000,
-      'expected header text to hot update within 10s'
-    )
-  })
+  if (process.env.BABEL_ENV !== 'coverage') {
+    it('supports hot reloading', async function () {
+      this.timeout(40000)
+      const newHeader = 'Welcome to Crater! with hot reloading'
+      const modified = appCode.replace(/Welcome to Crater!/, newHeader)
+      await promisify(fs.writeFile)(appFile, modified, 'utf8')
+      await browser.waitUntil(
+        () => browser.getText('h1') === newHeader,
+        20000,
+        'expected header text to hot update within 10s'
+      )
+    })
 
-  it('restarts the server when code is changed', async function () {
-    this.timeout(60000)
-    const modified = serverCode.replace(/express\(\)/, 'express()\napp.get("/test", (req, res) => res.send("hello world"))')
-    await promisify(fs.writeFile)(serverFile, modified, 'utf8')
-    await stdouted(server, /App is listening on http/i)
-  })
+    it('restarts the server when code is changed', async function () {
+      this.timeout(60000)
+      const modified = serverCode.replace(/express\(\)/, 'express()\napp.get("/test", (req, res) => res.send("hello world"))')
+      await promisify(fs.writeFile)(serverFile, modified, 'utf8')
+      await stdouted(server, /App is listening on http/i)
+    })
+  }
 })

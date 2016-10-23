@@ -32,4 +32,6 @@ before_install:
   - docker run -p 27017:27017 --detach mongo:3.2.8
 
 script:
+  - npm test
   - npm run coverage
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
