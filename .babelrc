@@ -9,7 +9,8 @@
       "plugins": [
         ["istanbul", {
           "exclude": [
-            "build/meteor/**/*.js"
+            "build/meteor/**/*.js",
+            "test/**/*.js"
           ]
         }]
       ]

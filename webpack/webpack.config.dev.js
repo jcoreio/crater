@@ -98,6 +98,7 @@ const config = {
   },
 }
 
+/* istanbul ignore next */
 if (!process.env.CI) config.plugins.push(new ProgressBarPlugin())
 
 export default config
