@@ -111,7 +111,7 @@ describe('prod mode', function () {
   let appCode, serverCode
 
   before(async function () {
-    this.timeout(240000)
+    this.timeout(600000)
     await promisify(rimraf)(build)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
@@ -122,7 +122,7 @@ describe('prod mode', function () {
   })
 
   after(async function () {
-    this.timeout(30000)
+    this.timeout(600000)
     // restore code in App.js, which (may) have been changed by hot reloading test
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
@@ -191,7 +191,7 @@ describe('dev mode', function () {
   let appCode, serverCode
 
   before(async function () {
-    this.timeout(600000)
+    this.timeout(15 * 60000)
     await promisify(rimraf)(build)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
@@ -201,7 +201,7 @@ describe('dev mode', function () {
   })
 
   after(async function () {
-    this.timeout(30000)
+    this.timeout(15 * 60000)
     // restore code in App.js, which (may) have been changed by hot reloading test
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
