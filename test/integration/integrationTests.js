@@ -1,9 +1,8 @@
 import {expect} from 'chai'
-import exec from '../../scripts/util/exec'
-import kill from '../../scripts/util/kill'
-import stdouted from '../../scripts/util/stdouted'
-import spawnAsync from '../../scripts/util/spawnAsync'
-import execAsync from '../../scripts/util/execAsync'
+import exec from 'crater-util/lib/exec'
+import {kill, childPrinted} from 'async-child-process'
+import spawnAsync from 'crater-util/lib/spawnAsync'
+import execAsync from 'crater-util/lib/execAsync'
 import path from 'path'
 import fs from 'fs'
 import rimraf from 'rimraf'
@@ -61,45 +60,45 @@ describe('build scripts', function () {
       this.timeout(480000)
 
       await promisify(rimraf)(path.join(build, 'meteor'))
-      expect(/building meteor packages/i.test((await execAsync('npm run build:meteor')).stdout)).to.be.true
-      expect(/build\/meteor is up to date/i.test((await execAsync('npm run build:meteor')).stdout)).to.be.true
+      expect(/building meteor packages/i.test((await execAsync('npm run build:meteor', {cwd: root})).stdout)).to.be.true
+      expect(/build\/meteor is up to date/i.test((await execAsync('npm run build:meteor', {cwd: root})).stdout)).to.be.true
 
       await delay(1000)
       await promisify(fs.utimes)(path.resolve(root, 'meteor', '.meteor', 'packages'), NaN, NaN)
-      expect(/building meteor packages/i.test((await execAsync('npm run build:meteor')).stdout)).to.be.true
-      expect(/build\/meteor is up to date/i.test((await execAsync('npm run build:meteor')).stdout)).to.be.true
+      expect(/building meteor packages/i.test((await execAsync('npm run build:meteor', {cwd: root})).stdout)).to.be.true
+      expect(/build\/meteor is up to date/i.test((await execAsync('npm run build:meteor', {cwd: root})).stdout)).to.be.true
     })
   })
   describe('build:client', function () {
     it('only rebuilds when necessary', async function () {
       this.timeout(480000)
 
-      await spawnAsync('npm', ['run', 'build:meteor'], {stdio: 'inherit'})
+      await spawnAsync('npm', ['run', 'build:meteor'], {stdio: 'inherit', cwd: root})
 
       await promisify(unlinkIfExists)(path.join(build, 'assets.json'))
-      expect(/building client bundle/.test((await execAsync('npm run build:client')).stdout)).to.be.true
-      expect(/client assets are up to date/.test((await execAsync('npm run build:client')).stdout)).to.be.true
+      expect(/building client bundle/.test((await execAsync('npm run build:client', {cwd: root})).stdout)).to.be.true
+      expect(/client assets are up to date/.test((await execAsync('npm run build:client', {cwd: root})).stdout)).to.be.true
 
       await delay(1000)
       await promisify(fs.utimes)(path.resolve(webpack, 'webpack.config.prod.js'), NaN, NaN)
-      expect(/building client bundle/.test((await execAsync('npm run build:client')).stdout)).to.be.true
-      expect(/client assets are up to date/.test((await execAsync('npm run build:client')).stdout)).to.be.true
+      expect(/building client bundle/.test((await execAsync('npm run build:client', {cwd: root})).stdout)).to.be.true
+      expect(/client assets are up to date/.test((await execAsync('npm run build:client', {cwd: root})).stdout)).to.be.true
     })
   })
   describe('build:server', function () {
     it('only rebuilds when necessary', async function () {
       this.timeout(480000)
 
-      await spawnAsync('npm', ['run', 'build:meteor'], {stdio: 'inherit'})
+      await spawnAsync('npm', ['run', 'build:meteor'], {stdio: 'inherit', cwd: root})
 
       await promisify(unlinkIfExists)(path.join(build, 'prerender.js'))
-      expect(/building server bundle/.test((await execAsync('npm run build:server')).stdout)).to.be.true
-      expect(/server assets are up to date/.test((await execAsync('npm run build:server')).stdout)).to.be.true
+      expect(/building server bundle/.test((await execAsync('npm run build:server', {cwd: root})).stdout)).to.be.true
+      expect(/server assets are up to date/.test((await execAsync('npm run build:server', {cwd: root})).stdout)).to.be.true
 
       await delay(1000)
       await promisify(fs.utimes)(path.resolve(webpack, 'webpack.config.server.js'), NaN, NaN)
-      expect(/building server bundle/.test((await execAsync('npm run build:server')).stdout)).to.be.true
-      expect(/server assets are up to date/.test((await execAsync('npm run build:server')).stdout)).to.be.true
+      expect(/building server bundle/.test((await execAsync('npm run build:server', {cwd: root})).stdout)).to.be.true
+      expect(/server assets are up to date/.test((await execAsync('npm run build:server', {cwd: root})).stdout)).to.be.true
     })
   })
 })
@@ -115,8 +114,8 @@ describe('prod mode', function () {
     await promisify(rimraf)(build)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
-    server = exec('npm run prod')
-    await stdouted(server, /App is listening on http/i)
+    server = exec('npm run prod', {cwd: root})
+    await childPrinted(server, /App is listening on http/i)
     await browser.reload()
     await browser.url(process.env.ROOT_URL)
   })
@@ -136,12 +135,12 @@ describe('prod mode', function () {
       this.timeout(60000)
       const serverModified = serverCode.replace(/express\(\)/, 'express()\napp.get("/test", (req, res) => res.send("hello world"))')
       await promisify(fs.writeFile)(serverFile, serverModified, 'utf8')
-      await stdouted(server, /App is listening on http/i)
+      await childPrinted(server, /App is listening on http/i)
 
       const newHeader = 'Welcome to Crater! with hot reloading'
       const appModified = appCode.replace(/Welcome to Crater!/, newHeader)
       await promisify(fs.writeFile)(appFile, appModified, 'utf8')
-      await stdouted(server, /App is listening on http/i)
+      await childPrinted(server, /App is listening on http/i)
     })
   }
 })
@@ -152,8 +151,9 @@ describe('docker build', function () {
   before(async function () {
     this.timeout(15 * 60000)
     await promisify(rimraf)(build)
-    await spawnAsync('npm', ['run', 'build:docker'])
+    await spawnAsync('npm', ['run', 'build:docker'], {cwd: root})
     server = exec('npm run docker', {
+      cwd: root,
       env: {
         ...process.env,
         METEOR_SETTINGS: JSON.stringify({
@@ -163,9 +163,9 @@ describe('docker build', function () {
         })
       }
     })
-    await stdouted(server, /App is listening on http/i)
+    await childPrinted(server, /App is listening on http/i)
     let host
-    if (process.env.CI) host = (await execAsync('docker-compose port crater 80')).stdout.trim()
+    if (process.env.CI) host = (await execAsync('docker-compose port crater 80', {cwd: root})).stdout.trim()
     else {
       await execAsync('which docker-machine')
         .then(() => host = `192.168.99.100:${process.env.PORT}`)
@@ -177,7 +177,7 @@ describe('docker build', function () {
 
   after(async function () {
     this.timeout(20000)
-    await spawnAsync('docker-compose', ['down'])
+    await spawnAsync('docker-compose', ['down'], {cwd: root})
   })
 
   sharedTests()
@@ -195,8 +195,8 @@ describe('dev mode', function () {
     await promisify(rimraf)(build)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
-    server = exec('npm start')
-    await stdouted(server, /webpack built [a-z0-9]+ in \d+ms/i)
+    server = exec('npm start', {cwd: root})
+    await childPrinted(server, /webpack built [a-z0-9]+ in \d+ms/i)
     await browser.url(`http://localhost:${webpackConfig.devServer.port}`)
   })
 
@@ -227,7 +227,7 @@ describe('dev mode', function () {
       this.timeout(60000)
       const modified = serverCode.replace(/express\(\)/, 'express()\napp.get("/test", (req, res) => res.send("hello world"))')
       await promisify(fs.writeFile)(serverFile, modified, 'utf8')
-      await stdouted(server, /App is listening on http/i)
+      await childPrinted(server, /App is listening on http/i)
     })
   }
 })

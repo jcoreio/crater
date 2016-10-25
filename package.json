@@ -48,6 +48,7 @@
   "description": "Meteor(/React) app skeleton that runs your app code with pure Webpack/Babel instead of isobuild",
   "devDependencies": {
     "assets-webpack-plugin": "^3.4.0",
+    "async-child-process": "^1.0.0",
     "babel-cli": "^6.14.0",
     "babel-core": "^6.14.0",
     "babel-eslint": "^6.1.2",

@@ -1,9 +1,9 @@
 #!/usr/bin/env babel-node
 // @flow
 
-import asyncScript from './util/asyncScript'
-import execAsync from './util/execAsync'
-import spawnAsync from './util/spawnAsync'
+import asyncScript from 'crater-util/lib/asyncScript'
+import execAsync from 'crater-util/lib/execAsync'
+import spawnAsync from 'crater-util/lib/spawnAsync'
 import path from 'path'
 import build from './build'
 import buildDir from '../buildDir'
@@ -13,7 +13,7 @@ const root = path.resolve(__dirname, '..')
 process.on('SIGINT', (): any => process.exit(1))
 
 const opts = {
-  cwd: path.resolve(__dirname, '..'),
+  cwd: root,
   stdio: 'inherit'
 }
 

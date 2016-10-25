@@ -5,9 +5,9 @@ import path from 'path'
 import glob from 'glob'
 import rimraf from 'rimraf'
 import mkdirp from 'mkdirp'
-import asyncScript from './util/asyncScript'
-import isNewerThan from './util/isNewerThan'
-import spawnAsync from './util/spawnAsync'
+import asyncScript from 'crater-util/lib/asyncScript'
+import isNewerThan from 'crater-util/lib/isNewerThan'
+import spawnAsync from 'crater-util/lib/spawnAsync'
 import promisify from 'es6-promisify'
 import buildDir from '../buildDir'
 
@@ -23,6 +23,10 @@ async function buildMeteor(): Promise<void> {
     path.join(meteor, '.meteor', 'release'),
     path.join(meteor, '.meteor', 'versions'),
   ], path.join(buildDir, 'meteor'))) {
+    console.log(buildDir)
+    console.log(root)
+    console.log(meteor)
+    console.log(process.cwd())
     console.log('building Meteor packages...')
     await promisify(rimraf)(path.join(buildDir, 'meteor'))
     await spawnAsync('meteor', ['build', path.join(path.relative(meteor, buildDir), 'meteor'), '--directory'], {

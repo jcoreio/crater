@@ -2,8 +2,8 @@
 // @flow
 
 import launch from 'smart-restart'
-import asyncScript from './util/asyncScript'
-import spawnAsync from './util/spawnAsync'
+import asyncScript from 'crater-util/lib/asyncScript'
+import spawnAsync from 'crater-util/lib/spawnAsync'
 import buildMeteor from './build-meteor'
 import installMeteorDeps from './installMeteorDeps'
 import path from 'path'

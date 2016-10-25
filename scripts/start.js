@@ -1,7 +1,7 @@
 #!/usr/bin/env babel-node
 // @flow
 
-import asyncScript from './util/asyncScript'
+import asyncScript from 'crater-util/lib/asyncScript'
 import path from 'path'
 import buildMeteor from './build-meteor'
 import installMeteorDeps from './installMeteorDeps'

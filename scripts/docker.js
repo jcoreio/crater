@@ -1,9 +1,9 @@
 #!/usr/bin/env babel-node
 // @flow
 
-import asyncScript from './util/asyncScript'
-import execAsync from './util/execAsync'
-import spawnAsync from './util/spawnAsync'
+import asyncScript from 'crater-util/lib/asyncScript'
+import execAsync from 'crater-util/lib/execAsync'
+import spawnAsync from 'crater-util/lib/spawnAsync'
 import path from 'path'
 
 const root = path.resolve(__dirname, '..')
