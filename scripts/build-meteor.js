@@ -23,10 +23,6 @@ async function buildMeteor(): Promise<void> {
     path.join(meteor, '.meteor', 'release'),
     path.join(meteor, '.meteor', 'versions'),
   ], path.join(buildDir, 'meteor'))) {
-    console.log(buildDir)
-    console.log(root)
-    console.log(meteor)
-    console.log(process.cwd())
     console.log('building Meteor packages...')
     await promisify(rimraf)(path.join(buildDir, 'meteor'))
     await spawnAsync('meteor', ['build', path.join(path.relative(meteor, buildDir), 'meteor'), '--directory'], {

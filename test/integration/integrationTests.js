@@ -122,10 +122,10 @@ describe('prod mode', function () {
 
   after(async function () {
     this.timeout(600000)
+    if (server) await kill(server)
     // restore code in App.js, which (may) have been changed by hot reloading test
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
-    if (server) await kill(server)
   })
 
   sharedTests()

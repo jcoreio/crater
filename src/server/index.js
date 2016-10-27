@@ -8,7 +8,6 @@ import { WebApp } from 'meteor/webapp'
 import '../universal/collections/Counts'
 
 const app = express()
-app.get("/test", (req, res) => res.send("hello world"))
 
 app.use((req: Object, res: Object, next: Function) => {
   if (/\/favicon\.?(jpe?g|png|ico|gif)?$/i.test(req.url)) {
