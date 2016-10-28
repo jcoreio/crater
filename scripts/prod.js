@@ -58,8 +58,6 @@ async function prod(options?: {commandOptions?: Array<string>} = {}): Promise<an
   launch({
     main: path.join(buildDir, 'index.js'),
     commandOptions: options.commandOptions || [],
-    usePolling: !!process.env.CI,
-    interval: 1000,
   })
 }
 

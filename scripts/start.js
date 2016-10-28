@@ -22,8 +22,6 @@ async function start(options?: {commandOptions?: Array<any>} = {}): Promise<any>
   launch({
     commandOptions: options.commandOptions || [],
     main: path.join(src, 'index.js'),
-    usePolling: !!process.env.CI,
-    interval: 1000,
   })
 }
 
