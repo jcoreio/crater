@@ -97,6 +97,7 @@ const config = {
   },
 }
 
+/* istanbul ignore next */
 if (!process.env.CI) config.plugins.push(new ProgressBarPlugin())
 if (process.argv.indexOf('--no-uglify') < 0) {
   config.plugins.push(new webpack.optimize.UglifyJsPlugin({

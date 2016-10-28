@@ -35,13 +35,13 @@ const config = {
     nodeExternals({
       modulesDir: path.join(root, 'node_modules'),
     }),
-    (context: string, request: string, callback: (error?: ?Error, result?: ?string) => any): any => {
-      const match = /^meteor\/(.*)$/.exec(request)
-      if (match) {
-        return callback(null, 'var Package.' + match[1].replace(/\//g, '.'))
-      }
-      callback()
-    },
+    // (context: string, request: string, callback: (error?: ?Error, result?: ?string) => any): any => {
+    //   const match = /^meteor\/(.*)$/.exec(request)
+    //   if (match) {
+    //     return callback(null, 'var Package.' + match[1].replace(/\//g, '.'))
+    //   }
+    //   callback()
+    // },
   ],
   plugins: [
     new webpack.NoErrorsPlugin(),
@@ -94,6 +94,7 @@ const config = {
   },
 }
 
+/* istanbul ignore next */
 if (!process.env.CI) config.plugins.push(new ProgressBarPlugin())
 if (process.argv.indexOf('--no-uglify') < 0) {
   config.plugins.push(new webpack.optimize.UglifyJsPlugin({
