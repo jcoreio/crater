@@ -9,7 +9,7 @@ services:
 env:
   DOCKER_COMPOSE_VERSION: 1.8.0
   CXX: g++-4.8
-  DEBUG: crater-util:kill,crater-util:kill:ps,crater:shutdown,crater:logs:browser
+  DEBUG: crater-util:kill,crater-util:kill:ps,crater:shutdown,crater:logs:browser,smart-restart:supervisor
   DUMP_HTTP: 1
 
 addons:

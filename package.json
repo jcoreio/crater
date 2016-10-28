@@ -101,7 +101,7 @@
     "react-hot-loader": "^3.0.0-beta.2",
     "redux-logger": "^2.6.1",
     "rimraf": "^2.5.4",
-    "smart-restart": "^1.0.0",
+    "smart-restart": "^1.1.1",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "wdio-mocha-framework": "^0.4.0",
