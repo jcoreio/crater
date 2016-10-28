@@ -55,6 +55,8 @@ const config = {
       'Meteor.isServer': true,
       'process.env.TARGET': JSON.stringify(process.env.TARGET),
       'process.env.NODE_ENV': JSON.stringify('production'),
+      // uncomment this line to hard-disable full SSR
+      // 'process.env.DISABLE_FULL_SSR': JSON.stringify('1'),
     }),
     new HappyPack({
       id: '1', // https://github.com/amireh/happypack/issues/88

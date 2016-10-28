@@ -22,7 +22,7 @@ export default class Html extends Component {
     const {title, __meteor_runtime_config__, store, assets, renderProps} = this.props
     const {manifest, app, vendor, meteor} = assets || {}
     const initialState = `window.__INITIAL_STATE__ = ${JSON.stringify(store.getState())}`
-    const root = PROD && renderToString(
+    const root = PROD && !process.env.DISABLE_FULL_SSR && renderToString(
       <Provider store={store}>
         <RouterContext {...renderProps} />
       </Provider>
@@ -48,6 +48,7 @@ export default class Html extends Component {
           {PROD && <script src={vendor.js} />}
           {PROD && <script src={meteor.js} />}
           <script src={PROD ? app.js : '/static/app.js'} />
+          {process.env.DISABLE_FULL_SSR && <span id="full-ssr-disabled" />}
         </body>
       </html>
     )

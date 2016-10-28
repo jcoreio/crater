@@ -153,6 +153,16 @@ npm run prod
 ```
 And open http://localhost:3000 in your browser.
 
+### Disabling full SSR in prod mode
+As neat as it is, full-blown SSR requires more work and you might decide it's not worth it.
+To only render an empty HTML document on the server and do everything else on the client, even in production,
+set the `DISABLE_FULL_SSR` environment variable:
+```
+DISABLE_FULL_SSR=1 npm run prod # or npm run build, etc.
+```
+or look in `webpack/webpack.config.server.js` and uncomment the `DISABLE_FULL_SSR` line inside the
+`webpack.DefinePlugin`.  If you build bundles this way, there will be no way to turn full SSR back on at runtime.
+
 ### Prod Debug mode
 ```
 npm run prod:debug

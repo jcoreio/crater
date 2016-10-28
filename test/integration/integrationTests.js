@@ -146,6 +146,37 @@ describe('prod mode', function () {
   }
 })
 
+describe('prod mode with DISABLE_FULL_SSR=1', function () {
+  let server
+
+  before(async function () {
+    this.timeout(240000)
+    server = exec('npm run prod', {
+      env: {
+        ...process.env,
+        DISABLE_FULL_SSR: '1',
+      },
+    })
+    await stdouted(server, /App is listening on http/i)
+    await browser.reload()
+    await browser.url(process.env.ROOT_URL)
+  })
+
+  it('has hidden element to indicate that full SSR is disabled', async () => {
+    assert(
+      await browser.isExisting('#full-ssr-disabled'),
+      "full SSR doesn't actually seem to be disabled"
+    )
+  })
+
+  sharedTests()
+
+  after(async function () {
+    this.timeout(30000)
+    if (server) await kill(server)
+  })
+})
+
 describe('docker build', function () {
   let server
 
