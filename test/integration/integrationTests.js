@@ -6,7 +6,6 @@ import spawnAsync from 'crater-util/lib/spawnAsync'
 import execAsync from 'crater-util/lib/execAsync'
 import path from 'path'
 import fs from 'fs'
-import rimraf from 'rimraf'
 import promisify from 'es6-promisify'
 import {Collector} from 'istanbul'
 import webpackConfig from '../../webpack/webpack.config.dev'
@@ -87,55 +86,6 @@ async function mergeClientCoverage() {
   }
 }
 
-describe('build scripts', function () {
-  describe('build:meteor', function () {
-    it('only rebuilds when necessary', async function () {
-      this.timeout(480000)
-
-      await promisify(rimraf)(path.join(build, 'meteor'))
-      expect(/building meteor packages/i.test((await execAsync('npm run build:meteor', {cwd: root})).stdout)).to.be.true
-      expect(/build\/meteor is up to date/i.test((await execAsync('npm run build:meteor', {cwd: root})).stdout)).to.be.true
-
-      await delay(1000)
-      await promisify(fs.utimes)(path.resolve(root, 'meteor', '.meteor', 'packages'), NaN, NaN)
-      expect(/building meteor packages/i.test((await execAsync('npm run build:meteor', {cwd: root})).stdout)).to.be.true
-      expect(/build\/meteor is up to date/i.test((await execAsync('npm run build:meteor', {cwd: root})).stdout)).to.be.true
-    })
-  })
-  describe('build:client', function () {
-    it('only rebuilds when necessary', async function () {
-      this.timeout(480000)
-
-      await spawnAsync('npm', ['run', 'build:meteor'], {stdio: 'inherit', cwd: root})
-
-      await promisify(unlinkIfExists)(path.join(build, 'assets.json'))
-      expect(/building client bundle/.test((await execAsync('npm run build:client', {cwd: root})).stdout)).to.be.true
-      expect(/client assets are up to date/.test((await execAsync('npm run build:client', {cwd: root})).stdout)).to.be.true
-
-      await delay(1000)
-      await promisify(fs.utimes)(path.resolve(webpack, 'webpack.config.prod.js'), NaN, NaN)
-      expect(/building client bundle/.test((await execAsync('npm run build:client', {cwd: root})).stdout)).to.be.true
-      expect(/client assets are up to date/.test((await execAsync('npm run build:client', {cwd: root})).stdout)).to.be.true
-    })
-  })
-  describe('build:server', function () {
-    it('only rebuilds when necessary', async function () {
-      this.timeout(480000)
-
-      await spawnAsync('npm', ['run', 'build:meteor'], {stdio: 'inherit', cwd: root})
-
-      await promisify(unlinkIfExists)(path.join(build, 'prerender.js'))
-      expect(/building server bundle/.test((await execAsync('npm run build:server', {cwd: root})).stdout)).to.be.true
-      expect(/server assets are up to date/.test((await execAsync('npm run build:server', {cwd: root})).stdout)).to.be.true
-
-      await delay(1000)
-      await promisify(fs.utimes)(path.resolve(webpack, 'webpack.config.server.js'), NaN, NaN)
-      expect(/building server bundle/.test((await execAsync('npm run build:server', {cwd: root})).stdout)).to.be.true
-      expect(/server assets are up to date/.test((await execAsync('npm run build:server', {cwd: root})).stdout)).to.be.true
-    })
-  })
-})
-
 describe('prod mode', function () {
   let server
   const appFile = path.join(src, 'universal', 'components', 'App.js')
@@ -144,7 +94,6 @@ describe('prod mode', function () {
 
   before(async function () {
     this.timeout(600000)
-    if (!process.env.SKIP_CLEAN) await promisify(rimraf)(build)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
     server = exec('npm run prod', {cwd: root})
@@ -218,7 +167,6 @@ describe('docker build', function () {
 
   before(async function () {
     this.timeout(15 * 60000)
-    if (!process.env.SKIP_CLEAN) await promisify(rimraf)(build)
     // run this first, even though it's not necessary, to increase coverage of scripts/build.js
     await spawnAsync('npm', ['run', 'build'], {cwd: root})
     await spawnAsync('npm', ['run', 'build:docker'], {cwd: root})
@@ -263,7 +211,6 @@ describe('dev mode', function () {
 
   before(async function () {
     this.timeout(15 * 60000)
-    if (!process.env.SKIP_CLEAN) await promisify(rimraf)(build)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
     server = exec('npm start', {cwd: root})
@@ -304,4 +251,53 @@ describe('dev mode', function () {
       })
     })
   }
+})
+
+describe('build scripts', function () {
+  describe('build:meteor', function () {
+    it('only rebuilds when necessary', async function () {
+      this.timeout(480000)
+
+      await promisify(rimraf)(path.join(build, 'meteor'))
+      expect(/building meteor packages/i.test((await execAsync('npm run build:meteor', {cwd: root})).stdout)).to.be.true
+      expect(/build\/meteor is up to date/i.test((await execAsync('npm run build:meteor', {cwd: root})).stdout)).to.be.true
+
+      await delay(1000)
+      await promisify(fs.utimes)(path.resolve(root, 'meteor', '.meteor', 'packages'), NaN, NaN)
+      expect(/building meteor packages/i.test((await execAsync('npm run build:meteor', {cwd: root})).stdout)).to.be.true
+      expect(/build\/meteor is up to date/i.test((await execAsync('npm run build:meteor', {cwd: root})).stdout)).to.be.true
+    })
+  })
+  describe('build:client', function () {
+    it('only rebuilds when necessary', async function () {
+      this.timeout(480000)
+
+      await spawnAsync('npm', ['run', 'build:meteor'], {stdio: 'inherit', cwd: root})
+
+      await promisify(unlinkIfExists)(path.join(build, 'assets.json'))
+      expect(/building client bundle/.test((await execAsync('npm run build:client', {cwd: root})).stdout)).to.be.true
+      expect(/client assets are up to date/.test((await execAsync('npm run build:client', {cwd: root})).stdout)).to.be.true
+
+      await delay(1000)
+      await promisify(fs.utimes)(path.resolve(webpack, 'webpack.config.prod.js'), NaN, NaN)
+      expect(/building client bundle/.test((await execAsync('npm run build:client', {cwd: root})).stdout)).to.be.true
+      expect(/client assets are up to date/.test((await execAsync('npm run build:client', {cwd: root})).stdout)).to.be.true
+    })
+  })
+  describe('build:server', function () {
+    it('only rebuilds when necessary', async function () {
+      this.timeout(480000)
+
+      await spawnAsync('npm', ['run', 'build:meteor'], {stdio: 'inherit', cwd: root})
+
+      await promisify(unlinkIfExists)(path.join(build, 'prerender.js'))
+      expect(/building server bundle/.test((await execAsync('npm run build:server', {cwd: root})).stdout)).to.be.true
+      expect(/server assets are up to date/.test((await execAsync('npm run build:server', {cwd: root})).stdout)).to.be.true
+
+      await delay(1000)
+      await promisify(fs.utimes)(path.resolve(webpack, 'webpack.config.server.js'), NaN, NaN)
+      expect(/building server bundle/.test((await execAsync('npm run build:server', {cwd: root})).stdout)).to.be.true
+      expect(/server assets are up to date/.test((await execAsync('npm run build:server', {cwd: root})).stdout)).to.be.true
+    })
+  })
 })
