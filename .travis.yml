@@ -34,6 +34,6 @@ before_install:
 script:
   - npm run lint
   - npm run flow
-  - npm test:hot-reloading
+  - npm run test:hot-reloading
   - npm run coverage
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
