@@ -201,6 +201,8 @@ describe('docker build', function () {
   before(async function () {
     this.timeout(15 * 60000)
     if (!process.env.SKIP_CLEAN) await promisify(rimraf)(build)
+    // run this first, even though it's not necessary, to increase coverage of scripts/build.js
+    await spawnAsync('npm', ['run', 'build'], {cwd: root})
     await spawnAsync('npm', ['run', 'build:docker'], {cwd: root})
     server = exec('npm run docker', {
       cwd: root,
