@@ -40,5 +40,6 @@ script:
   - npm run lint
   - npm run flow
   - npm run test:hot-reloading
+  - rm -rf build
   - npm run coverage
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
