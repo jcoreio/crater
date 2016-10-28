@@ -85,6 +85,15 @@ async function navigateTo(url) {
   await browser.url(url)
 }
 
+async function logBrowserMessages() {
+  const logs = (await browser.log('browser')).value
+  if (!logs) return
+  logs.forEach(({level, message, timestamp}) => {
+    const time = new Date(timestamp).toLocaleTimeString()
+    browserLogsDebug(`${time} ${level} ${message}`)
+  })
+}
+
 describe('prod mode', function () {
   let server
   const appFile = path.join(src, 'universal', 'components', 'App.js')
@@ -108,7 +117,7 @@ describe('prod mode', function () {
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
-    browserLogsDebug(await browser.log('browser'))
+    await logBrowserMessages()
   })
 
   sharedTests()
@@ -159,7 +168,7 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
     this.timeout(30000)
     if (server) await kill(server, 'SIGINT')
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
-    browserLogsDebug(await browser.log('browser'))
+    await logBrowserMessages()
   })
 })
 
@@ -198,7 +207,7 @@ describe('docker build', function () {
     this.timeout(20000)
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
     await spawnAsync('docker-compose', ['down'], {cwd: root})
-    browserLogsDebug(await browser.log('browser'))
+    await logBrowserMessages()
   })
 
   sharedTests()
@@ -230,7 +239,7 @@ describe('dev mode', function () {
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
-    browserLogsDebug(await browser.log('browser'))
+    await logBrowserMessages()
   })
 
   sharedTests()
