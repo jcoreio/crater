@@ -140,8 +140,8 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
 
   after(async function () {
     this.timeout(30000)
-    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
     if (server) await kill(server, 'SIGINT')
+    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
   })
 })
 

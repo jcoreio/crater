@@ -2,6 +2,9 @@
 
 import express from 'express'
 import webpackConfig from '../webpack/webpack.config.dev'
+import createDebug from 'debug'
+
+const shutdownDebug = createDebug('crater:shutdown')
 
 if (process.env.USE_DOTENV) require('dotenv').config()
 const {PORT} = process.env
@@ -25,3 +28,13 @@ const server = app.listen(webpackConfig.devServer.port)
 server.on('upgrade', (req: Object, socket: any, head: any): any => proxy.ws(req, socket, head, { target }))
 
 console.log(`Dev server is listening on http://0.0.0.0:${webpackConfig.devServer.port}`)
+
+function shutdown() {
+  shutdownDebug('got signal, shutting down')
+  server.stop()
+  process.exit(0)
+}
+
+process.on('SIGINT', shutdown)
+process.on('SIGTERM', shutdown)
+
