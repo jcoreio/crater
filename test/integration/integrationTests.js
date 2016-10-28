@@ -1,7 +1,7 @@
 import {expect, assert} from 'chai'
 import exec from 'crater-util/lib/exec'
 import killTree from 'crater-util/lib/kill'
-import {join, kill, childPrinted} from 'async-child-process'
+import {kill, childPrinted} from 'async-child-process'
 import spawnAsync from 'crater-util/lib/spawnAsync'
 import execAsync from 'crater-util/lib/execAsync'
 import path from 'path'
