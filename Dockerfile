@@ -27,6 +27,7 @@ EXPOSE 80
 
 ENV MONGO_URL=mongodb://mongo:27017/crater \
     ROOT_URL=http://localhost:80 \
-    PORT=80
+    PORT=80 \
+    METEOR_PRINT_ON_LISTEN=1
 
 CMD ["node", "index.js"]

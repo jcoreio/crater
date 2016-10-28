@@ -92,8 +92,14 @@ describe('prod mode', function () {
     this.timeout(600000)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
-    server = exec('npm run prod', {cwd: root})
-    await childPrinted(server, /App is listening on http/i)
+    server = exec('npm run prod', {
+      cwd: root,
+      env: {
+        ...process.env,
+        METEOR_PRINT_ON_LISTEN: '1',
+      },
+    })
+    await childPrinted(server, /LISTENING/)
     await browser.reload()
     await navigateTo(process.env.ROOT_URL)
   })
@@ -115,12 +121,12 @@ describe('prod mode', function () {
         this.timeout(60000)
         const serverModified = serverCode.replace(/express\(\)/, 'express()\napp.get("/test", (req, res) => res.send("hello world"))')
         await promisify(fs.writeFile)(serverFile, serverModified, 'utf8')
-        await childPrinted(server, /App is listening on http/i)
+        await childPrinted(server, /LISTENING/)
 
         const newHeader = 'Welcome to Crater! with hot reloading'
         const appModified = appCode.replace(/Welcome to Crater!/, newHeader)
         await promisify(fs.writeFile)(appFile, appModified, 'utf8')
-        await childPrinted(server, /App is listening on http/i)
+        await childPrinted(server, /LISTENING/i)
       })
     })
   }
@@ -135,9 +141,10 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
       env: {
         ...process.env,
         DISABLE_FULL_SSR: '1',
+        METEOR_PRINT_ON_LISTEN: '1',
       },
     })
-    await childPrinted(server, /App is listening on http/i)
+    await childPrinted(server, /LISTENING/)
     await browser.reload()
     await navigateTo(process.env.ROOT_URL)
   })
@@ -177,7 +184,7 @@ describe('docker build', function () {
         })
       }
     })
-    await childPrinted(server, /App is listening on http/i)
+    await childPrinted(server, /LISTENING/)
     let host
     if (process.env.CI) host = (await execAsync('docker-compose port crater 80', {cwd: root})).stdout.trim()
     else {
@@ -209,10 +216,16 @@ describe('dev mode', function () {
     this.timeout(15 * 60000)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
-    server = exec('npm start', {cwd: root})
+    server = exec('npm start', {
+      cwd: root,
+      env: {
+        ...process.env,
+        METEOR_PRINT_ON_LISTEN: '1',
+      }
+    })
     await Promise.all([
       childPrinted(server, /webpack built [a-z0-9]+ in \d+ms/i),
-      childPrinted(server, /App is listening on http/i),
+      childPrinted(server, /LISTENING/),
     ])
     await navigateTo(`http://localhost:${webpackConfig.devServer.port}`)
   })
@@ -246,7 +259,7 @@ describe('dev mode', function () {
         this.timeout(60000)
         const modified = serverCode.replace(/express\(\)/, 'express()\napp.get("/test", (req, res) => res.send("hello world"))')
         await promisify(fs.writeFile)(serverFile, modified, 'utf8')
-        await childPrinted(server, /App is listening on http/i)
+        await childPrinted(server, /LISTENING/)
       })
     })
   }

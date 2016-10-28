@@ -31,7 +31,7 @@ console.log(`Dev server is listening on http://0.0.0.0:${webpackConfig.devServer
 
 function shutdown() {
   shutdownDebug('got signal, shutting down')
-  server.stop()
+  server.close()
   process.exit(0)
 }
 
