@@ -10,6 +10,9 @@ import rimraf from 'rimraf'
 import promisify from 'es6-promisify'
 import {Collector} from 'istanbul'
 import webpackConfig from '../../webpack/webpack.config.dev'
+import debug from 'debug'
+
+const browserLogsDebug = debug('crater:logs:browser')
 
 const root = path.resolve(__dirname, '..', '..')
 const src = path.join(root, 'src')
@@ -105,6 +108,7 @@ describe('prod mode', function () {
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
+    browserLogsDebug(await browser.log('browser'))
   })
 
   sharedTests()
@@ -155,6 +159,7 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
     this.timeout(30000)
     if (server) await kill(server, 'SIGINT')
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
+    browserLogsDebug(await browser.log('browser'))
   })
 })
 
@@ -193,6 +198,7 @@ describe('docker build', function () {
     this.timeout(20000)
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
     await spawnAsync('docker-compose', ['down'], {cwd: root})
+    browserLogsDebug(await browser.log('browser'))
   })
 
   sharedTests()
@@ -224,6 +230,7 @@ describe('dev mode', function () {
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
+    browserLogsDebug(await browser.log('browser'))
   })
 
   sharedTests()
