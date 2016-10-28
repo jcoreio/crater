@@ -35,8 +35,9 @@ app.get('*', (req: Object, res: Object, next: Function) => {
 })
 
 WebApp.rawConnectHandlers.use(app)
-
-console.log(`App is listening on http://0.0.0.0:${process.env.PORT || '80'}`) // eslint-disable-line no-console
+WebApp.onListening(() => {
+  console.log(`App is listening on http://0.0.0.0:${process.env.PORT || '80'}`) // eslint-disable-line no-console
+})
 
 function shutdown() {
   shutdownDebug('got signal, shutting down')
