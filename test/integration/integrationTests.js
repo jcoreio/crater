@@ -69,6 +69,19 @@ async function mergeClientCoverage() {
   }
 }
 
+async function navigateTo(url) {
+  if (process.env.DUMP_HTTP) {
+    const popsicle = require('popsicle')
+    const res = await popsicle.get(url)
+    /* eslint-disable no-console */
+    console.log(`GET ${url} ${res.status}`)
+    console.log(res.headers)
+    console.log(res.body)
+    /* eslint-enable no-console */
+  }
+  await browser.url(url)
+}
+
 describe('prod mode', function () {
   let server
   const appFile = path.join(src, 'universal', 'components', 'App.js')
@@ -82,7 +95,7 @@ describe('prod mode', function () {
     server = exec('npm run prod', {cwd: root})
     await childPrinted(server, /App is listening on http/i)
     await browser.reload()
-    await browser.url(process.env.ROOT_URL)
+    await navigateTo(process.env.ROOT_URL)
   })
 
   after(async function () {
@@ -126,7 +139,7 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
     })
     await childPrinted(server, /App is listening on http/i)
     await browser.reload()
-    await browser.url(process.env.ROOT_URL)
+    await navigateTo(process.env.ROOT_URL)
   })
 
   it('has hidden element to indicate that full SSR is disabled', async () => {
@@ -173,7 +186,7 @@ describe('docker build', function () {
         .catch(() => host = `localhost:${process.env.PORT}`)
     }
     await browser.reload()
-    await browser.url(`http://${host}`)
+    await navigateTo(`http://${host}`)
   })
 
   after(async function () {
@@ -197,8 +210,11 @@ describe('dev mode', function () {
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
     server = exec('npm start', {cwd: root})
-    await childPrinted(server, /webpack built [a-z0-9]+ in \d+ms/i)
-    await browser.url(`http://localhost:${webpackConfig.devServer.port}`)
+    await Promise.all([
+      childPrinted(server, /webpack built [a-z0-9]+ in \d+ms/i),
+      childPrinted(server, /App is listening on http/i),
+    ])
+    await navigateTo(`http://localhost:${webpackConfig.devServer.port}`)
   })
 
   after(async function () {
