@@ -106,6 +106,8 @@ describe('prod mode', function () {
     this.timeout(600000)
     try {
       if (server) await timeout(kill(server, 'SIGINT'), 10000)
+    } catch (error) {
+      await execAsync("ps")
     } finally {
       // restore code in App.js, which (may) have been changed by hot reloading test
       if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
@@ -225,6 +227,8 @@ describe('dev mode', function () {
     this.timeout(15 * 60000)
     try {
       if (server) await timeout(kill(server, 'SIGINT'), 10000)
+    } catch (error) {
+      await execAsync('ps')
     } finally {
       // restore code in App.js, which (may) have been changed by hot reloading test
       if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
