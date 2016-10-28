@@ -1,4 +1,4 @@
-import {expect} from 'chai'
+import {expect, assert} from 'chai'
 import exec from 'crater-util/lib/exec'
 import kill from 'crater-util/lib/kill'
 import {childPrinted} from 'async-child-process'
@@ -157,7 +157,7 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
         DISABLE_FULL_SSR: '1',
       },
     })
-    await stdouted(server, /App is listening on http/i)
+    await childPrinted(server, /App is listening on http/i)
     await browser.reload()
     await browser.url(process.env.ROOT_URL)
   })
