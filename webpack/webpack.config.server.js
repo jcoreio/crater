@@ -14,6 +14,11 @@ const globalCSS = path.join(srcDir, 'styles', 'global')
 
 const config = {
   context: root,
+  resolve: {
+    alias: {
+      '~': srcDir,
+    }
+  },
   devtool: 'source-map',
   entry: {
     prerender: './src/server',

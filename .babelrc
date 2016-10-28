@@ -2,6 +2,17 @@
   "presets": ["es2015", "stage-1", "react", "flow"],
   "plugins": [
     "transform-runtime",
-    "meteor-imports"
-  ]
+    "meteor-imports",
+  ],
+  "env": {
+    "development": {
+      "plugins": [
+        ["module-resolver", {
+          "alias": {
+            "~": "./src"
+          }
+        }]
+      ]
+    }
+  }
 }

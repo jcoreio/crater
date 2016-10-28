@@ -17,6 +17,11 @@ const { ROOT_URL } = process.env
 
 const config = {
   context: root,
+  resolve: {
+    alias: {
+      '~': srcDir,
+    }
+  },
   devtool: 'eval',
   entry: [
     './src/client/index.js',
