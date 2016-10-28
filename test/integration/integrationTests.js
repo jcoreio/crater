@@ -1,7 +1,7 @@
 import {expect, assert} from 'chai'
 import exec from 'crater-util/lib/exec'
-import killTree from 'crater-util/lib/kill'
-import {kill, childPrinted} from 'async-child-process'
+import {childPrinted} from 'async-child-process'
+import kill from 'crater-util/lib/kill'
 import spawnAsync from 'crater-util/lib/spawnAsync'
 import execAsync from 'crater-util/lib/execAsync'
 import path from 'path'
@@ -137,7 +137,7 @@ describe('prod mode', function () {
 
   after(async function () {
     this.timeout(600000)
-    if (server) await killTree(server)
+    if (server) await kill(server, 'SIGINT')
     // restore code in App.js, which (may) have been changed by hot reloading test
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
@@ -191,7 +191,7 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
   after(async function () {
     this.timeout(30000)
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
-    if (server) await killTree(server)
+    if (server) await kill(server, 'SIGINT')
   })
 })
 
