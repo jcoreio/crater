@@ -1,7 +1,7 @@
 import {expect, assert} from 'chai'
 import exec from 'crater-util/lib/exec'
-import kill from 'crater-util/lib/kill'
-import {childPrinted} from 'async-child-process'
+import killTree from 'crater-util/lib/kill'
+import {join, kill, childPrinted} from 'async-child-process'
 import spawnAsync from 'crater-util/lib/spawnAsync'
 import execAsync from 'crater-util/lib/execAsync'
 import path from 'path'
@@ -126,7 +126,7 @@ describe('prod mode', function () {
 
   before(async function () {
     this.timeout(600000)
-    await promisify(rimraf)(build)
+    if (!process.env.SKIP_CLEAN) await promisify(rimraf)(build)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
     server = exec('npm run prod', {cwd: root})
@@ -137,7 +137,7 @@ describe('prod mode', function () {
 
   after(async function () {
     this.timeout(600000)
-    if (server) await kill(server)
+    if (server) await killTree(server)
     // restore code in App.js, which (may) have been changed by hot reloading test
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
@@ -191,7 +191,7 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
   after(async function () {
     this.timeout(30000)
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
-    if (server) await kill(server)
+    if (server) await killTree(server)
   })
 })
 
@@ -200,7 +200,7 @@ describe('docker build', function () {
 
   before(async function () {
     this.timeout(15 * 60000)
-    await promisify(rimraf)(build)
+    if (!process.env.SKIP_CLEAN) await promisify(rimraf)(build)
     await spawnAsync('npm', ['run', 'build:docker'], {cwd: root})
     server = exec('npm run docker', {
       cwd: root,
@@ -243,7 +243,7 @@ describe('dev mode', function () {
 
   before(async function () {
     this.timeout(15 * 60000)
-    await promisify(rimraf)(build)
+    if (!process.env.SKIP_CLEAN) await promisify(rimraf)(build)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
     server = exec('npm start', {cwd: root})
@@ -257,7 +257,7 @@ describe('dev mode', function () {
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
-    if (server) await kill(server)
+    if (server) await kill(server, 'SIGINT')
   })
 
   sharedTests()
@@ -271,8 +271,8 @@ describe('dev mode', function () {
         await promisify(fs.writeFile)(appFile, modified, 'utf8')
         await browser.waitUntil(
           () => browser.getText('h1') === newHeader,
-          20000,
-          'expected header text to hot update within 10s'
+          30000,
+          'expected header text to hot update within 30s'
         )
       })
 
