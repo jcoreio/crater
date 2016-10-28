@@ -13,7 +13,7 @@
     "prod:debug-brk": "babel-node scripts/prod-debug-brk.js",
     "pretest": "babel-node scripts/pretest.js",
     "test": "wdio wdio.conf.js",
-    "coverage": "BABEL_ENV=coverage nyc --reporter=lcov --reporter=text npm test",
+    "coverage": "BABEL_ENV=coverage nyc --reporter=lcov --reporter=text --show-process-tree npm test",
     "test:dev": "wdio wdio.conf.js --mochaOpts.grep dev",
     "test:prod": "wdio wdio.conf.js --mochaOpts.grep prod",
     "test:docker": "wdio wdio.conf.js --mochaOpts.grep docker",

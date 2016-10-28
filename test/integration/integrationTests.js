@@ -8,6 +8,7 @@ import path from 'path'
 import fs from 'fs'
 import rimraf from 'rimraf'
 import promisify from 'es6-promisify'
+import {Collector} from 'istanbul'
 import webpackConfig from '../../webpack/webpack.config.dev'
 
 const root = path.resolve(__dirname, '..', '..')
@@ -53,6 +54,19 @@ function unlinkIfExists(path, callback) {
     if (err && /ENOENT/.test(err.message)) err = null
     return callback(err, result)
   })
+}
+
+// istanbul ignore next
+async function mergeClientCoverage() {
+  if (process.env.BABEL_ENV === 'coverage') {
+    const collector = new Collector()
+
+    collector.add(global.__coverage__)
+    /* eslint-disable no-undef */
+    collector.add((await browser.execute(() => window.__coverage__)).value)
+    /* eslint-enable no-undef */
+    global.__coverage__ = collector.getFinalCoverage()
+  }
 }
 
 describe('build scripts', function () {
@@ -127,21 +141,24 @@ describe('prod mode', function () {
     // restore code in App.js, which (may) have been changed by hot reloading test
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
+    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
   })
 
   sharedTests()
 
   if (process.env.BABEL_ENV !== 'coverage') {
-    it('restarts the server when code is changed', async function () {
-      this.timeout(60000)
-      const serverModified = serverCode.replace(/express\(\)/, 'express()\napp.get("/test", (req, res) => res.send("hello world"))')
-      await promisify(fs.writeFile)(serverFile, serverModified, 'utf8')
-      await childPrinted(server, /App is listening on http/i)
+    describe('hot reloading', function () {
+      it('server restarts when code is changed', async function () {
+        this.timeout(60000)
+        const serverModified = serverCode.replace(/express\(\)/, 'express()\napp.get("/test", (req, res) => res.send("hello world"))')
+        await promisify(fs.writeFile)(serverFile, serverModified, 'utf8')
+        await childPrinted(server, /App is listening on http/i)
 
-      const newHeader = 'Welcome to Crater! with hot reloading'
-      const appModified = appCode.replace(/Welcome to Crater!/, newHeader)
-      await promisify(fs.writeFile)(appFile, appModified, 'utf8')
-      await childPrinted(server, /App is listening on http/i)
+        const newHeader = 'Welcome to Crater! with hot reloading'
+        const appModified = appCode.replace(/Welcome to Crater!/, newHeader)
+        await promisify(fs.writeFile)(appFile, appModified, 'utf8')
+        await childPrinted(server, /App is listening on http/i)
+      })
     })
   }
 })
@@ -173,6 +190,7 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
 
   after(async function () {
     this.timeout(30000)
+    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
     if (server) await kill(server)
   })
 })
@@ -209,6 +227,7 @@ describe('docker build', function () {
 
   after(async function () {
     this.timeout(20000)
+    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
     await spawnAsync('docker-compose', ['down'], {cwd: root})
   })
 
@@ -237,29 +256,32 @@ describe('dev mode', function () {
     // restore code in App.js, which (may) have been changed by hot reloading test
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
+    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
     if (server) await kill(server)
   })
 
   sharedTests()
 
   if (process.env.BABEL_ENV !== 'coverage') {
-    it('supports hot reloading', async function () {
-      this.timeout(40000)
-      const newHeader = 'Welcome to Crater! with hot reloading'
-      const modified = appCode.replace(/Welcome to Crater!/, newHeader)
-      await promisify(fs.writeFile)(appFile, modified, 'utf8')
-      await browser.waitUntil(
-        () => browser.getText('h1') === newHeader,
-        20000,
-        'expected header text to hot update within 10s'
-      )
-    })
+    describe('hot reloading', function () {
+      it('works on the client', async function () {
+        this.timeout(40000)
+        const newHeader = 'Welcome to Crater! with hot reloading'
+        const modified = appCode.replace(/Welcome to Crater!/, newHeader)
+        await promisify(fs.writeFile)(appFile, modified, 'utf8')
+        await browser.waitUntil(
+          () => browser.getText('h1') === newHeader,
+          20000,
+          'expected header text to hot update within 10s'
+        )
+      })
 
-    it('restarts the server when code is changed', async function () {
-      this.timeout(60000)
-      const modified = serverCode.replace(/express\(\)/, 'express()\napp.get("/test", (req, res) => res.send("hello world"))')
-      await promisify(fs.writeFile)(serverFile, modified, 'utf8')
-      await childPrinted(server, /App is listening on http/i)
+      it('server restarts when code is changed', async function () {
+        this.timeout(60000)
+        const modified = serverCode.replace(/express\(\)/, 'express()\napp.get("/test", (req, res) => res.send("hello world"))')
+        await promisify(fs.writeFile)(serverFile, modified, 'utf8')
+        await childPrinted(server, /App is listening on http/i)
+      })
     })
   }
 })
