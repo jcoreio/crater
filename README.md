@@ -1,7 +1,7 @@
 # Crater
 
 [![Build Status](https://travis-ci.org/jcoreio/crater.svg?branch=master)](https://travis-ci.org/jcoreio/crater)
-[![Coverage Status](https://coveralls.io/repos/github/jcoreio/crater/badge.svg?branch=coverage-fixed)](https://coveralls.io/github/jcoreio/crater?branch=coverage-fixed)
+[![Coverage Status](https://coveralls.io/repos/github/jcoreio/crater/badge.svg?branch=coverage-fixed)](https://coveralls.io/github/jcoreio/crater?branch=modules) (doesn't include client-side code yet)
 
 ## A new app skeleton for Meteor/React
 
