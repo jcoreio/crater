@@ -22,24 +22,6 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-function timeout(promise, delay) {
-  return new Promise((_resolve, _reject) => {
-    let done = false
-    function resolve(result) {
-      if (done) return
-      done = true
-      _resolve(result)
-    }
-    function reject(error) {
-      if (done) return
-      done = true
-      _reject(error)
-    }
-    promise.then(resolve).catch(reject)
-    setTimeout(() => reject(new Error("timed out waiting for promise")), delay)
-  })
-}
-
 function sharedTests() {
   it('serves page with correct title', async function () {
     expect(await browser.getTitle()).to.equal('Crater')
@@ -105,16 +87,11 @@ describe('prod mode', function () {
 
   after(async function () {
     this.timeout(600000)
-    try {
-      if (server) await timeout(kill(server, 'SIGINT'), 10000)
-    } catch (error) {
-      await execAsync("ps")
-    } finally {
-      // restore code in App.js, which (may) have been changed by hot reloading test
-      if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
-      if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
-      if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
-    }
+    if (server) await kill(server, 'SIGINT')
+    // restore code in App.js, which (may) have been changed by hot reloading test
+    if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
+    if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
+    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
   })
 
   sharedTests()
@@ -164,7 +141,7 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
   after(async function () {
     this.timeout(30000)
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
-    if (server) await timeout(kill(server, 'SIGINT'), 5000)
+    if (server) await kill(server, 'SIGINT')
   })
 })
 
@@ -226,16 +203,11 @@ describe('dev mode', function () {
 
   after(async function () {
     this.timeout(15 * 60000)
-    try {
-      if (server) await timeout(kill(server, 'SIGINT'), 10000)
-    } catch (error) {
-      await execAsync('ps')
-    } finally {
-      // restore code in App.js, which (may) have been changed by hot reloading test
-      if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
-      if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
-      if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
-    }
+    if (server) await kill(server, 'SIGINT')
+    // restore code in App.js, which (may) have been changed by hot reloading test
+    if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
+    if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
+    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
   })
 
   sharedTests()

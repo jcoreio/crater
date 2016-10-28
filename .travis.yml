@@ -32,6 +32,8 @@ before_install:
   - docker run -p 27017:27017 --detach mongo:3.2.8
 
 script:
-  - npm test -- --mochaOpts.grep "hot reloading"
+  - npm run lint
+  - npm run flow
+  - npm test:hot-reloading
   - npm run coverage
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
