@@ -64,12 +64,16 @@ const config = {
       loaders: [{
         path: 'babel',
         query: {
+          // this webpack bundle targets node, so we can use an es2015 preset optimized for
+          // its current version.
           "presets": ["es2015-node", "stage-1", "react", "flow"],
           "plugins": [
             "transform-runtime",
-            "transform-react-constant-elements",
-            "transform-react-inline-elements",
-            "transform-es2015-modules-commonjs", // in case es2015-node doesn't do it
+            // depending on our node version, es2015-node may not transform import/export statements.
+            // in that case node would understand them but webpack 1 wouldn't.
+            // so make sure they get transformed regardless.
+            // this should be removed for webpack 2
+            "transform-es2015-modules-commonjs",
           ],
           "env": {
             "coverage": {

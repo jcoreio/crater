@@ -48,6 +48,7 @@ const config = {
       loaders: [{
         path: 'babel',
         query: {
+          // use es2015 instead of es2015-node (as in .babelrc) because we're targeting the browser
           "presets": ["es2015", "stage-1", "react", "flow"],
           "plugins": [
             "transform-runtime",
