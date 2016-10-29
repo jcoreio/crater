@@ -14,6 +14,7 @@ import {Meteor} from 'meteor/meteor'
 import url from 'url'
 import type {IncomingMessage, ServerResponse} from 'http'
 import type {Store} from '../universal/flowtypes/redux'
+import Fiber from 'fibers'
 
 const __meteor_runtime_config__ = {
   PUBLIC_SETTINGS: Meteor.settings.public || {},
@@ -28,21 +29,23 @@ const __meteor_runtime_config__ = {
 }
 
 function renderApp(res: ServerResponse, store: Store, assets?: Object, renderProps?: Object) {
-  const location = renderProps && renderProps.location && renderProps.location.pathname || '/'
-  // Needed so some components can render based on location
-  store.dispatch(push(location))
-  const htmlStream = renderToStaticMarkup(
-    <Html
-      title="Crater"
-      store={store}
-      assets={assets}
-      __meteor_runtime_config__={__meteor_runtime_config__}
-      renderProps={renderProps}
-    />
-  )
-  res.write('<!DOCTYPE html>')
-  htmlStream.pipe(res, {end: false})
-  htmlStream.on('end', (): void => res.end())
+  Fiber((): any => Meteor.bindEnvironment(() => {
+    const location = renderProps && renderProps.location && renderProps.location.pathname || '/'
+    // Needed so some components can render based on location
+    store.dispatch(push(location))
+    const htmlStream = renderToStaticMarkup(
+      <Html
+        title="Crater"
+        store={store}
+        assets={assets}
+        __meteor_runtime_config__={__meteor_runtime_config__}
+        renderProps={renderProps}
+      />
+    )
+    res.write('<!DOCTYPE html>')
+    htmlStream.pipe(res, {end: false})
+    htmlStream.on('end', (): void => res.end())
+  })()).run()
 }
 
 async function createSSR(req: IncomingMessage, res: ServerResponse): Promise<void> {
