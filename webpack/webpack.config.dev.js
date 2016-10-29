@@ -98,9 +98,18 @@ const config = {
         use:[{
           loader: 'babel',
           options: {
-            'plugins': [
-              'react-hot-loader/babel',
+            "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react", "flow"],
+            "plugins": [
+              "transform-runtime",
+              "react-hot-loader/babel",
             ],
+            "env": {
+              "coverage": {
+                "plugins": [
+                  "istanbul"
+                ]
+              }
+            }
           },
         }],
         include: clientInclude,
