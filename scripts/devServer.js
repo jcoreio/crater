@@ -42,3 +42,4 @@ if (process.env.BABEL_ENV === 'coverage') {
   process.on('SIGINT', shutdown)
   process.on('SIGTERM', shutdown)
 }
+
