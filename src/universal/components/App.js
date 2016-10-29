@@ -1,6 +1,7 @@
 // @flow
 
 import React, {Component} from 'react'
+import {Link} from 'react-router'
 import {Meteor} from 'meteor/meteor'
 import Counts from '../collections/Counts'
 
@@ -32,6 +33,7 @@ export default class App extends Component {
         <h1>Welcome to Crater!</h1>
         <h3 className="counter">Counter: {this.state.value}</h3>
         <h3>Meteor.settings.public.test: <span className="settings-test">{Meteor.settings.public.test}</span></h3>
+        <Link to="/about">About</Link>
       </div>
     )
   }

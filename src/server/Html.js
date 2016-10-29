@@ -48,7 +48,6 @@ export default class Html extends Component {
           {PROD && <script src={vendor.js} />}
           {PROD && <script src={meteor.js} />}
           <script src={PROD ? app.js : '/static/app.js'} />
-          {process.env.DISABLE_FULL_SSR && <span id="full-ssr-disabled" />}
         </body>
       </html>
     )
