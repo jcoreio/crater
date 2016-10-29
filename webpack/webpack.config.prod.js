@@ -110,7 +110,22 @@ const config = {
         include: globalCSS,
       },
       { test: /\.js$/,
-        use: [{loader: 'babel'}],
+        use: [{
+          loader: 'babel',
+          options: {
+            "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react", "flow"],
+            "plugins": [
+              "transform-runtime",
+            ],
+            "env": {
+              "coverage": {
+                "plugins": [
+                  "istanbul"
+                ]
+              }
+            }
+          },
+        }],
         include: clientInclude,
       },
       //This is a workaround, the meteor-config is supposed to be injected in meteor-imports-webpack-plugin
