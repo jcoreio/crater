@@ -29,7 +29,7 @@ const __meteor_runtime_config__ = {
 }
 
 function renderApp(res: ServerResponse, store: Store, assets?: Object, renderProps?: Object) {
-  Fiber(() => Meteor.bindEnvironment(() => {
+  Fiber((): any => Meteor.bindEnvironment(() => {
     const location = renderProps && renderProps.location && renderProps.location.pathname || '/'
     // Needed so some components can render based on location
     store.dispatch(push(location))
