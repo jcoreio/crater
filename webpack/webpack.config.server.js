@@ -90,6 +90,20 @@ const config = {
         test: /\.js$/,
         loader: 'babel',
         include: srcDir,
+        options: {
+          "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react", "flow"],
+          "plugins": [
+            "transform-runtime",
+            "meteor-imports"
+          ],
+          "env": {
+            "coverage": {
+              "plugins": [
+                "istanbul"
+              ]
+            }
+          }
+        }
       },
     ],
   },
