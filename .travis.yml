@@ -8,7 +8,25 @@ services:
   - docker
 env:
   DOCKER_COMPOSE_VERSION: 1.8.0
+  CXX: g++-4.8
+  DEBUG: crater-util:kill,crater-util:kill:ps,crater:shutdown,crater:logs:browser,smart-restart:supervisor
+  DUMP_HTTP: 1
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+      - libgnome-keyring-dev
+
+cache:
+  directories:
+    - node_modules
+
 before_install:
+  # enable more file watches
+  - echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
   - npm config set progress false
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -16,3 +34,11 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
   - curl https://install.meteor.com/ | sh
   - docker run -p 27017:27017 --detach mongo:3.2.8
+
+script:
+  - npm install popsicle
+  - npm run lint
+  - npm run flow
+  - npm run test:hot-reloading
+  - npm run coverage
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js

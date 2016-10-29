@@ -2,7 +2,7 @@
 // @flow
 
 import start from './start'
-import spawn from './util/spawn'
+import spawn from 'crater-util/lib/spawn'
 import path from 'path'
 
 process.on('SIGINT', (): any => process.exit(1))

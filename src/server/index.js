@@ -4,6 +4,9 @@ import express from 'express'
 import path from 'path'
 import createSSR from './createSSR'
 import { WebApp } from 'meteor/webapp'
+import createDebug from 'debug'
+
+const shutdownDebug = createDebug('crater:shutdown')
 
 import '../universal/collections/Counts'
 
@@ -32,5 +35,16 @@ app.get('*', (req: Object, res: Object, next: Function) => {
 })
 
 WebApp.rawConnectHandlers.use(app)
+WebApp.onListening(() => {
+  console.log(`App is listening on http://0.0.0.0:${process.env.PORT || '80'}`) // eslint-disable-line no-console
+})
 
-console.log(`App is listening on http://0.0.0.0:${process.env.PORT || '80'}`) // eslint-disable-line no-console
+function shutdown() {
+  shutdownDebug('got signal, shutting down')
+  WebApp.httpServer.close()
+  process.exit(0)
+}
+
+process.on('SIGINT', shutdown)
+process.on('SIGTERM', shutdown)
+

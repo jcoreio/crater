@@ -1,7 +1,7 @@
 #!/usr/bin/env babel-node
 // @flow
 
-import asyncScript from './util/asyncScript'
+import asyncScript from 'crater-util/lib/asyncScript'
 import path from 'path'
 import buildMeteor from './build-meteor'
 import installMeteorDeps from './installMeteorDeps'
@@ -28,7 +28,8 @@ async function start(options?: {commandOptions?: Array<any>} = {}): Promise<any>
 export default start
 
 if (!module.parent) {
-  process.on('SIGINT', (): any => process.exit(1))
+  process.on('SIGINT', (): any => process.exit(0))
+  process.on('SIGTERM', (): any => process.exit(0))
   asyncScript(start, {
     exitOnSuccess: false,
   })
