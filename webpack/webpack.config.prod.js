@@ -59,7 +59,22 @@ const config = {
     new HappyPack({
       id: '1', // https://github.com/amireh/happypack/issues/88
       cache: false,
-      loaders: ['babel'],
+      loaders: [{
+        path: 'babel',
+        query: {
+          "presets": ["es2015", "stage-1", "react", "flow"],
+          "plugins": [
+            "transform-runtime",
+          ],
+          "env": {
+            "coverage": {
+              "plugins": [
+                "istanbul"
+              ]
+            }
+          }
+        }
+      }],
       threads: 4,
     }),
     new MeteorImportsPlugin({

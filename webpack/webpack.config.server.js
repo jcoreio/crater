@@ -61,7 +61,23 @@ const config = {
     new HappyPack({
       id: '1', // https://github.com/amireh/happypack/issues/88
       cache: false,
-      loaders: ['babel'],
+      loaders: [{
+        path: 'babel',
+        query: {
+          "presets": ["es2015-node", "stage-1", "react", "flow"],
+          "plugins": [
+            "transform-runtime",
+            "transform-es2015-modules-commonjs" // in case es2015-node doesn't do it
+          ],
+          "env": {
+            "coverage": {
+              "plugins": [
+                "istanbul"
+              ]
+            }
+          }
+        }
+      }],
       threads: 4,
     }),
   ],
@@ -96,10 +112,5 @@ const config = {
 
 /* istanbul ignore next */
 if (!process.env.CI) config.plugins.push(new ProgressBarPlugin())
-if (process.argv.indexOf('--no-uglify') < 0) {
-  config.plugins.push(new webpack.optimize.UglifyJsPlugin({
-    compressor: { warnings: false }
-  }))
-}
 
 export default config
