@@ -1,4 +1,4 @@
-import {expect, assert} from 'chai'
+import {expect} from 'chai'
 import exec from 'crater-util/lib/exec'
 import {childPrinted} from 'async-child-process'
 import kill from 'crater-util/lib/kill'
@@ -11,6 +11,8 @@ import promisify from 'es6-promisify'
 import {Collector} from 'istanbul'
 import webpackConfig from '../../webpack/webpack.config.dev'
 import debug from 'debug'
+
+const popsicle = require('popsicle')
 
 const browserLogsDebug = debug('crater:logs:browser')
 
@@ -50,6 +52,12 @@ function sharedTests() {
   it('sends Meteor.settings.public to the client', async function () {
     expect(await browser.getText('.settings-test')).to.equal('success')
   })
+  it('allows switching between home and about page', async () => {
+    await browser.click('=About')
+    expect(await browser.getText('h1')).to.equal('About')
+    await browser.click('=Home')
+    expect(await browser.getText('h1')).to.equal('Welcome to Crater!')
+  })
 }
 
 function unlinkIfExists(path, callback) {
@@ -74,7 +82,6 @@ async function mergeClientCoverage() {
 
 async function navigateTo(url) {
   if (process.env.DUMP_HTTP) {
-    const popsicle = require('popsicle')
     const res = await popsicle.get(url)
     /* eslint-disable no-console */
     console.log(`GET ${url} ${res.status}`)
@@ -122,6 +129,17 @@ describe('prod mode', function () {
 
   sharedTests()
 
+  describe('full server-side rendering', () => {
+    it('renders contents of home page', async () => {
+      const html = (await popsicle.get(process.env.ROOT_URL)).body
+      expect(html).to.match(/Welcome to Crater!/)
+    })
+    it('renders contents of about page', async () => {
+      const html = (await popsicle.get(process.env.ROOT_URL + '/about')).body
+      expect(html).to.match(/About<\/h1>/)
+    })
+  })
+
   if (process.env.BABEL_ENV !== 'coverage') {
     describe('hot reloading', function () {
       it('server restarts when code is changed', async function () {
@@ -134,6 +152,8 @@ describe('prod mode', function () {
         const appModified = appCode.replace(/Welcome to Crater!/, newHeader)
         await promisify(fs.writeFile)(appFile, appModified, 'utf8')
         await childPrinted(server, /App is listening on http/i)
+        const html = (await popsicle.get(process.env.ROOT_URL)).body
+        expect(html).to.match(/Welcome to Crater! with hot reloading/)
       })
     })
   }
@@ -155,11 +175,9 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
     await navigateTo(process.env.ROOT_URL)
   })
 
-  it('has hidden element to indicate that full SSR is disabled', async () => {
-    assert(
-      await browser.isExisting('#full-ssr-disabled'),
-      "full SSR doesn't actually seem to be disabled"
-    )
+  it('does not perform full server-side rendering', async () => {
+    const html = (await popsicle.get(process.env.ROOT_URL + '/about')).body
+    expect(html).not.to.match(/<h1>About<\/h1>/)
   })
 
   sharedTests()
@@ -263,6 +281,7 @@ describe('dev mode', function () {
         const modified = serverCode.replace(/express\(\)/, 'express()\napp.get("/test", (req, res) => res.send("hello world"))')
         await promisify(fs.writeFile)(serverFile, modified, 'utf8')
         await childPrinted(server, /App is listening on http/i)
+        expect((await popsicle.get(process.env.ROOT_URL + '/test')).body).to.equal('hello world')
       })
     })
   }
