@@ -29,12 +29,14 @@ server.on('upgrade', (req: Object, socket: any, head: any): any => proxy.ws(req,
 
 console.log(`Dev server is listening on http://0.0.0.0:${webpackConfig.devServer.port}`)
 
-function shutdown() {
-  shutdownDebug('got signal, shutting down')
-  server.close()
-  process.exit(0)
+// istanbul ignore next
+if (process.env.BABEL_ENV === 'coverage') {
+  const shutdown = () => {
+    shutdownDebug('got signal, shutting down')
+    server.close()
+    process.exit(0)
+  }
+
+  process.on('SIGINT', shutdown)
+  process.on('SIGTERM', shutdown)
 }
-
-process.on('SIGINT', shutdown)
-process.on('SIGTERM', shutdown)
-

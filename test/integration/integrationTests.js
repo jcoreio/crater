@@ -52,11 +52,19 @@ function sharedTests() {
   it('sends Meteor.settings.public to the client', async function () {
     expect(await browser.getText('.settings-test')).to.equal('success')
   })
+  it('serves 404 for favicon', async () => {
+    expect((await popsicle.get(process.env.ROOT_URL + '/favicon.png')).status).to.equal(404)
+  })
   it('allows switching between home and about page', async () => {
     await browser.click('=About')
     expect(await browser.getText('h1')).to.equal('About')
     await browser.click('=Home')
     expect(await browser.getText('h1')).to.equal('Welcome to Crater!')
+  })
+  it('proxies or defers to /sockjs', async () => {
+    const response = (await popsicle.get(process.env.ROOT_URL + '/sockjs/info')
+      .use(popsicle.plugins.parse(['json', 'urlencoded']))).body
+    expect(response.websocket).to.be.true
   })
 }
 
@@ -137,6 +145,9 @@ describe('prod mode', function () {
     it('renders contents of about page', async () => {
       const html = (await popsicle.get(process.env.ROOT_URL + '/about')).body
       expect(html).to.match(/About<\/h1>/)
+    })
+    it('responds with 404 for invalid routes', async () => {
+      expect((await popsicle.get(process.env.ROOT_URL + '/wat')).status).to.equal(404)
     })
   })
 
