@@ -65,6 +65,8 @@ const config = {
           "presets": ["es2015", "stage-1", "react", "flow"],
           "plugins": [
             "transform-runtime",
+            "transform-react-constant-elements",
+            "transform-react-inline-elements",
           ],
           "env": {
             "coverage": {
