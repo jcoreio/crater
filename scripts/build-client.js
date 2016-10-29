@@ -2,8 +2,8 @@
 // @flow
 
 import path from 'path'
-import asyncScript from './util/asyncScript'
-import isNewerThan from './util/isNewerThan'
+import asyncScript from 'crater-util/lib/asyncScript'
+import isNewerThan from 'crater-util/lib/isNewerThan'
 import webpack from 'webpack'
 import webpackConfig from '../webpack/webpack.config.prod'
 import promisify from 'es6-promisify'

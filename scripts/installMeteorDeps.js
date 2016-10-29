@@ -1,8 +1,8 @@
 #!/usr/bin/env babel-node
 // @flow
 
-import spawnAsync from './util/spawnAsync'
-import isDirectory from './util/isDirectory'
+import spawnAsync from 'crater-util/lib/spawnAsync'
+import isDirectory from 'crater-util/lib/isDirectory'
 import path from 'path'
 import buildDir from '../buildDir'
 

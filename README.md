@@ -1,6 +1,7 @@
 # Crater
 
-[![Build Status](https://travis-ci.org/jedwards1211/crater.svg?branch=master)](https://travis-ci.org/jedwards1211/crater)
+[![Build Status](https://travis-ci.org/jcoreio/crater.svg?branch=master)](https://travis-ci.org/jcoreio/crater)
+[![Coverage Status](https://coveralls.io/repos/github/jcoreio/crater/badge.svg?branch=master)](https://coveralls.io/github/jcoreio/crater?branch=master)
 
 ## A new app skeleton for Meteor/React
 
@@ -23,6 +24,8 @@ If you can't start over (i.e. switch to [Meatier](https://github.com/mattkrick/m
 * redux
 * react-router
 * react-router-redux
+* eslint, eslint-watch
+* flow, flow-watch
 * Very customizable
 * Dockerfile included
 * Webdriver.io + Mocha + Chai integration test setup
@@ -89,6 +92,17 @@ If you want a different folder structure, it's perfectly possible to customize t
 See explanation [here](https://github.com/luisherranz/meteor-imports-webpack-plugin#the-bad-things).
 A Webpack loader for Spacebars HTML templates could be implemented, but it's not a priority for me.
 
+## react-meteor-data
+
+Currently the Meteor package doesn't work with Crater.  As a superior alternative, use the version I published as a true NPM package:
+```
+npm install --save-dev react-meteor-data react-addons-pure-render-mixin
+```
+Then import it like this:
+```es6
+import {ReactMeteorData} from 'react-meteor-data'
+```
+
 ## Version notes
 * **Node**: Tested on the latest Node 4, 5, and 6 in Travis CI.  No effort will be made to support Node < 4.4.7.
 * **Webpack**: The `master` branch currently works only with Webpack 1.  If you want to use Webpack 2, check out the [`webpack2` branch](https://github.com/jedwards1211/crater/tree/webpack2).
@@ -106,8 +120,6 @@ git checkout webpack2
 
 ## Running
 Crater doesn't start a Mongo dev database, before running, you must start one by running `mongod` in a separate shell.
-
-**Note: if you're *not* using Node 4, you will need to rebuild the fibers binary for your node version -- see the [Troubleshooting](#troubleshooting) section for more details.**
 
 ### Dev mode
 
@@ -141,6 +153,16 @@ npm run prod
 ```
 And open http://localhost:3000 in your browser.
 
+### Disabling full SSR in prod mode
+As neat as it is, full-blown SSR requires more work and you might decide it's not worth it.
+To only render an empty HTML document on the server and do everything else on the client, even in production,
+set the `DISABLE_FULL_SSR` environment variable:
+```
+DISABLE_FULL_SSR=1 npm run prod # or npm run build, etc.
+```
+or look in `webpack/webpack.config.server.js` and uncomment the `DISABLE_FULL_SSR` line inside the
+`webpack.DefinePlugin`.  If you build bundles this way, there will be no way to turn full SSR back on at runtime.
+
 ### Prod Debug mode
 ```
 npm run prod:debug
@@ -152,10 +174,12 @@ npm run prod:debug-brk
 And then go to the usual `node-inspector` URL, which will be printed in the console.
 
 ### Eslint/Flow
-```
-npm run check
-```
-Starts a `supervisor` watcher that reruns `eslint` and `flow` when you change anything.
+The following scripts are available:
+- `npm run lint`
+- `npm run lint:fix`
+- `npm run lint:watch`
+- `npm run flow`
+- `npm run flow:watch`
 
 ### Build
 ```

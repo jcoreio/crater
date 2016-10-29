@@ -54,6 +54,10 @@ async function createSSR(req: IncomingMessage, res: ServerResponse): Promise<voi
       const assets = JSON.parse(await readFile(path.resolve(__dirname, 'assets.json'), 'utf8'))
       assets.manifest.text = await
       readFile(join(__dirname, assets.manifest.js), 'utf-8')
+      if (process.env.DISABLE_FULL_SSR) {
+        return renderApp(res, store, assets)
+      }
+      const makeRoutes = require('../universal/routes').default
       const routes = makeRoutes(store)
       match({routes, location: req.url}, (error: ?Error, redirectLocation: {pathname: string, search: string}, renderProps: ?Object) => {
         if (error) {

@@ -3,9 +3,9 @@
 
 import path from 'path'
 import mkdirp from 'mkdirp'
-import asyncScript from './util/asyncScript'
-import isNewerThan from './util/isNewerThan'
-import spawnAsync from './util/spawnAsync'
+import asyncScript from 'crater-util/lib/asyncScript'
+import isNewerThan from 'crater-util/lib/isNewerThan'
+import spawnAsync from 'crater-util/lib/spawnAsync'
 import webpack from 'webpack'
 import webpackConfig from '../webpack/webpack.config.server'
 import promisify from 'es6-promisify'
