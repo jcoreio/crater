@@ -149,6 +149,14 @@ describe('prod mode', function () {
     it('responds with 404 for invalid routes', async () => {
       expect((await popsicle.get(process.env.ROOT_URL + '/wat')).status).to.equal(404)
     })
+    it('displays error message if error occurs during streaming', async () => {
+      const html = (await popsicle.get(process.env.ROOT_URL + '/errorTest')).body
+      expect(html).to.match(/An internal server error occurred/)
+    })
+    it("doesn't crash when an error is thrown during rendering", async () => {
+      await popsicle.get(process.env.ROOT_URL + '/errorTest')
+      expect((await popsicle.get(process.env.ROOT_URL)).status).to.equal(200)
+    })
   })
 
   if (process.env.BABEL_ENV !== 'coverage') {

@@ -7,6 +7,7 @@ export default (store: Store): Object => {
     childRoutes: [
       require('./home').default(store),
       require('./about').default(store),
+      require('./errorTest').default(store),
     ],
   }
 }
