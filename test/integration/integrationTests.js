@@ -4,6 +4,8 @@ import {childPrinted} from 'async-child-process'
 import kill from 'crater-util/lib/kill'
 import spawnAsync from 'crater-util/lib/spawnAsync'
 import execAsync from 'crater-util/lib/execAsync'
+import dockerComposePort from 'crater-util/lib/dockerComposePort'
+import dockerComposeEnv from '../../scripts/dockerComposeEnv'
 import path from 'path'
 import fs from 'fs'
 import rimraf from 'rimraf'
@@ -27,7 +29,7 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-function sharedTests() {
+function sharedTests(getRootUrl = async () => Promise.resolve(process.env.ROOT_URL)) {
   it('serves page with correct title', async function () {
     expect(await browser.getTitle()).to.equal('Crater')
   })
@@ -53,7 +55,7 @@ function sharedTests() {
     expect(await browser.getText('.settings-test')).to.equal('success')
   })
   it('serves 404 for favicon', async () => {
-    expect((await popsicle.get(process.env.ROOT_URL + '/favicon.png')).status).to.equal(404)
+    expect((await popsicle.get(await getRootUrl() + '/favicon.png')).status).to.equal(404)
   })
   it('allows switching between home and about page', async () => {
     await browser.click('=About')
@@ -62,7 +64,7 @@ function sharedTests() {
     expect(await browser.getText('h1')).to.equal('Welcome to Crater!')
   })
   it('proxies or defers to /sockjs', async () => {
-    const response = (await popsicle.get(process.env.ROOT_URL + '/sockjs/info')
+    const response = (await popsicle.get(await getRootUrl() + '/sockjs/info')
       .use(popsicle.plugins.parse(['json', 'urlencoded']))).body
     expect(response.websocket).to.be.true
   })
@@ -212,6 +214,8 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
 describe('docker build', function () {
   let server
 
+  const getRootUrl = async () => `http://${await dockerComposePort('crater', 80, {cwd: root})}`
+
   before(async function () {
     this.timeout(15 * 60000)
     // run this first, even though it's not necessary, to increase coverage of scripts/build.js
@@ -229,25 +233,21 @@ describe('docker build', function () {
       }
     })
     await childPrinted(server, /App is listening on http/i)
-    let host
-    if (process.env.CI) host = (await execAsync('docker-compose port crater 80', {cwd: root})).stdout.trim()
-    else {
-      await execAsync('which docker-machine')
-        .then(() => host = `192.168.99.100:${process.env.PORT}`)
-        .catch(() => host = `localhost:${process.env.PORT}`)
-    }
     await browser.reload()
-    await navigateTo(`http://${host}`)
+    await navigateTo(await getRootUrl())
   })
 
   after(async function () {
     this.timeout(20000)
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
-    await spawnAsync('docker-compose', ['down'], {cwd: root})
+    await spawnAsync('docker-compose', ['down'], {
+      cwd: root,
+      env: await dockerComposeEnv(),
+    })
     await logBrowserMessages()
   })
 
-  sharedTests()
+  sharedTests(getRootUrl)
 })
 
 describe('dev mode', function () {
