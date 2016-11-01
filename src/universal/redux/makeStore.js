@@ -1,21 +1,23 @@
 /* @flow */
 
+import { Meteor } from 'meteor/meteor'
 import { createStore, applyMiddleware, compose } from 'redux'
 import { Map as iMap } from 'immutable'
 import { routerMiddleware } from 'react-router-redux'
 import { browserHistory } from 'react-router'
-import makeReducer from '../universal/redux/makeReducer'
-import type {Store} from '../universal/flowtypes/redux'
+import makeReducer from './makeReducer'
+import type {Store} from '../flowtypes/redux'
 
 export default (initialState: iMap<string, any>): Store => {
   let store
   const reducer = makeReducer()
-  const reduxRouterMiddleware = routerMiddleware(browserHistory)
-  const middlewares = [
-    reduxRouterMiddleware,
-  ]
+  const middlewares = []
 
-  if (process.env.NODE_ENV === 'production') {
+  if (!Meteor.isServer) {
+      middlewares.push(routerMiddleware(browserHistory))
+  }
+
+  if (Meteor.isServer || process.env.NODE_ENV === 'production') {
     store = createStore(reducer, initialState, applyMiddleware(...middlewares))
   } else {
     const devtoolsExt = global.devToolsExtension && global.devToolsExtension()

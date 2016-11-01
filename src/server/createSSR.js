@@ -1,6 +1,5 @@
 import React from 'react'
-import {createStore} from 'redux'
-import makeReducer from '../universal/redux/makeReducer'
+import makeStore from '../universal/redux/makeStore'
 import {match as _match} from 'react-router'
 import Html from './Html'
 import {push} from 'react-router-redux'
@@ -84,7 +83,7 @@ function match({routes, location}: {routes: Object, location: string}): Promise<
 
 const createSSR = Meteor.bindEnvironment(async (req: IncomingMessage, res: ServerResponse): Promise<void> => {
   try {
-    const store = createStore(makeReducer(), iMap())
+    const store = makeStore(iMap())
     if (process.env.NODE_ENV === 'production') {
       const readFile = promisify(fs.readFile)
       const assets = JSON.parse(await readFile(path.resolve(__dirname, 'assets.json'), 'utf8'))
