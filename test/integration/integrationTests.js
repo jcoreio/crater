@@ -5,7 +5,7 @@ import kill from 'crater-util/lib/kill'
 import spawnAsync from 'crater-util/lib/spawnAsync'
 import execAsync from 'crater-util/lib/execAsync'
 import dockerComposePort from 'crater-util/lib/dockerComposePort'
-import dockerEnv from 'crater-util/lib/dockerEnv'
+import dockerComposeEnv from '../../scripts/dockerComposeEnv'
 import path from 'path'
 import fs from 'fs'
 import rimraf from 'rimraf'
@@ -242,10 +242,7 @@ describe('docker build', function () {
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
     await spawnAsync('docker-compose', ['down'], {
       cwd: root,
-      env: {
-        ...process.env,
-        ...await dockerEnv(),
-      }
+      env: await dockerComposeEnv(),
     })
     await logBrowserMessages()
   })
