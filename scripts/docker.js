@@ -4,6 +4,8 @@
 import asyncScript from 'crater-util/lib/asyncScript'
 import execAsync from 'crater-util/lib/execAsync'
 import spawnAsync from 'crater-util/lib/spawnAsync'
+import dockerEnv from 'crater-util/lib/dockerEnv'
+import getDockerIP from 'crater-util/lib/getDockerIP'
 import path from 'path'
 
 const root = path.resolve(__dirname, '..')
@@ -15,8 +17,9 @@ asyncScript(async (): Promise<any> => {
   await spawnAsync('docker-compose', ['up'], {
     env: {
       ...process.env,
+      ...await dockerEnv(),
       NAME,
-      ROOT_URL: 'http://localhost:3000',
+      ROOT_URL: `http://${await getDockerIP()}:3000`,
       TAG: commitHash,
     },
     cwd: root,
