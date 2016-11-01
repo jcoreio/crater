@@ -15,11 +15,12 @@ export default class Html extends Component {
     env: PropTypes.object,
     settings: PropTypes.object,
     renderProps: PropTypes.object,
+    onError: PropTypes.func,
   }
 
   render(): React.Element<any> {
     const PROD = process.env.NODE_ENV === 'production'
-    const {title, __meteor_runtime_config__, store, assets, renderProps} = this.props
+    const {title, __meteor_runtime_config__, store, assets, renderProps, onError} = this.props
     const {manifest, app, vendor, meteor} = assets || {}
     const initialState = `window.__INITIAL_STATE__ = ${JSON.stringify(store.getState())}`
     const root = PROD && !process.env.DISABLE_FULL_SSR && renderToString(
@@ -27,6 +28,7 @@ export default class Html extends Component {
         <RouterContext {...renderProps} />
       </Provider>
     )
+    if (root && onError) root.on('error', onError)
 
     return (
       <html>

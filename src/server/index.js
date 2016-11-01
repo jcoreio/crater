@@ -5,6 +5,7 @@ import path from 'path'
 import createSSR from './createSSR'
 import { WebApp } from 'meteor/webapp'
 import createDebug from 'debug'
+import Fiber from 'fibers'
 
 const shutdownDebug = createDebug('crater:shutdown')
 
@@ -31,7 +32,7 @@ app.get('*', (req: Object, res: Object, next: Function) => {
     next()
     return
   }
-  createSSR(req, res)
+  Fiber((): void => createSSR(req, res)).run()
 })
 
 WebApp.rawConnectHandlers.use(app)
