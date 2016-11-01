@@ -4,7 +4,7 @@ import { render } from 'react-dom'
 import React from 'react'
 import { AppContainer } from 'react-hot-loader'
 import { Map as iMap } from 'immutable'
-import makeStore from './makeStore'
+import makeStore from '../universal/redux/makeStore'
 import Root from './Root'
 
 Meteor.startup(() => {
