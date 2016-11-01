@@ -45,7 +45,7 @@ export default class Html extends Component {
             __html: `window.__meteor_runtime_config__ = ${JSON.stringify(__meteor_runtime_config__)}`
           }} />
           <script dangerouslySetInnerHTML={{__html: initialState}} />
-          {PROD ? <div id="root" dangerouslySetInnerHTML={{__html: root}}></div> : <div id="root"></div>}
+          {root ? <div id="root" dangerouslySetInnerHTML={{__html: root}}></div> : <div id="root"></div>}
           {PROD && <script dangerouslySetInnerHTML={{__html: manifest.text}} />}
           {PROD && <script src={vendor.js} />}
           {PROD && <script src={meteor.js} />}
