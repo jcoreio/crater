@@ -1,6 +1,7 @@
-var path = require('path')
+// @flow
 
-module.exports = path.resolve(__dirname, 'build')
+var buildDir = process.env.BUILD_DIR
+if (!buildDir) throw new Error("missing process.env.BUILD_DIR")
 
-// to support a multitarget build, use the following:
-// module.exports = path.resolve(__dirname, 'build', process.env.TARGET || 'default')
+module.exports = buildDir
+

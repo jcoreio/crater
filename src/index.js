@@ -1,6 +1,6 @@
 global.__CLIENT__ = false
 
-if (process.env.USE_DOTENV) require('dotenv').config()
+if (process.env.USE_GETENV) require('../getenv')
 
 global.__PRODUCTION__ = process.env.NODE_ENV === 'production'
 

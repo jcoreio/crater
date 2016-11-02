@@ -7,15 +7,16 @@ import spawnAsync from 'crater-util/lib/spawnAsync'
 import buildMeteor from './build-meteor'
 import installMeteorDeps from './installMeteorDeps'
 import path from 'path'
-import buildDir from '../buildDir'
 import webpack from 'webpack'
 import clientConfig from '../webpack/webpack.config.prod'
 import serverConfig from '../webpack/webpack.config.server'
+import '../getenv'
+import buildDir from '../buildDir'
 
 const root = path.resolve(__dirname, '..')
 
 process.env.NODE_ENV = 'production'
-process.env.USE_DOTENV = '1'
+process.env.USE_GETENV = '1'
 
 async function prod(options?: {commandOptions?: Array<string>} = {}): Promise<any> {
   await buildMeteor()

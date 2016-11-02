@@ -7,6 +7,7 @@ import HappyPack from 'happypack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import MeteorImportsPlugin from 'meteor-imports-webpack-plugin'
 import cssModulesValues from 'postcss-modules-values'
+import '../getenv'
 import buildDir from '../buildDir'
 
 const root = path.resolve(__dirname, '..')

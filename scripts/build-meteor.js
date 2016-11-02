@@ -9,6 +9,7 @@ import asyncScript from 'crater-util/lib/asyncScript'
 import isNewerThan from 'crater-util/lib/isNewerThan'
 import spawnAsync from 'crater-util/lib/spawnAsync'
 import promisify from 'es6-promisify'
+import '../getenv'
 import buildDir from '../buildDir'
 
 const root = path.resolve(__dirname, '..')

@@ -7,6 +7,7 @@ import isNewerThan from 'crater-util/lib/isNewerThan'
 import webpack from 'webpack'
 import webpackConfig from '../webpack/webpack.config.prod'
 import promisify from 'es6-promisify'
+import '../getenv'
 import buildDir from '../buildDir'
 
 const root = path.resolve(__dirname, '..')

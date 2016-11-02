@@ -3,10 +3,10 @@
 import express from 'express'
 import webpackConfig from '../webpack/webpack.config.dev'
 import createDebug from 'debug'
+import '../getenv'
 
 const shutdownDebug = createDebug('crater:shutdown')
 
-if (process.env.USE_DOTENV) require('dotenv').config()
 const {PORT} = process.env
 if (PORT == null) throw new Error("Missing process.env.PORT")
 

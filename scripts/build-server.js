@@ -9,6 +9,7 @@ import spawnAsync from 'crater-util/lib/spawnAsync'
 import webpack from 'webpack'
 import webpackConfig from '../webpack/webpack.config.server'
 import promisify from 'es6-promisify'
+import '../getenv'
 import buildDir from '../buildDir'
 
 const root = path.resolve(__dirname, '..')

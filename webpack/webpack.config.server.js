@@ -6,6 +6,7 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import HappyPack from 'happypack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import nodeExternals from 'webpack-node-externals'
+import '../getenv'
 import buildDir from '../buildDir'
 
 const root = path.resolve(__dirname, '..')

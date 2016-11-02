@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('./getenv')
 
 exports.config = {
 
