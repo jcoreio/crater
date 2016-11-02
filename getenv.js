@@ -1,3 +1,5 @@
+// @flow
+
 require('dotenv').config({silent: true})
 var path = require('path')
 
