@@ -4,6 +4,7 @@
 import spawnAsync from 'crater-util/lib/spawnAsync'
 import isDirectory from 'crater-util/lib/isDirectory'
 import path from 'path'
+import '../getenv'
 import buildDir from '../buildDir'
 
 const programsServer = path.join(buildDir, 'meteor', 'bundle', 'programs', 'server')

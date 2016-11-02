@@ -7,12 +7,12 @@ import spawnAsync from 'crater-util/lib/spawnAsync'
 import dockerEnv from 'crater-util/lib/dockerEnv'
 import path from 'path'
 import build from './build'
+import '../getenv'
 import buildDir from '../buildDir'
 
 const root = path.resolve(__dirname, '..')
 
 process.on('SIGINT', (): any => process.exit(1))
-
 
 asyncScript(async (): Promise<void> => {
   const opts = {
