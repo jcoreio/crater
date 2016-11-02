@@ -45,7 +45,14 @@ const config = {
     }),
     new HappyPack({
       id: '1', // https://github.com/amireh/happypack/issues/88
-      loaders: ['babel'],
+      loaders: [{
+        path: 'babel',
+        query: {
+          'plugins': [
+            'react-hot-loader/babel',
+          ],
+        },
+      }],
       threads: 4,
     }),
     new MeteorImportsPlugin({
@@ -78,11 +85,6 @@ const config = {
         test: /\.js$/,
         loader: 'happypack/loader',
         include: clientInclude,
-        query: {
-          'plugins': [
-            'react-hot-loader/babel',
-          ],
-        },
       },
     ],
   },
