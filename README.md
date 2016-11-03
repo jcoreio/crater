@@ -121,7 +121,7 @@ git checkout webpack2
 ## Updating
 Some helpers used by the scripts are in the `crater-util` and `async-child-process` packages, so update those:
 ```
-npm i --save-dev crater-util async-child-process
+npm update --save-dev crater-util async-child-process
 ```
 Otherwise it can be kind of awkward because you're free to modify anything in this skeleton.  Ideally you can just run
 ```
