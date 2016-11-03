@@ -118,6 +118,18 @@ Again, if you want to use webpack 2:
 git checkout webpack2
 ```
 
+## Updating
+Some helpers used by the scripts are in the `crater-util` and `async-child-process` packages, so update those:
+```
+npm i --save-dev crater-util async-child-process
+```
+Otherwise it can be kind of awkward because you're free to modify anything in this skeleton.  Ideally you can just run
+```
+git pull skeleton master
+```
+and it will merge without conflicts, but if you've made many of your own changes, you'll probably have at least a few conflicts.
+I don't really know of a way to make this easier than to make it a package that starts up everything and then calls your code.  But that's what Meteor does, which I'm trying to avoid because not being able to fully customize the bootstrap process and libraries used can be a real PITA sometimes.
+
 ## Running
 Crater doesn't start a Mongo dev database, before running, you must start one by running `mongod` in a separate shell.
 
