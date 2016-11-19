@@ -76,7 +76,7 @@ const config = {
       {
         test: /\.css$/,
         loader: ExtractTextPlugin.extract(
-          'css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss'
+          'css-loader?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss-loader'
         ),
         include: srcDir,
         exclude: globalCSS,
@@ -88,7 +88,7 @@ const config = {
       },
       {
         test: /\.js$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         include: srcDir,
         options: {
           "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react", "flow"],
