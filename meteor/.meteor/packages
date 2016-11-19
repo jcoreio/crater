@@ -4,6 +4,6 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-meteor
-mongo
-webapp
+meteor@1.6.0
+mongo@1.1.14
+webapp@1.3.12
