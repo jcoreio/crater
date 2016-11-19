@@ -17,6 +17,18 @@ const meteor = path.join(root, 'meteor')
 
 async function buildMeteor(): Promise<void> {
   await promisify(mkdirp)(buildDir)
+  if (await isNewerThan(
+    path.join(meteor, 'package.json'),
+    path.join(meteor, 'node_modules'),
+    )) {
+    console.log('installing meteor/node_modules...')
+    await spawnAsync('npm', ['install'], {
+      cwd: meteor,
+      stdio: 'inherit'
+    })
+  } else {
+    console.log('meteor/node_modules is up to date')
+  }
   if (await isNewerThan([
     ...await promisify(glob)(path.join(meteor, '**')),
     path.join(meteor, '.meteor', 'packages'),
