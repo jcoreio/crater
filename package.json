@@ -93,7 +93,7 @@
     "node-inspector": "^0.12.8",
     "nyc": "^10.0.0",
     "phantomjs-prebuilt": "^2.1.12",
-    "popsicle": "^8.2.0",
+    "popsicle": "^9.0.0",
     "postcss-loader": "^1.1.1",
     "postcss-modules-values": "^1.2.2",
     "pre-commit": "^1.1.3",
