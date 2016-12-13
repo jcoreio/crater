@@ -107,7 +107,7 @@
     "url-loader": "^0.5.7",
     "wdio-mocha-framework": "^0.5.4",
     "wdio-phantomjs-service": "^0.2.2",
-    "wdio-spec-reporter": "0.0.3",
+    "wdio-spec-reporter": "0.0.4",
     "webdriverio": "^4.4.0",
     "webpack": "^1.13.2",
     "webpack-dev-middleware": "^1.6.1",
