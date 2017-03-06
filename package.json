@@ -32,6 +32,7 @@
     "debug": "^2.2.0",
     "express": "^4.14.0",
     "immutable": "^3.8.1",
+    "json-string-loader": "1.0.0",
     "meteor-node-stubs": "~0.2.0",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
