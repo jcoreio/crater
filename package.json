@@ -104,7 +104,7 @@
     "redux-logger": "^2.7.4",
     "rimraf": "^2.5.4",
     "smart-restart": "^1.1.1",
-    "style-loader": "^0.13.1",
+    "style-loader": "^0.16.1",
     "url-loader": "^0.5.7",
     "wdio-mocha-framework": "^0.5.4",
     "wdio-phantomjs-service": "^0.2.2",
