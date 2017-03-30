@@ -35,6 +35,9 @@ before_install:
   - curl https://install.meteor.com/ | sh
   - docker run -p 27017:27017 --detach mongo:3.2.8
 
+before_script:
+  - npm prune
+
 script:
   - npm install popsicle
   - npm run lint
