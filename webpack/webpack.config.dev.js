@@ -82,6 +82,7 @@ const config = {
         test: /\.json$/,
         loader: 'json-loader',
         exclude: [
+          path.join(root, 'node_modules', 'meteor-imports-webpack-plugin'),
           path.join(root, 'build', 'meteor', 'bundle', 'programs'),
         ]
       },
@@ -118,6 +119,18 @@ const config = {
         loader: 'happypack/loader',
         include: clientInclude,
       },
+      //This is a workaround, the meteor-config is supposed to be injected in meteor-imports-webpack-plugin
+      //but this does not work in webpack2.1.beta23+ so it is loaded here until a solution can be found
+      {
+        test: /meteor-config\.json$/,
+        include: [path.join(root, 'node_modules', 'meteor-imports-webpack-plugin')],
+        use: [{
+          loader: 'json-string-loader',
+          options: {
+            json: JSON.stringify(meteorConfig),
+          }
+        }]
+      }
     ],
   },
   watch: true,
