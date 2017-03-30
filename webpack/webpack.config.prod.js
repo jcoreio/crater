@@ -3,7 +3,7 @@
 import path from 'path'
 import webpack from 'webpack'
 import AssetsPlugin from 'assets-webpack-plugin'
-// import HappyPack from 'happypack'
+import HappyPack from 'happypack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import MeteorImportsPlugin from 'meteor-imports-webpack-plugin'
 import cssModulesValues from 'postcss-modules-values'
@@ -50,9 +50,9 @@ const config = {
       chunks: ['meteor']
     }),
     new webpack.optimize.AggressiveMergingPlugin(),
-    new webpack.optimize.MinChunkSizePlugin({ minChunkSize: 50000 }),
-    new webpack.NoErrorsPlugin(),
-    new AssetsPlugin({ path: buildDir, filename: 'assets.json' }),
+    new webpack.optimize.MinChunkSizePlugin({minChunkSize: 50000}),
+    new webpack.NoEmitOnErrorsPlugin(),
+    new AssetsPlugin({path: buildDir, filename: 'assets.json'}),
     new webpack.DefinePlugin({
       '__CLIENT__': true,
       'Meteor.isClient': true,
@@ -62,13 +62,26 @@ const config = {
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),
     new webpack.IgnorePlugin(/\/server\//),
-    // disable HappyPack until it becomes compatible with webpack2 https://github.com/amireh/happypack/issues/91
-    // new HappyPack({
-    //   id: '1', // https://github.com/amireh/happypack/issues/88
-    //   cache: false,
-    //   loaders: ['babel'],
-    //   threads: 4,
-    // }),
+    new HappyPack({
+      cache: false,
+      loaders: [{
+        path: 'babel-loader',
+        options: {
+          "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react", "flow"],
+          "plugins": [
+            "transform-runtime",
+          ],
+          "env": {
+            "coverage": {
+              "plugins": [
+                "istanbul"
+              ]
+            }
+          }
+        }
+      }],
+      threads: 4,
+    }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       options: {
@@ -80,61 +93,54 @@ const config = {
   ],
   module: {
     rules: [
-      { test: /\.json$/,
-        use: [{loader: 'json-loader'}],
+      {
+        test: /\.json$/,
+        loader: 'json-loader',
         exclude: [
           path.join(root, 'node_modules', 'meteor-imports-webpack-plugin'),
           path.join(root, 'build', 'meteor', 'bundle', 'programs'),
-      ]},
-      { test: /\.txt$/, use:[{loader: 'raw-loader'}] },
-      { test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/, use:[{loader: 'url-loader', query: {limit: 10000}}] },
-      { test: /\.(eot|ttf|wav|mp3)$/, use:[{loader: 'file-loader'}] },
-      { test: /\.css$/,
-        use:[
-          {loader: 'style'},
+        ]
+      },
+      {test: /\.txt$/, loader: 'raw-loader'},
+      {test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/, use: [{loader: 'url-loader', options: {limit: 10000}}]},
+      {test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader'},
+      {
+        test: /\.css$/,
+        use: [
+          {loader: 'style-loader'},
           {
-            loader: 'css',
-            query: {
+            loader: 'css-loader',
+            options: {
               modules: true,
               importLoaders: 1,
               localIdentName: '[name]_[local]_[hash:base64:5]'
             }
           },
-          {loader: 'postcss'}
+          {loader: 'postcss-loader'}
         ],
         exclude: globalCSS,
         include: clientInclude,
       },
-      { test: /\.css$/,
-        use:[{loader: 'style'}, {loader: 'css'}],
+      {
+        test: /\.css$/,
+        use: [{loader: 'style-loader'}, {loader: 'css-loader'}],
         include: globalCSS,
       },
-      { test: /\.js$/,
-        use: [{
-          loader: 'babel',
-          options: {
-            "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react", "flow"],
-            "plugins": [
-              "transform-runtime",
-            ],
-            "env": {
-              "coverage": {
-                "plugins": [
-                  "istanbul"
-                ]
-              }
-            }
-          },
-        }],
+      {
+        test: /\.js$/,
+        loader: 'happypack/loader',
         include: clientInclude,
       },
       //This is a workaround, the meteor-config is supposed to be injected in meteor-imports-webpack-plugin
       //but this does not work in webpack2.1.beta23+ so it is loaded here until a solution can be found
-      { test: /meteor-config\.json$/,
+      {
+        test: /meteor-config\.json$/,
         include: [path.join(root, 'node_modules', 'meteor-imports-webpack-plugin')],
         use: [{
           loader: 'json-string-loader',
-          query: 'json=' + JSON.stringify(meteorConfig)
+          options: {
+            json: JSON.stringify(meteorConfig),
+          }
         }]
       }
     ],
