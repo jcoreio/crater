@@ -77,26 +77,26 @@ const config = {
       { test: /\.(eot|ttf|wav|mp3)$/, use:[{loader: 'file-loader'}] },
       { test: /\.css$/,
         use:[
-          { loader: 'style'},
-          { loader: 'css',
+          { loader: 'style-loader'},
+          { loader: 'css-loader',
             query: {
               modules: true,
               importLoaders: 1,
               localIdentName: '[name]_[local]_[hash:base64:5]'
             }
           },
-          { loader: 'postcss'}
+          { loader: 'postcss-loader'}
         ],
         exclude: globalCSS,
         include: clientInclude,
       },
       { test: /\.css$/,
-        use:[{loader: 'style'}, {loader: 'css'}],
+        use:[{loader: 'style-loader'}, {loader: 'css-loader'}],
         include: globalCSS,
       },
       { test: /\.js$/,
         use:[{
-          loader: 'babel',
+          loader: 'babel-loader',
           options: {
             "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react", "flow"],
             "plugins": [

@@ -87,7 +87,7 @@
     "istanbul": "^0.4.5",
     "json-loader": "^0.5.4",
     "json-string-loader": "^1.0.0",
-    "meteor-imports-webpack-plugin": "^2.0.0-beta.2",
+    "meteor-imports-webpack-plugin": "^2.0.0-beta.3",
     "mkdirp": "^0.5.1",
     "mocha": "^3.0.2",
     "node-inspector": "^0.12.8",
