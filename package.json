@@ -112,7 +112,7 @@
     "webdriverio": "^4.4.0",
     "webpack": "^1.13.2",
     "webpack-dev-middleware": "^1.6.1",
-    "webpack-hot-middleware": "^2.13.2",
+    "webpack-hot-middleware": "^2.18.0",
     "webpack-node-externals": "^1.3.3"
   },
   "repository": {
