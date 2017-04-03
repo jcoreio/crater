@@ -7,8 +7,9 @@ import createDebug from 'debug'
 const shutdownDebug = createDebug('crater:shutdown')
 
 if (process.env.USE_DOTENV) require('dotenv').config()
-const {PORT} = process.env
+const {PORT, ROOT_URL} = process.env
 if (PORT == null) throw new Error("Missing process.env.PORT")
+if (ROOT_URL) process.env.ROOT_URL = ROOT_URL.replace(`:${PORT}`, `:${webpackConfig.devServer.port}`)
 
 const app = express()
 
