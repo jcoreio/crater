@@ -6,7 +6,9 @@ import createSSR from './createSSR'
 import { WebApp } from 'meteor/webapp'
 import createDebug from 'debug'
 import Fiber from 'fibers'
-import buildDir from '../../buildDir'
+
+const buildDir = process.env.BUILD_DIR
+if (!buildDir) throw new Error("missing process.env.BUILD_DIR")
 
 const shutdownDebug = createDebug('crater:shutdown')
 

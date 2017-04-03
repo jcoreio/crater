@@ -6,7 +6,8 @@ global.__PRODUCTION__ = process.env.NODE_ENV === 'production'
 
 const path = require('path')
 
-const buildDir = require('../buildDir')
+const buildDir = process.env.BUILD_DIR
+if (!buildDir) throw new Error("missing process.env.BUILD_DIR")
 
 const cwd = process.cwd()
 
