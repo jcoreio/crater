@@ -6,6 +6,7 @@ import createSSR from './createSSR'
 import { WebApp } from 'meteor/webapp'
 import createDebug from 'debug'
 import Fiber from 'fibers'
+import buildDir from '../../buildDir'
 
 const shutdownDebug = createDebug('crater:shutdown')
 
@@ -21,6 +22,9 @@ app.use((req: Object, res: Object, next: Function) => {
   }
 })
 
+// serve assets from meteor packages
+app.use('/packages', express.static(path.resolve(buildDir, 'meteor', 'bundle', 'programs', 'web.browser', 'packages')))
+
 if (process.env.NODE_ENV === 'production') {
   app.use('/static', express.static(path.resolve(__dirname, 'static')))
 }
@@ -28,7 +32,8 @@ if (process.env.NODE_ENV === 'production') {
 // server-side rendering
 app.get('*', (req: Object, res: Object, next: Function) => {
   // let Meteor handle sockjs requests so that DDP works
-  if (/^\/sockjs/.test(req.path)) {
+  // and OAuth requests as well
+  if (/^\/(sockjs|_?oauth)/.test(req.path)) {
     next()
     return
   }
