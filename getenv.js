@@ -16,5 +16,7 @@ var defaults = {
   METEOR_SETTINGS: '{"public": {"test": "success"}}',
 }
 
-for (var key in defaults) process.env[key] = defaults[key]
+for (var key in defaults) {
+  if (process.env[key] == null) process.env[key] = defaults[key]
+}
 
