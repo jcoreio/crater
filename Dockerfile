@@ -28,6 +28,6 @@ EXPOSE 80
 ENV MONGO_URL=mongodb://mongo:27017/crater \
     ROOT_URL=http://localhost:80 \
     PORT=80 \
-    BUILD_DIR=$BUILD_DIR
+    BUILD_DIR=/usr/app
 
 CMD ["node", "index.js"]
