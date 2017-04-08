@@ -36,7 +36,7 @@
     "json-string-loader": "1.0.0",
     "meteor-node-stubs": "^0.2.4",
     "react": "^15.4.0",
-    "react-dom": "^15.4.0",
+    "react-dom": "^15.5.1",
     "react-dom-stream": "^0.5.1",
     "react-redux": "^5.0.0",
     "react-router": "^3.0.0",
