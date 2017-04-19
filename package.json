@@ -88,7 +88,7 @@
     "http-proxy": "^1.14.0",
     "istanbul": "^0.4.5",
     "json-loader": "^0.5.4",
-    "meteor-imports-webpack-plugin": "^1.1.5",
+    "meteor-imports-webpack-plugin": "^2.0.4",
     "mkdirp": "^0.5.1",
     "mocha": "^3.0.2",
     "node-inspector": "^0.12.8",
