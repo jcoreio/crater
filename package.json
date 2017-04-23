@@ -1,5 +1,33 @@
 {
   "name": "crater",
+  "author": "Andy Edwards <jedwards@fastmail.com>",
+  "version": "2.0.0-alpha.0",
+  "license": "ISC",
+  "description": "Meteor(/React) app skeleton that runs your app code with pure Webpack/Babel instead of isobuild",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jedwards1211/crater.git"
+  },
+  "homepage": "https://github.com/jedwards1211/crater#readme",
+  "bugs": {
+    "url": "https://github.com/jedwards1211/crater/issues"
+  },
+  "keywords": [
+    "meteor",
+    "babel",
+    "webpack",
+    "react",
+    "crater"
+  ],
+  "main": "index.js",
+  "nyc": {
+    "include": [
+      "src/**/*.js",
+      "scripts/**/*.js"
+    ],
+    "sourceMap": false,
+    "instrument": false
+  },
   "scripts": {
     "start": "babel-node scripts/start.js",
     "debug": "babel-node scripts/debug.js",
@@ -25,6 +53,10 @@
     "lint:fix": "eslint --fix *.js src scripts test util webpack",
     "lint:watch": "esw -w *.js src scripts test util webpack"
   },
+  "pre-commit": [
+    "lint",
+    "flow"
+  ],
   "dependencies": {
     "babel-runtime": "^6.11.6",
     "bcrypt": "^0.8.7",
@@ -42,11 +74,6 @@
     "redux": "^3.5.2",
     "redux-immutablejs": "0.0.8"
   },
-  "version": "2.0.0-alpha.0",
-  "main": "index.js",
-  "author": "Andy Edwards <jedwards@fastmail.com>",
-  "license": "ISC",
-  "description": "Meteor(/React) app skeleton that runs your app code with pure Webpack/Babel instead of isobuild",
   "devDependencies": {
     "assets-webpack-plugin": "^3.4.0",
     "async-child-process": "^1.0.0",
@@ -111,32 +138,5 @@
     "webpack-dev-middleware": "^1.7.0",
     "webpack-hot-middleware": "^2.12.2",
     "webpack-node-externals": "^1.3.3"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jedwards1211/crater.git"
-  },
-  "keywords": [
-    "meteor",
-    "babel",
-    "webpack",
-    "react",
-    "crater"
-  ],
-  "bugs": {
-    "url": "https://github.com/jedwards1211/crater/issues"
-  },
-  "homepage": "https://github.com/jedwards1211/crater#readme",
-  "nyc": {
-    "include": [
-      "src/**/*.js",
-      "scripts/**/*.js"
-    ],
-    "sourceMap": false,
-    "instrument": false
-  },
-  "pre-commit": [
-    "lint",
-    "flow"
-  ]
+  }
 }
