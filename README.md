@@ -135,7 +135,8 @@ Crater doesn't start a Mongo dev database, before running, you must start one by
 
 ### Requirements
 - install meteor: https://www.meteor.com/install <br/>
-- ` $ brew install node@6 mongodb `
+- install node version 6 - (on OSX you can use NVM to manage multiple versions of node) <br/>
+- install mongodb - for OSX: [https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/)
 
 ### Dev mode
 
