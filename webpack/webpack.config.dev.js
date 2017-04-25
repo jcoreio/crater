@@ -53,6 +53,7 @@ const config = {
       loaders: [{
         path: 'babel-loader',
         options: {
+          "babelrc": false,
           "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react", "flow"],
           "plugins": [
             "transform-runtime",
