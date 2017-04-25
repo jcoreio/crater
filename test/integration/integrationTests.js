@@ -17,6 +17,7 @@ import debug from 'debug'
 const popsicle = require('popsicle')
 
 const browserLogsDebug = debug('crater:logs:browser')
+const clientCoverageDebug = debug('crater:coverage:client')
 
 const root = path.resolve(__dirname, '..', '..')
 const src = path.join(root, 'src')
@@ -83,8 +84,12 @@ async function mergeClientCoverage() {
     const collector = new Collector()
 
     collector.add(global.__coverage__)
+
     /* eslint-disable no-undef */
-    collector.add((await browser.execute(() => window.__coverage__)).value)
+    clientCoverageDebug('getting client coverage...')
+    const coverage = await browser.execute(() => window.__coverage__).value
+    clientCoverageDebug(JSON.stringify(coverage, null, 2))
+    collector.add(coverage)
     /* eslint-enable no-undef */
     global.__coverage__ = collector.getFinalCoverage()
   }
