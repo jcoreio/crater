@@ -121,6 +121,11 @@ git checkout webpack2
 ## Running
 Crater doesn't start a Mongo dev database, before running, you must start one by running `mongod` in a separate shell.
 
+### Requirements
+- install meteor: https://www.meteor.com/install <br/>
+- install node version 6 - (on OSX you can use node version manager to [auto change to node6 using .nvmrc](https://github.com/creationix/nvm#calling-nvm-use-automatically-in-a-directory-with-a-nvmrc-file)) <br/>
+- install mongodb - for OSX: [https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/)
+
 ### Dev mode
 
 *Note*: dev mode only renders a basic page on the server side; only prod mode and the built app render your routes
