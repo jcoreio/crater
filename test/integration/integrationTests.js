@@ -112,11 +112,11 @@ describe('prod mode', function () {
 
   after(async function () {
     this.timeout(600000)
+    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
     if (server) await kill(server, 'SIGINT')
     // restore code in App.js, which (may) have been changed by hot reloading test
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
-    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
     await logBrowserMessages()
   })
 
@@ -166,8 +166,8 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
 
   after(async function () {
     this.timeout(30000)
-    if (server) await kill(server, 'SIGINT')
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
+    if (server) await kill(server, 'SIGINT')
     await logBrowserMessages()
   })
 })
@@ -234,11 +234,11 @@ describe('dev mode', function () {
 
   after(async function () {
     this.timeout(15 * 60000)
+    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
     if (server) await kill(server, 'SIGINT')
     // restore code in App.js, which (may) have been changed by hot reloading test
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
-    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
     await logBrowserMessages()
   })
 
