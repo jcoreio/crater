@@ -9,7 +9,7 @@ services:
 env:
   DOCKER_COMPOSE_VERSION: 1.8.0
   CXX: g++-4.8
-  DEBUG: crater-util:kill,crater-util:kill:ps,crater:shutdown,crater:logs:browser,smart-restart:supervisor,crater:coverage:client
+  DEBUG: smart-restart:supervisor,crater:coverage:client
   DUMP_HTTP: 1
 
 addons:
@@ -42,6 +42,7 @@ script:
   - npm install popsicle
   - npm run lint
   - npm run flow
+  - npm run coverage -- -- --mochaOpts.grep 'dev mode'
   - npm run test:hot-reloading
   - rm -rf build
   - npm run coverage
