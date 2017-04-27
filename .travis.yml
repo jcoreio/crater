@@ -9,7 +9,7 @@ services:
 env:
   DOCKER_COMPOSE_VERSION: 1.8.0
   CXX: g++-4.8
-  DEBUG: smart-restart:supervisor,crater:coverage:client
+  DEBUG: smart-restart:supervisor
   DUMP_HTTP: 1
 
 addons:
@@ -42,7 +42,6 @@ script:
   - npm install popsicle
   - npm run lint
   - npm run flow
-  - npm run coverage -- -- --mochaOpts.grep 'dev mode'
   - npm run test:hot-reloading
   - rm -rf build
   - npm run coverage
