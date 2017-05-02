@@ -64,7 +64,6 @@ If you can't start over (i.e. switch to [Meatier](https://github.com/mattkrick/m
 * Webdriver.io + Mocha + Chai integration test setup
 * Thoroughly integration-tested
 
-
 ## Rationale
 
 Ever since I started using Meteor, Isobuild has been my biggest source of frustration with it, for the following
