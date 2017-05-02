@@ -1,15 +1,48 @@
-# Crater
+Crater
+======
 
 [![Build Status](https://travis-ci.org/jcoreio/crater.svg?branch=master)](https://travis-ci.org/jcoreio/crater)
 [![Coverage Status](https://coveralls.io/repos/github/jcoreio/crater/badge.svg?branch=master)](https://coveralls.io/github/jcoreio/crater?branch=master)
 
-## A new app skeleton for Meteor/React
+
+A new app skeleton for Meteor/React
+------
 
 **Note: this is experimental, doesn't work with all Meteor packages, and you may run into issues that can only be solved by deep investigation of what Isobuild, Babel, and Webpack do (or by cloning code from Meteor packages straight into your project).**  If you're not willing to get your hands dirty, using Crater may not be worthwhile.  Please pressure MDG to refactor all core Meteor packages as pure NPM packages.
 
 It's 2016, and your Meteor app has crash landed in the middle of a more advanced JavaScript civilization, leaving a crater full of mangled and poorly forked npm packages and antique build tools.  You climb out of the ruins of your Celestial-Body-as-a-Service and wonder, how can I pick up the pieces and keep going in this new ecosystem?
 
 If you can't start over (i.e. switch to [Meatier](https://github.com/mattkrick/meatier), which I recommend highly) because your codebase is too firmly entrenched in Meteor, then you may find this app skeleton quite useful.
+
+
+<!-- TOC depthFrom:1 depthTo:3 orderedList:false updateOnSave:true withLinks:true -->
+
+- [Features](#features)
+- [Rationale](#rationale)
+- [How it works](#how-it-works)
+- [Where to put things](#where-to-put-things)
+- [Blaze is not supported](#blaze-is-not-supported)
+- [react-meteor-data](#react-meteor-data)
+- [Version notes](#version-notes)
+- [Requirements](#requirements)
+  - [Node6 & Node7 Side-by-Side](#node6--node7-side-by-side)
+- [Obtaining](#obtaining)
+- [Updating](#updating)
+- [Running](#running)
+  - [Dev mode](#dev-mode)
+  - [Dev Debug mode](#dev-debug-mode)
+  - [Prod mode](#prod-mode)
+  - [Disabling full SSR in prod mode](#disabling-full-ssr-in-prod-mode)
+  - [Prod Debug mode](#prod-debug-mode)
+  - [Eslint/Flow](#eslintflow)
+  - [Build](#build)
+- [Docker](#docker)
+- [Multiple targets](#multiple-targets)
+- [Testing](#testing)
+
+<!-- /TOC -->
+
+---
 
 ## Features
 
@@ -30,6 +63,7 @@ If you can't start over (i.e. switch to [Meatier](https://github.com/mattkrick/m
 * Dockerfile included
 * Webdriver.io + Mocha + Chai integration test setup
 * Thoroughly integration-tested
+
 
 ## Rationale
 
@@ -107,6 +141,16 @@ import {ReactMeteorData} from 'react-meteor-data'
 * **Node**: Tested on the latest Node 4, 5, and 6 in Travis CI.  No effort will be made to support Node < 4.4.7.
 * **Webpack**: The `master` branch currently works only with Webpack 1.  If you want to use Webpack 2, check out the [`webpack2` branch](https://github.com/jedwards1211/crater/tree/webpack2).
 
+## Requirements
+- install meteor: https://www.meteor.com/install <br/>
+- install node version 6 - (on OSX you can use NVM to manage multiple versions of node) <br/>
+- install mongodb - for OSX: [https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/)
+
+### Node6 & Node7 Side-by-Side
+You can use [nvm](https://github.com/creationix/nvm) with a [.nvmrc](https://github.com/creationix/nvm#nvmrc) file and automate changing node versions with [nvm-zsh](https://github.com/creationix/nvm#zsh)
+
+Whether you are using `yarn` or `npm` Meteor uses Node6 ([issues#140](https://github.com/jcoreio/crater/issues/140))
+
 ## Obtaining
 ```
 git clone https://github.com/jedwards1211/crater
@@ -133,10 +177,6 @@ I don't really know of a way to make this easier than to make it a package that 
 ## Running
 Crater doesn't start a Mongo dev database, before running, you must start one by running `mongod` in a separate shell.
 
-### Requirements
-- install meteor: https://www.meteor.com/install <br/>
-- install node version 6 - (on OSX you can use NVM to manage multiple versions of node) <br/>
-- install mongodb - for OSX: [https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/)
 
 ### Dev mode
 
