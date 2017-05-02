@@ -176,7 +176,6 @@ I don't really know of a way to make this easier than to make it a package that 
 ## Running
 Crater doesn't start a Mongo dev database, before running, you must start one by running `mongod` in a separate shell.
 
-
 ### Dev mode
 
 *Note*: dev mode only renders a basic page on the server side; only prod mode and the built app render your routes
