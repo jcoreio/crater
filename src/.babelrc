@@ -1,0 +1,12 @@
+{
+  "extends": "../.babelrc",
+  "plugins": [
+    "meteor-imports",
+    ["module-resolver", {
+      "root": [
+        "./build/meteor/bundle/programs/server/node_modules",
+        "./build/meteor/bundle/programs/server/npm/node_modules"
+      ]
+    }]
+  ]
+}
