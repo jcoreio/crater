@@ -4,10 +4,10 @@
     ["transform-runtime", {"polyfill": false, "helpers": false}],
     "meteor-imports",
     ["module-resolver", {
-      "root": [
-        "./build/meteor/bundle/programs/server/node_modules",
-        "./build/meteor/bundle/programs/server/npm/node_modules"
-      ]
+      "root": ["./build/meteor/bundle/programs/server/npm/node_modules"],
+      "alias": {
+        "fibers": "./build/meteor/bundle/programs/server/node_modules/fibers"
+      }
     }]
   ],
   "env": {
