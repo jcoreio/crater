@@ -36,7 +36,7 @@ const config = {
     nodeExternals({
       modulesDir: path.join(root, 'node_modules'),
     }),
-    (context, request, callback) => {
+    (context: string, request: string, callback: (error?: ?Error, request?: string) => any): any => {
       // require anything in build/meteor/bundle/programs/server/* via node
       const match = /meteor\/bundle\/programs\/server\/.*$/.exec(request)
       if (match) {
