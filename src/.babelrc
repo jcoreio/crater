@@ -1,6 +1,7 @@
 {
-  "extends": "../.babelrc",
+  "presets": ["es2015", "stage-1", "react", "flow"],
   "plugins": [
+    ["transform-runtime", {"polyfill": false, "helpers": false}],
     "meteor-imports",
     ["module-resolver", {
       "root": [
@@ -8,5 +9,11 @@
         "./build/meteor/bundle/programs/server/npm/node_modules"
       ]
     }]
-  ]
+  ],
+  "env": {
+    "coverage": {
+      "plugins": ["istanbul"]
+    }
+  }
 }
+

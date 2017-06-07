@@ -15,7 +15,7 @@ const globalCSS = path.join(srcDir, 'styles', 'global')
 
 const config = {
   context: root,
-  devtool: 'source-map',
+  devtool: process.env.WEBPACK_DEVTOOL || 'source-map',
   entry: {
     prerender: './src/server',
   },

@@ -22,7 +22,7 @@ const vendor = [
 
 const config = {
   context: root,
-  devtool: 'source-map',
+  devtool: process.env.WEBPACK_DEVTOOL || 'source-map',
   entry: {
     app: './src/client/index.js',
     vendor,
@@ -100,7 +100,7 @@ const config = {
 
 /* istanbul ignore next */
 if (!process.env.CI) config.plugins.push(new ProgressBarPlugin())
-if (process.argv.indexOf('--no-uglify') < 0) {
+if (!process.env.NO_UGLIFY && process.argv.indexOf('--no-uglify') < 0) {
   config.plugins.push(new webpack.optimize.UglifyJsPlugin({
     compressor: { warnings: false }
   }))
