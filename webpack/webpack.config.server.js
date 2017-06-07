@@ -15,7 +15,7 @@ const globalCSS = path.join(srcDir, 'styles', 'global')
 
 const config = {
   context: root,
-  devtool: 'source-map',
+  devtool: process.env.WEBPACK_DEVTOOL || 'source-map',
   entry: {
     prerender: './src/server',
   },
@@ -36,13 +36,14 @@ const config = {
     nodeExternals({
       modulesDir: path.join(root, 'node_modules'),
     }),
-    // (context: string, request: string, callback: (error?: ?Error, result?: ?string) => any): any => {
-    //   const match = /^meteor\/(.*)$/.exec(request)
-    //   if (match) {
-    //     return callback(null, 'var Package.' + match[1].replace(/\//g, '.'))
-    //   }
-    //   callback()
-    // },
+    (context: string, request: string, callback: (error?: ?Error, request?: string) => any): any => {
+      // require anything in build/meteor/bundle/programs/server/* via node
+      const match = /meteor\/bundle\/programs\/server\/.*$/.exec(request)
+      if (match) {
+        return callback(null, 'commonjs ./' + match[0])
+      }
+      callback()
+    },
   ],
   plugins: [
     new webpack.NoErrorsPlugin(),

@@ -1,8 +1,7 @@
 {
   "presets": ["es2015", "stage-1", "react", "flow"],
   "plugins": [
-    "transform-runtime",
-    "meteor-imports"
+    "transform-runtime"
   ],
   "env": {
     "coverage": {
@@ -17,3 +16,4 @@
     }
   }
 }
+

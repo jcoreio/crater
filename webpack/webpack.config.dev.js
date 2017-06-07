@@ -14,11 +14,11 @@ const srcDir = path.join(root, 'src')
 const globalCSS = path.join(srcDir, 'styles', 'global')
 const clientInclude = [srcDir]
 
-const { ROOT_URL } = process.env
+const { ROOT_URL, WEBPACK_DEVTOOL } = process.env
 
 const config = {
   context: root,
-  devtool: 'eval',
+  devtool: WEBPACK_DEVTOOL || 'eval',
   entry: [
     './src/client/index.js',
     'react-hot-loader/patch',

@@ -5,7 +5,6 @@ import path from 'path'
 import createSSR from './createSSR'
 import { WebApp } from 'meteor/webapp'
 import createDebug from 'debug'
-import Fiber from 'fibers'
 
 const buildDir = process.env.BUILD_DIR
 if (!buildDir) throw new Error("missing process.env.BUILD_DIR")
@@ -39,7 +38,7 @@ app.get('*', (req: Object, res: Object, next: Function) => {
     next()
     return
   }
-  Fiber((): void => createSSR(req, res)).run()
+  createSSR(req, res)
 })
 
 WebApp.rawConnectHandlers.use(app)
