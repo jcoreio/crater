@@ -40,9 +40,9 @@ before(async function () {
 
   console.log('phantomjs-prebuilt:') // eslint-disable-line no-console
   console.log(require('phantomjs-prebuilt')) // eslint-disable-line no-console
-  const phantomJSPath = require('phantomjs-prebuilt').path
-  console.log('Launching PhantomJS:', phantomJSPath, ' --webdriver=4444') // eslint-disable-line no-console
-  phantomjs = exec(phantomJSPath + ' --webdriver=4444')
+  const phantomJSExecutable = require('phantomjs-prebuilt').path || 'phantomjs'
+  console.log('Launching PhantomJS:', phantomJSExecutable, '--webdriver=4444') // eslint-disable-line no-console
+  phantomjs = exec(phantomJSExecutable + ' --webdriver=4444')
   await childPrinted(phantomjs, /running on port 4444/i)
 
   console.log('Launching webdriverio...') // eslint-disable-line no-console
