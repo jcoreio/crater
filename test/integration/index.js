@@ -30,10 +30,17 @@ const webpack = path.join(root, 'webpack')
 
 let phantomjs
 
+function killProcessOnPort(port: number): Promise<void> {
+  return execAsync('sudo fuser -KILL -k -n tcp ' + port).catch(() => {})
+}
+
 before(async function () {
   this.timeout(30000)
-  console.log('Launching PhantomJS...') // eslint-disable-line no-console
-  phantomjs = exec(require('phantomjs-prebuilt').path + ' --webdriver=4444')
+  if (process.env.CI)  await killProcessOnPort(4444)
+
+  const phantomJSPath = require('phantomjs-prebuilt').path
+  console.log('Launching PhantomJS:', phantomJSPath, ' --webdriver=4444') // eslint-disable-line no-console
+  phantomjs = exec(phantomJSPath + ' --webdriver=4444')
   await childPrinted(phantomjs, /running on port 4444/i)
 
   console.log('Launching webdriverio...') // eslint-disable-line no-console
@@ -178,6 +185,7 @@ describe('prod mode', function () {
 
   before(async function () {
     this.timeout(600000)
+    if (process.env.CI)  await killProcessOnPort(envDefaults.PORT)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
     server = exec('npm run prod', {cwd: root, env})
@@ -249,6 +257,7 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
 
   before(async function () {
     this.timeout(240000)
+    if (process.env.CI)  await killProcessOnPort(envDefaults.PORT)
     server = exec('npm run prod', {env})
     await childPrinted(server, /App is listening on http/i)
     await browser.reload()
@@ -283,6 +292,7 @@ if (!process.env.CI || process.version.startsWith('v4')) {
 
     before(async function () {
       this.timeout(15 * 60000)
+      if (process.env.CI)  await killProcessOnPort(envDefaults.PORT)
       // run this first, even though it's not necessary, to increase coverage of scripts/build.js
       await spawnAsync('npm', ['run', 'build'], {cwd: root, env})
       await spawnAsync('npm', ['run', 'build:docker'], {cwd: root, env})
@@ -330,6 +340,7 @@ describe('dev mode', function () {
 
   before(async function () {
     this.timeout(15 * 60000)
+    if (process.env.CI)  await killProcessOnPort(envDefaults.WEBPACK_PORT)
     appCode = await promisify(fs.readFile)(appFile, 'utf8')
     serverCode = await promisify(fs.readFile)(serverFile, 'utf8')
     server = exec('npm start', {cwd: root, env})

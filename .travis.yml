@@ -40,11 +40,7 @@ before_install:
 script:
   - npm run lint
   - npm run flow
-  # Make sure PhantomJS is not running
-  - sudo fuser -KILL -k -n tcp 4444
   - npm run test:hot-reloading
-  # Make sure PhantomJS is not running
-  - sudo fuser -KILL -k -n tcp 4444
   - rm -rf build
   - npm run coverage
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
