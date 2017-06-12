@@ -25,7 +25,7 @@ cache:
   yarn: true
   directories:
     - node_modules
-    
+
 before_install:
   # enable more file watches
   - echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
@@ -36,6 +36,10 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
   - curl https://install.meteor.com/ | sh
   - docker run -p 27017:27017 --detach mongo:3.2.8
+
+install:
+  - yarn
+  - npm rebuild
 
 script:
   - npm run lint
