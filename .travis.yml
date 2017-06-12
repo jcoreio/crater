@@ -22,6 +22,7 @@ addons:
       - libgnome-keyring-dev
 
 cache:
+  yarn: true
   directories:
     - node_modules
 
