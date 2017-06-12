@@ -26,8 +26,9 @@ app.use((req: Object, res: Object, next: Function) => {
 // serve assets from meteor packages
 app.use('/packages', express.static(path.resolve(buildDir, 'meteor', 'bundle', 'programs', 'web.browser', 'packages')))
 
+app.use('/static', express.static(path.resolve(buildDir, '..', 'static')))
 if (process.env.NODE_ENV === 'production') {
-  app.use('/static', express.static(path.resolve(__dirname, 'static')))
+  app.use('/assets', express.static(path.resolve(__dirname, 'assets')))
 }
 
 // server-side rendering

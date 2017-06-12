@@ -28,8 +28,8 @@ const config = {
     // https://github.com/webpack/webpack/issues/1752
     filename: 'app.js',
     chunkFilename: '[name]_[chunkhash].js',
-    path: path.join(buildDir, 'static'),
-    publicPath: '/static/',
+    path: path.join(buildDir, 'assets'),
+    publicPath: '/assets/',
   },
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin(),
@@ -92,7 +92,7 @@ const config = {
   watch: true,
   devServer: {
     contentBase: ROOT_URL,
-    publicPath: '/static/',
+    publicPath: '/assets/',
     noInfo: true,
     port: 4000,
     stats: {

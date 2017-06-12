@@ -29,7 +29,7 @@ const config = {
     chunkFilename: '[name]_[chunkhash].js',
     filename: '[name].js',
     libraryTarget: 'commonjs2',
-    publicPath: '/static/',
+    publicPath: '/assets/',
   },
   // ignore anything that throws warnings & doesn't affect the view
   externals: [
@@ -47,7 +47,7 @@ const config = {
   ],
   plugins: [
     new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin('/static/[name].css'),
+    new ExtractTextPlugin('/assets/[name].css'),
     new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
     new webpack.DefinePlugin({
       '__CLIENT__': false,

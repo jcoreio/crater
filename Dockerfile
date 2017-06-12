@@ -1,8 +1,9 @@
 FROM node:4.5
 MAINTAINER Andy Edwards
 
+WORKDIR /usr/app/build
+
 RUN mkdir -p /usr/app/meteor/bundle/programs/server
-WORKDIR /usr/app
 
 ARG NODE_ENV=production
 ENV NODE_ENV $NODE_ENV
@@ -18,16 +19,14 @@ COPY $BUILD_DIR/meteor/bundle/programs/server/package.json \
     /usr/app/meteor/bundle/programs/server/
 RUN cd meteor/bundle/programs/server && npm install
 
-COPY package.json /usr/app/
+COPY package.json /usr/app/build/
 RUN npm install
 
-COPY $BUILD_DIR/ /usr/app/
+COPY $BUILD_DIR/ /usr/app/build/
+COPY static/ /usr/app/static/
 
 EXPOSE 80
 
-ENV MONGO_URL=mongodb://mongo:27017/crater \
-    ROOT_URL=http://localhost:80 \
-    PORT=80 \
-    BUILD_DIR=/usr/app
+ENV PORT=80 BUILD_DIR=/usr/app/build
 
 CMD ["node", "index.js"]

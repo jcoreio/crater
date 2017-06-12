@@ -31,8 +31,8 @@ const config = {
   output: {
     filename: '[name]_[chunkhash].js',
     chunkFilename: '[name]_[chunkhash].js',
-    path: path.join(buildDir, 'static'),
-    publicPath: '/static/',
+    path: path.join(buildDir, 'assets'),
+    publicPath: '/assets/',
   },
   plugins: [
     new webpack.NamedModulesPlugin(),
