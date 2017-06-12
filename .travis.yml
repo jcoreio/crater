@@ -22,9 +22,11 @@ addons:
       - libgnome-keyring-dev
 
 cache:
-  yarn: true
   directories:
     - node_modules
+
+install:
+  - npm install
 
 before_install:
   # enable more file watches
@@ -36,7 +38,6 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
   - curl https://install.meteor.com/ | sh
   - docker run -p 27017:27017 --detach mongo:3.2.8
-
 
 script:
   - npm run lint
