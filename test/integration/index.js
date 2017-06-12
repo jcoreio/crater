@@ -47,7 +47,7 @@ before(async function () {
 })
 after(async function () {
   this.timeout(30000)
-  if (browser) await browser.end()
+  if (global.browser) await global.browser.end()
   if (phantomjs) await kill(phantomjs, 'SIGINT')
 })
 
