@@ -3,14 +3,12 @@
 import express from 'express'
 import webpackConfig from '../webpack/webpack.config.dev'
 import createDebug from 'debug'
-import '../getenv'
+import requireEnv from '../requireEnv'
 
 const shutdownDebug = createDebug('crater:shutdown')
 
-if (process.env.USE_DOTENV) require('dotenv').config()
-const {PORT, ROOT_URL} = process.env
-if (PORT == null) throw new Error("Missing process.env.PORT")
-if (ROOT_URL) process.env.ROOT_URL = ROOT_URL.replace(`:${PORT}`, `:${webpackConfig.devServer.port}`)
+const {BABEL_ENV} = process.env
+const PORT = requireEnv('PORT')
 
 const app = express()
 
@@ -32,7 +30,7 @@ server.on('upgrade', (req: Object, socket: any, head: any): any => proxy.ws(req,
 console.log(`Dev server is listening on http://0.0.0.0:${webpackConfig.devServer.port}`)
 
 // istanbul ignore next
-if (process.env.BABEL_ENV === 'coverage') {
+if (BABEL_ENV === 'coverage') {
   const shutdown = () => {
     shutdownDebug('got signal, shutting down')
     server.close()

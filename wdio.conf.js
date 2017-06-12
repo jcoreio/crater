@@ -1,5 +1,3 @@
-require('./getenv')
-
 exports.config = {
 
     //

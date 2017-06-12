@@ -9,17 +9,17 @@ import spawnAsync from 'crater-util/lib/spawnAsync'
 import webpack from 'webpack'
 import webpackConfig from '../webpack/webpack.config.server'
 import promisify from 'es6-promisify'
-import '../getenv'
-import buildDir from '../buildDir'
+import requireEnv from '../requireEnv'
 
 const root = path.resolve(__dirname, '..')
-const prerender = path.join(buildDir, 'prerender.js')
 
 const opts = {cwd: root, stdio: 'inherit'}
 
 async function buildServer(): Promise<void> {
-  await promisify(mkdirp)(buildDir)
-  await spawnAsync('babel', [path.join(root, 'src', 'index.js'), '-o', path.join(buildDir, 'index.js')], opts)
+  const BUILD_DIR = requireEnv('BUILD_DIR')
+  const prerender = path.join(BUILD_DIR, 'prerender.js')
+  await promisify(mkdirp)(BUILD_DIR)
+  await spawnAsync('babel', [path.join(root, 'src', 'index.js'), '-o', path.join(BUILD_DIR, 'index.js')], opts)
   if (await isNewerThan(path.join(root, 'webpack', 'webpack.config.server.js'), prerender) ||
       await isNewerThan(path.join(root, 'src'), prerender)) {
     console.log('building server bundle...')

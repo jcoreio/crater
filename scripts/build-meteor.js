@@ -9,14 +9,13 @@ import asyncScript from 'crater-util/lib/asyncScript'
 import isNewerThan from 'crater-util/lib/isNewerThan'
 import spawnAsync from 'crater-util/lib/spawnAsync'
 import promisify from 'es6-promisify'
-import '../getenv'
-import buildDir from '../buildDir'
-
+import requireEnv from '../requireEnv'
 const root = path.resolve(__dirname, '..')
 const meteor = path.join(root, 'meteor')
 
 async function buildMeteor(): Promise<void> {
-  await promisify(mkdirp)(buildDir)
+  const BUILD_DIR = requireEnv('BUILD_DIR')
+  await promisify(mkdirp)(BUILD_DIR)
   if (await isNewerThan(
     path.join(meteor, 'package.json'),
     path.join(meteor, 'node_modules'),
@@ -35,10 +34,10 @@ async function buildMeteor(): Promise<void> {
     path.join(meteor, '.meteor', 'platforms'),
     path.join(meteor, '.meteor', 'release'),
     path.join(meteor, '.meteor', 'versions'),
-  ], path.join(buildDir, 'meteor'))) {
+  ], path.join(BUILD_DIR, 'meteor'))) {
     console.log('building Meteor packages...')
-    await promisify(rimraf)(path.join(buildDir, 'meteor'))
-    await spawnAsync('meteor', ['build', path.join(path.relative(meteor, buildDir), 'meteor'), '--directory'], {
+    await promisify(rimraf)(path.join(BUILD_DIR, 'meteor'))
+    await spawnAsync('meteor', ['build', path.join(path.relative(meteor, BUILD_DIR), 'meteor'), '--directory'], {
       cwd: meteor,
       stdio: 'inherit'
     })

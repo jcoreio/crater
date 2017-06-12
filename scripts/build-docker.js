@@ -7,14 +7,13 @@ import spawnAsync from 'crater-util/lib/spawnAsync'
 import dockerEnv from 'crater-util/lib/dockerEnv'
 import path from 'path'
 import build from './build'
-import '../getenv'
-import buildDir from '../buildDir'
+import requireEnv from '../requireEnv'
 
 const root = path.resolve(__dirname, '..')
 
-process.on('SIGINT', (): any => process.exit(1))
+async function buildDocker(): Promise<void> {
+  const BUILD_DIR = requireEnv('BUILD_DIR')
 
-asyncScript(async (): Promise<void> => {
   const opts = {
     cwd: root,
     stdio: 'inherit',
@@ -30,9 +29,14 @@ asyncScript(async (): Promise<void> => {
   const tag = `jedwards1211/crater${TARGET ? '-' + TARGET : ''}:${commitHash}`
   await spawnAsync('docker', [
     'build',
-    '--build-arg', `BUILD_DIR=${path.relative(root, buildDir)}`,
+    '--build-arg', `BUILD_DIR=${path.relative(root, BUILD_DIR)}`,
     '--build-arg', `TARGET=${TARGET || ''}`,
     '-t', tag,
     root
   ], opts)
-})
+}
+
+if (!module.parent) {
+  process.on('SIGINT', (): any => process.exit(1))
+  asyncScript(buildDocker)
+}

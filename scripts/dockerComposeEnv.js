@@ -3,7 +3,6 @@
 import execAsync from 'crater-util/lib/execAsync'
 import dockerEnv from 'crater-util/lib/dockerEnv'
 import getDockerIP from 'crater-util/lib/getDockerIP'
-import '../getenv'
 
 export default async function dockerComposeEnv(): Promise<Object> {
   const {TARGET} = process.env

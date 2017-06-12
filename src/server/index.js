@@ -6,8 +6,8 @@ import createSSR from './createSSR'
 import { WebApp } from 'meteor/webapp'
 import createDebug from 'debug'
 
-const buildDir = process.env.BUILD_DIR
-if (!buildDir) throw new Error("missing process.env.BUILD_DIR")
+const {BUILD_DIR} = process.env
+if (!BUILD_DIR) throw new Error("missing process.env.BUILD_DIR")
 
 const shutdownDebug = createDebug('crater:shutdown')
 
@@ -24,7 +24,7 @@ app.use((req: Object, res: Object, next: Function) => {
 })
 
 // serve assets from meteor packages
-app.use('/packages', express.static(path.resolve(buildDir, 'meteor', 'bundle', 'programs', 'web.browser', 'packages')))
+app.use('/packages', express.static(path.resolve(BUILD_DIR, 'meteor', 'bundle', 'programs', 'web.browser', 'packages')))
 
 if (process.env.NODE_ENV === 'production') {
   app.use('/static', express.static(path.resolve(__dirname, 'static')))
@@ -43,7 +43,7 @@ app.get('*', (req: Object, res: Object, next: Function) => {
 
 WebApp.rawConnectHandlers.use(app)
 WebApp.onListening(() => {
-  console.log(`App is listening on http://0.0.0.0:${process.env.PORT || '80'}`) // eslint-disable-line no-console
+  console.log(`App is listening on http://0.0.0.0:${process.env.WEBPACK_PORT || process.env.PORT || '80'}`) // eslint-disable-line no-console
 })
 
 function shutdown() {

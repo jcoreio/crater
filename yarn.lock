@@ -1976,6 +1976,15 @@ default-require-extensions@^1.0.0:
   dependencies:
     strip-bom "^2.0.0"
 
+defaultenv@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/defaultenv/-/defaultenv-1.1.0.tgz#4fc26fa65f9ef35734dac8bbf3199b5526caf9dc"
+  dependencies:
+    dotenv "^4.0.0"
+    lodash.defaults "^4.2.0"
+  optionalDependencies:
+    kexec "^3.0.0"
+
 define-properties@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/define-properties/-/define-properties-1.1.2.tgz#83a73f2fea569898fb737193c8f873caf6d45c94"
@@ -2082,6 +2091,10 @@ dotenv@^2.0.0:
 dotenv@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/dotenv/-/dotenv-3.0.0.tgz#a007eb14a16444adbfafac936f33299bc08f9ba7"
+
+dotenv@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/dotenv/-/dotenv-4.0.0.tgz#864ef1379aced55ce6f95debecdce179f7a0cd1d"
 
 duplexer@~0.1.1:
   version "0.1.1"
@@ -3645,6 +3658,12 @@ kew@~0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/kew/-/kew-0.7.0.tgz#79d93d2d33363d6fdd2970b335d9141ad591d79b"
 
+kexec@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/kexec/-/kexec-3.0.0.tgz#0ef4aa9d3caa26180c11a10075ac1fce2681e36c"
+  dependencies:
+    nan "^2.4.0"
+
 keypress@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/keypress/-/keypress-0.2.1.tgz#1e80454250018dbad4c3fe94497d6e67b6269c77"
@@ -3814,6 +3833,10 @@ lodash.defaults@^3.1.2:
   dependencies:
     lodash.assign "^3.0.0"
     lodash.restparam "^3.0.0"
+
+lodash.defaults@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.npmjs.org/lodash.defaults/-/lodash.defaults-4.2.0.tgz#d09178716ffea4dde9e5fb7b37f6f0802274580c"
 
 lodash.isarguments@^3.0.0:
   version "3.1.0"
@@ -4188,7 +4211,7 @@ mute-stream@0.0.7:
   version "0.0.7"
   resolved "https://registry.npmjs.org/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
 
-nan@2.5.0, nan@^2.3.0, nan@^2.3.2:
+nan@2.5.0, nan@^2.3.0, nan@^2.3.2, nan@^2.4.0:
   version "2.5.0"
   resolved "https://registry.npmjs.org/nan/-/nan-2.5.0.tgz#aa8f1e34531d807e9e27755b234b4a6ec0c152a8"
 

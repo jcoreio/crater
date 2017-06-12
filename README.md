@@ -214,11 +214,21 @@ npm run docker
 ```
 And open http://localhost:3000 in your browser.
 
-## Multiple targets
+## Environment variables
 
-If you need to build multiple targets, read the comments in `buildDir.js` and change it accordingly.  Then run any
-commands with the `TARGET` environment variable set to the name of the build target.  You can use
-`process.env.TARGET` in your code.
+The npm scripts set default values for all required environment variables by running `defaultenv env/dev.js <command>`
+or `defaultenv env/prod.js <command>`.
+
+* `BUILD_DIR` - the build directory (defaults to `build` in the project root)
+* `TARGET` - if you provide this, `BUILD_DIR` will default to `BUILD_DIR/TARGET` if not provided.
+`process.env.TARGET` will also be defined in the client code via `webpack.DefinePlugin`.
+* `PORT` - the port that the server runs on
+* `WEBPACK_PORT` - the port that the webpack dev server runs on
+* `ROOT_URL` - the app's root URL
+* `WEBPACK_DEVTOOL` - the `devtool` to use in webpack config (e.g. `eval`, `source-map`, etc.)
+* `MONGO_DATABASE` - the name of the database within MongoDB to use
+* `MONGO_URL` the full URL to MongoDB, including the database name
+* `METEOR_SETTINGS` - a JSON literal that will be injected into `Meteor.settings`
 
 ## Testing
 ```

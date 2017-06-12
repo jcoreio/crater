@@ -6,19 +6,20 @@ import HappyPack from 'happypack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import MeteorImportsPlugin from 'meteor-imports-webpack-plugin'
 import cssModulesValues from 'postcss-modules-values'
-import '../getenv'
-import buildDir from '../buildDir'
+import requireEnv from '../requireEnv'
+
+const BUILD_DIR = requireEnv('BUILD_DIR')
+const ROOT_URL = requireEnv('ROOT_URL')
+const WEBPACK_PORT = requireEnv('WEBPACK_PORT')
+const {WEBPACK_DEVTOOL, CI} = process.env
 
 const root = path.resolve(__dirname, '..')
 const srcDir = path.join(root, 'src')
 const globalCSS = path.join(srcDir, 'styles', 'global')
 const clientInclude = [srcDir]
 
-const { ROOT_URL, WEBPACK_DEVTOOL } = process.env
-
 const config = {
   context: root,
-  devtool: WEBPACK_DEVTOOL || 'eval',
   entry: [
     './src/client/index.js',
     'react-hot-loader/patch',
@@ -28,7 +29,7 @@ const config = {
     // https://github.com/webpack/webpack/issues/1752
     filename: 'app.js',
     chunkFilename: '[name]_[chunkhash].js',
-    path: path.join(buildDir, 'static'),
+    path: path.join(BUILD_DIR, 'static'),
     publicPath: '/static/',
   },
   plugins: [
@@ -57,7 +58,7 @@ const config = {
       threads: 4,
     }),
     new MeteorImportsPlugin({
-      meteorProgramsFolder: path.resolve(buildDir, 'meteor', 'bundle', 'programs'),
+      meteorProgramsFolder: path.resolve(BUILD_DIR, 'meteor', 'bundle', 'programs'),
       injectMeteorRuntimeConfig: false,
     }),
   ],
@@ -94,7 +95,7 @@ const config = {
     contentBase: ROOT_URL,
     publicPath: '/static/',
     noInfo: true,
-    port: 4000,
+    port: WEBPACK_PORT,
     stats: {
       colors: true,
     },
@@ -102,7 +103,9 @@ const config = {
 }
 
 /* istanbul ignore next */
-if (!process.env.CI) config.plugins.push(new ProgressBarPlugin())
+if (!CI) config.plugins.push(new ProgressBarPlugin())
+/* istanbul ignore next */
+if (WEBPACK_DEVTOOL) (config: Object).devtool = WEBPACK_DEVTOOL
 
 export default config
 
