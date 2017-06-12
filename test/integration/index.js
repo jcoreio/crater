@@ -31,6 +31,7 @@ const webpack = path.join(root, 'webpack')
 let phantomjs
 
 before(async function () {
+  this.timeout(30000)
   console.log('Launching PhantomJS...') // eslint-disable-line no-console
   phantomjs = exec(require('phantomjs-prebuilt').path + ' --webdriver=4444')
   await childPrinted(phantomjs, /running on port 4444/i)
@@ -45,8 +46,9 @@ before(async function () {
   await browser.init()
 })
 after(async function () {
+  this.timeout(30000)
   if (browser) await browser.end()
-  if (phantomjs) phantomjs.kill()
+  if (phantomjs) await kill(phantomjs, 'SIGINT')
 })
 
 afterEach(async function () {
@@ -71,8 +73,6 @@ afterEach(async function () {
       browserLogsDebug(`${new Date(timestamp).toLocaleString()} ${level} ${message}`)
     )
   }
-
-  await mergeClientCoverage()
 })
 
 function delay(ms) {
