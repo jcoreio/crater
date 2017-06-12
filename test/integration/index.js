@@ -36,8 +36,10 @@ function killProcessOnPort(port: number): Promise<void> {
 
 before(async function () {
   this.timeout(30000)
-  if (process.env.CI)  await killProcessOnPort(4444)
+  if (process.env.CI) await killProcessOnPort(4444)
 
+  console.log('phantomjs-prebuilt:') // eslint-disable-line no-console
+  console.log(require('phantomjs-prebuilt')) // eslint-disable-line no-console
   const phantomJSPath = require('phantomjs-prebuilt').path
   console.log('Launching PhantomJS:', phantomJSPath, ' --webdriver=4444') // eslint-disable-line no-console
   phantomjs = exec(phantomJSPath + ' --webdriver=4444')
