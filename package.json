@@ -11,12 +11,12 @@
     "prod": "defaultenv env/prod.js babel-node scripts/prod.js",
     "prod:debug": "defaultenv env/prod.js babel-node scripts/prod-debug.js",
     "prod:debug-brk": "defaultenv env/prod.js babel-node scripts/prod-debug-brk.js",
-    "test": "wdio wdio.conf.js",
-    "test:hot-reloading": "wdio wdio.conf.js --mochaOpts.grep \"hot reloading\"",
-    "coverage": "BABEL_ENV=coverage nyc --reporter=lcov --reporter=text npm test",
-    "test:dev": "wdio wdio.conf.js --mochaOpts.grep dev",
-    "test:prod": "wdio wdio.conf.js --mochaOpts.grep prod",
-    "test:docker": "wdio wdio.conf.js --mochaOpts.grep docker",
+    "test": "mocha $npm_package_config_mocha",
+    "test:hot-reloading": "mocha $npm_package_config_mocha --grep 'hot reloading'",
+    "test:dev": "mocha $npm_package_config_mocha --grep dev",
+    "test:prod": "mocha $npm_package_config_mocha --grep prod",
+    "test:docker": "mocha $npm_package_config_mocha --grep docker",
+    "coverage": "BABEL_ENV=coverage nyc --reporter=lcov --reporter=text mocha $npm_package_config_mocha",
     "build:docker": "defaultenv env/prod.js babel-node scripts/build-docker.js",
     "docker": "defaultenv env/prod.js babel-node scripts/docker.js",
     "flow": "flow",
@@ -24,6 +24,9 @@
     "lint": "eslint *.js src scripts test util webpack",
     "lint:fix": "eslint --fix *.js src scripts test util webpack",
     "lint:watch": "esw -w *.js src scripts test util webpack"
+  },
+  "config": {
+    "mocha": "--compilers js:babel-core/register ./test/integration/index.js"
   },
   "dependencies": {
     "babel-plugin-module-resolver": "^2.7.1",
@@ -107,9 +110,6 @@
     "smart-restart": "^1.1.1",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
-    "wdio-mocha-framework": "^0.5.4",
-    "wdio-phantomjs-service": "^0.2.2",
-    "wdio-spec-reporter": "0.0.5",
     "webdriverio": "^4.4.0",
     "webpack": "^1.14.0",
     "webpack-dev-middleware": "^1.6.1",

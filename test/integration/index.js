@@ -1,3 +1,4 @@
+import * as webdriverio from 'webdriverio'
 import {expect} from 'chai'
 import exec from 'crater-util/lib/exec'
 import {childPrinted} from 'async-child-process'
@@ -9,63 +10,117 @@ import dockerComposeEnv from '../../scripts/dockerComposeEnv'
 import path from 'path'
 import fs from 'fs'
 import rimraf from 'rimraf'
+import mkdirp from 'mkdirp'
 import promisify from 'es6-promisify'
 import {Collector} from 'istanbul'
 import debug from 'debug'
 
+/* global browser: false */
+
 const popsicle = require('popsicle')
 
-const browserLogsDebug = debug('crater:logs:browser')
+const browserLogsDebug = debug('wdio:logs:browser')
+const printLogs = (process.env.DEBUG || '').split(/\s*,\s*|\s+/).indexOf('wdio:logs:browser') >= 0
 
 const root = path.resolve(__dirname, '..', '..')
+const errorShots = path.resolve(root, 'errorShots')
 const src = path.join(root, 'src')
 const build = path.join(root, 'build')
 const webpack = path.join(root, 'webpack')
 
-/* global browser: false */
+let phantomjs
+
+before(async function () {
+  console.log('Launching PhantomJS...') // eslint-disable-line no-console
+  phantomjs = exec(require('phantomjs-prebuilt').path + ' --webdriver=4444')
+  await childPrinted(phantomjs, /running on port 4444/i)
+
+  console.log('Launching webdriverio...') // eslint-disable-line no-console
+  global.browser = webdriverio.remote({
+    desiredCapabilities: {
+      browserName: 'phantomjs',
+    },
+    logLevel: process.env.WDIO_LOG_LEVEL || 'command',
+  })
+  await browser.init()
+})
+after(async function () {
+  if (browser) await browser.end()
+  if (phantomjs) phantomjs.kill()
+})
+
+afterEach(async function () {
+  const {state, title} = this.currentTest
+  if (state === 'failed') {
+    await mkdirp(errorShots)
+    const file = path.join(errorShots, `ERROR_phantomjs_${title}_${new Date().toISOString()}.png`)
+    browser.saveScreenshot(file)
+    console.log('Saved screenshot to', file) // eslint-disable-line no-console
+
+    if (!printLogs) {
+      // log anyway for failed tests
+      const logs = (await browser.log('browser')).value
+      logs.forEach(({timestamp, level, message}) =>
+        console.error('[browser log]', new Date(timestamp).toLocaleString(), level, message) // eslint-disable-line no-console
+      )
+    }
+  }
+  if (printLogs) {
+    const logs = (await browser.log('browser')).value
+    logs.forEach(({timestamp, level, message}) =>
+      browserLogsDebug(`${new Date(timestamp).toLocaleString()} ${level} ${message}`)
+    )
+  }
+
+  await mergeClientCoverage()
+})
 
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 function sharedTests(getRootUrl) {
-  it('serves page with correct title', async function () {
-    expect(await browser.getTitle()).to.equal('Crater')
-  })
-  it('serves page with correct header', async function () {
-    expect(await browser.getText('h1')).to.equal('Welcome to Crater!')
-  })
-  it('serves up client css', async function () {
-    const color = await browser.getCssProperty('h1', 'color')
-    expect(color.parsed.hex).to.equal('#333333')
-  })
-  it('updates the counter', async function () {
-    const getCounter = async () => {
-      const text = await browser.getText('.counter')
-      const match = /(\d+)/.exec(text)
-      return match && parseInt(match[1])
-    }
+  describe('shared tests', function () {
+    this.timeout(10000)
 
-    const initCounter = await getCounter()
-    await delay(2000)
-    expect(await getCounter()).to.be.above(initCounter)
-  })
-  it('sends Meteor.settings.public to the client', async function () {
-    expect(await browser.getText('.settings-test')).to.equal('success')
-  })
-  it('serves 404 for favicon', async () => {
-    expect((await popsicle.get(await getRootUrl() + '/favicon.png')).status).to.equal(404)
-  })
-  it('allows switching between home and about page', async () => {
-    await browser.click('=About')
-    expect(await browser.getText('h1')).to.equal('About')
-    await browser.click('=Home')
-    expect(await browser.getText('h1')).to.equal('Welcome to Crater!')
-  })
-  it('proxies or defers to /sockjs', async () => {
-    const response = (await popsicle.get(await getRootUrl() + '/sockjs/info')
-      .use(popsicle.plugins.parse(['json', 'urlencoded']))).body
-    expect(response.websocket).to.be.true
+    it('serves page with correct title', async function () {
+      expect(await browser.getTitle()).to.equal('Crater')
+    })
+    it('serves page with correct header', async function () {
+      expect(await browser.getText('h1')).to.equal('Welcome to Crater!')
+    })
+    it('serves up client css', async function () {
+      const color = await browser.getCssProperty('h1', 'color')
+      expect(color.parsed.hex).to.equal('#333333')
+    })
+    it('updates the counter', async function () {
+      const getCounter = async () => {
+        const text = await browser.getText('.counter')
+        const match = /(\d+)/.exec(text)
+        return match && parseInt(match[1])
+      }
+
+      const initCounter = await getCounter()
+      await delay(2000)
+      expect(await getCounter()).to.be.above(initCounter)
+    })
+    it('sends Meteor.settings.public to the client', async function () {
+      expect(await browser.getText('.settings-test')).to.equal('success')
+    })
+    it('serves 404 for favicon', async () => {
+      expect((await popsicle.get(await getRootUrl() + '/favicon.png')).status).to.equal(404)
+    })
+    it('allows switching between home and about page', async () => {
+      await browser.click('=About')
+      expect(await browser.getText('h1')).to.equal('About')
+      await browser.click('=Home')
+      expect(await browser.getText('h1')).to.equal('Welcome to Crater!')
+    })
+    it('proxies or defers to /sockjs', async () => {
+      const response = (await popsicle.get(await getRootUrl() + '/sockjs/info')
+        .use(popsicle.plugins.parse(['json', 'urlencoded']))).body
+      expect(response.websocket).to.be.true
+    })
   })
 }
 
@@ -215,48 +270,51 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
   })
 })
 
-describe('docker build', function () {
-  const env = {...process.env}
-  const envDefaults =  require('../../env/prod')
-  for (let key in envDefaults) delete env[key]
+// in CI, only test docker in the Node 4 job (since Docker container is from Node 4 anyway)
+if (!process.env.CI || process.version.startsWith('v4')) {
+  describe('docker build', function () {
+    const env = {...process.env}
+    const envDefaults = require('../../env/prod')
+    for (let key in envDefaults) delete env[key]
 
-  let server
+    let server
 
-  const getRootUrl = async () => `http://${await dockerComposePort('crater', 80, {cwd: root})}`
+    const getRootUrl = async () => `http://${await dockerComposePort('crater', 80, {cwd: root})}`
 
-  before(async function () {
-    this.timeout(15 * 60000)
-    // run this first, even though it's not necessary, to increase coverage of scripts/build.js
-    await spawnAsync('npm', ['run', 'build'], {cwd: root, env})
-    await spawnAsync('npm', ['run', 'build:docker'], {cwd: root, env})
-    server = exec('npm run docker', {
-      cwd: root,
-      env: {
-        ...env,
-        METEOR_SETTINGS: JSON.stringify({
-          public: {
-            test: 'success'
-          }
-        })
-      }
+    before(async function () {
+      this.timeout(15 * 60000)
+      // run this first, even though it's not necessary, to increase coverage of scripts/build.js
+      await spawnAsync('npm', ['run', 'build'], {cwd: root, env})
+      await spawnAsync('npm', ['run', 'build:docker'], {cwd: root, env})
+      server = exec('npm run docker', {
+        cwd: root,
+        env: {
+          ...env,
+          METEOR_SETTINGS: JSON.stringify({
+            public: {
+              test: 'success'
+            }
+          })
+        }
+      })
+      await childPrinted(server, /App is listening on http/i)
+      await browser.reload()
+      await navigateTo(await getRootUrl())
     })
-    await childPrinted(server, /App is listening on http/i)
-    await browser.reload()
-    await navigateTo(await getRootUrl())
-  })
 
-  after(async function () {
-    this.timeout(20000)
-    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
-    await spawnAsync('docker-compose', ['down'], {
-      cwd: root,
-      env: await dockerComposeEnv(),
+    after(async function () {
+      this.timeout(20000)
+      if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
+      await spawnAsync('docker-compose', ['down'], {
+        cwd: root,
+        env: await dockerComposeEnv(),
+      })
+      await logBrowserMessages()
     })
-    await logBrowserMessages()
-  })
 
-  sharedTests(getRootUrl)
-})
+    sharedTests(getRootUrl)
+  })
+}
 
 describe('dev mode', function () {
   const env = {...process.env}
@@ -302,7 +360,7 @@ describe('dev mode', function () {
         const modified = appCode.replace(/Welcome to Crater!/, newHeader)
         await promisify(fs.writeFile)(appFile, modified, 'utf8')
         await browser.waitUntil(
-          () => browser.getText('h1') === newHeader,
+          () => browser.getText('h1').then(text => text === newHeader),
           30000,
           'expected header text to hot update within 30s'
         )

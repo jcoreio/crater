@@ -5,7 +5,8 @@ RUN mkdir -p /usr/app/meteor/bundle/programs/server
 WORKDIR /usr/app
 
 ARG NODE_ENV=production
-ENV NODE_ENV $NODE_ENV
+ENV NODE_ENV $NODE_ENV \
+    NPM_CONFIG_LOGLEVEL warn
 
 ARG TARGET=""
 ENV TARGET $TARGET
