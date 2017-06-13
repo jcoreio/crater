@@ -42,10 +42,11 @@ if (BABEL_ENV === 'test' || BABEL_ENV === 'coverage') {
         const NYC = require('nyc')
         new NYC().writeCoverageFile()
       }
-    } finally {
-      setTimeout(shutdown, 1000)
-      return proxy.web(req, res, {target})
+    } catch (error) {
+      console.error(error.stack) // eslint-disable-line no-console
     }
+    setTimeout(shutdown, 1000)
+    return proxy.web(req, res, {target})
   })
 }
 

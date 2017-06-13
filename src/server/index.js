@@ -37,10 +37,11 @@ if (process.env.BABEL_ENV === 'test' || process.env.BABEL_ENV === 'coverage') {
         const NYC = require('nyc')
         new NYC().writeCoverageFile()
       }
-    } finally {
-      setTimeout(shutdown, 1000)
-      res.status(200).send('shutting down...')
+    } catch (error) {
+      console.error(error.stack) // eslint-disable-line no-console
     }
+    setTimeout(shutdown, 1000)
+    res.status(200).send('shutting down...')
   })
 }
 
