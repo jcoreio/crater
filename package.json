@@ -11,11 +11,11 @@
     "prod": "defaultenv env/prod.js babel-node scripts/prod.js",
     "prod:debug": "defaultenv env/prod.js babel-node scripts/prod-debug.js",
     "prod:debug-brk": "defaultenv env/prod.js babel-node scripts/prod-debug-brk.js",
-    "test": "mocha $npm_package_config_mocha",
-    "test:hot-reloading": "mocha $npm_package_config_mocha --grep 'hot reloading'",
-    "test:dev": "mocha $npm_package_config_mocha --grep dev",
-    "test:prod": "mocha $npm_package_config_mocha --grep prod",
-    "test:docker": "mocha $npm_package_config_mocha --grep docker",
+    "test": "BABEL_ENV=test mocha $npm_package_config_mocha",
+    "test:hot-reloading": "BABEL_ENV=test mocha $npm_package_config_mocha --grep 'hot reloading'",
+    "test:dev": "BABEL_ENV=test mocha $npm_package_config_mocha --grep dev",
+    "test:prod": "BABEL_ENV=test mocha $npm_package_config_mocha --grep prod",
+    "test:docker": "BABEL_ENV=test mocha $npm_package_config_mocha --grep docker",
     "coverage": "BABEL_ENV=coverage nyc --reporter=lcov --reporter=text mocha $npm_package_config_mocha",
     "build:docker": "defaultenv env/prod.js babel-node scripts/build-docker.js",
     "docker": "defaultenv env/prod.js babel-node scripts/docker.js",
@@ -23,7 +23,8 @@
     "flow:watch": "flow-watch --watch flowlib/ --watch scripts/ --watch src/ --watch test/ --watch webpack/ --watch .flowconfig",
     "lint": "eslint *.js src scripts test util webpack",
     "lint:fix": "eslint --fix *.js src scripts test util webpack",
-    "lint:watch": "esw -w *.js src scripts test util webpack"
+    "lint:watch": "esw -w *.js src scripts test util webpack",
+    "open:coverage": "open coverage/lcov-report/index.html"
   },
   "config": {
     "mocha": "--compilers js:babel-core/register ./test/integration/index.js"

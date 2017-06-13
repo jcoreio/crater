@@ -9,6 +9,8 @@ import createDebug from 'debug'
 const {BUILD_DIR} = process.env
 if (!BUILD_DIR) throw new Error("missing process.env.BUILD_DIR")
 
+console.log('BABEL_ENV', process.env.BABEL_ENV)
+
 const shutdownDebug = createDebug('crater:shutdown')
 
 import '../universal/collections/Counts'
@@ -28,6 +30,12 @@ app.use('/packages', express.static(path.resolve(BUILD_DIR, 'meteor', 'bundle', 
 
 if (process.env.NODE_ENV === 'production') {
   app.use('/static', express.static(path.resolve(__dirname, 'static')))
+}
+if (process.env.BABEL_ENV === 'test' || process.env.BABEL_ENV === 'coverage') {
+  app.get('/shutdown', (req: Object, res: Object) => {
+    setImmediate(shutdown)
+    res.status(200).send('shutting down...')
+  })
 }
 
 // server-side rendering

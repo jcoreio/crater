@@ -1,7 +1,7 @@
 import * as webdriverio from 'webdriverio'
 import {expect} from 'chai'
 import exec from 'crater-util/lib/exec'
-import {childPrinted} from 'async-child-process'
+import {childPrinted, join} from 'async-child-process'
 import kill from 'crater-util/lib/kill'
 import spawnAsync from 'crater-util/lib/spawnAsync'
 import execAsync from 'crater-util/lib/execAsync'
@@ -144,10 +144,12 @@ async function mergeClientCoverage() {
   if (process.env.BABEL_ENV === 'coverage') {
     const collector = new Collector()
 
-    collector.add(global.__coverage__)
     /* eslint-disable no-undef */
-    collector.add((await browser.execute(() => window.__coverage__)).value)
+    const clientCoverage = (await browser.execute(() => window.__coverage__)).value
     /* eslint-enable no-undef */
+
+    if (global.__coverage__) collector.add(global.__coverage__)
+    if (clientCoverage) collector.add(clientCoverage)
     global.__coverage__ = collector.getFinalCoverage()
   }
 }
@@ -197,11 +199,11 @@ describe('prod mode', function () {
 
   after(async function () {
     this.timeout(600000)
+    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
     if (server) await kill(server, 'SIGINT')
     // restore code in App.js, which (may) have been changed by hot reloading test
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
-    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
     await logBrowserMessages()
   })
 
@@ -274,8 +276,8 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
 
   after(async function () {
     this.timeout(30000)
-    if (server) await kill(server, 'SIGINT')
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
+    if (server) await kill(server, 'SIGINT')
     await logBrowserMessages()
   })
 })
@@ -340,11 +342,14 @@ describe('dev mode', function () {
 
   after(async function () {
     this.timeout(15 * 60000)
-    if (server) await kill(server, 'SIGINT')
+    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
+    if (server) {
+      popsicle.get(ROOT_URL + '/shutdown')
+      await join(server).catch(() => {})
+    }
     // restore code in App.js, which (may) have been changed by hot reloading test
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
-    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
     await logBrowserMessages()
   })
 
