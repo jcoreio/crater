@@ -6,7 +6,6 @@ import kill from 'crater-util/lib/kill'
 import spawnAsync from 'crater-util/lib/spawnAsync'
 import execAsync from 'crater-util/lib/execAsync'
 import dockerComposePort from 'crater-util/lib/dockerComposePort'
-import dockerComposeEnv from '../../scripts/dockerComposeEnv'
 import path from 'path'
 import fs from 'fs'
 import rimraf from 'rimraf'
@@ -259,7 +258,7 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
 
   before(async function () {
     this.timeout(240000)
-    if (process.env.CI)  await killProcessOnPort(envDefaults.PORT)
+    if (process.env.CI) await killProcessOnPort(envDefaults.PORT)
     server = exec('npm run prod', {env})
     await childPrinted(server, /App is listening on http/i)
     await browser.reload()
@@ -294,21 +293,11 @@ if (!process.env.CI || process.version.startsWith('v4')) {
 
     before(async function () {
       this.timeout(15 * 60000)
-      if (process.env.CI)  await killProcessOnPort(envDefaults.PORT)
+      if (process.env.CI) await killProcessOnPort(envDefaults.PORT)
       // run this first, even though it's not necessary, to increase coverage of scripts/build.js
       await spawnAsync('npm', ['run', 'build'], {cwd: root, env})
       await spawnAsync('npm', ['run', 'build:docker'], {cwd: root, env})
-      server = exec('npm run docker', {
-        cwd: root,
-        env: {
-          ...env,
-          METEOR_SETTINGS: JSON.stringify({
-            public: {
-              test: 'success'
-            }
-          })
-        }
-      })
+      server = exec('npm run docker', {cwd: root, env})
       await childPrinted(server, /App is listening on http/i)
       await browser.reload()
       await navigateTo(await getRootUrl())
@@ -316,11 +305,7 @@ if (!process.env.CI || process.version.startsWith('v4')) {
 
     after(async function () {
       this.timeout(20000)
-      if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
-      await spawnAsync('docker-compose', ['down'], {
-        cwd: root,
-        env: await dockerComposeEnv(),
-      })
+      await spawnAsync('docker-compose', ['down'], {cwd: root})
       await logBrowserMessages()
     })
 
