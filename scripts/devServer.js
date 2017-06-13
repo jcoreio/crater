@@ -24,8 +24,11 @@ const target = `http://localhost:${PORT}`
 // istanbul ignore next
 function shutdown() {
   shutdownDebug('got signal, shutting down')
-  server.close()
-  process.exit(0)
+  try {
+    server.close()
+  } finally {
+    process.exit(0)
+  }
 }
 
 // istanbul ignore next
@@ -36,7 +39,7 @@ if (BABEL_ENV === 'coverage') {
 
 // istanbul ignore next
 if (BABEL_ENV === 'test' || BABEL_ENV === 'coverage') {
-  app.get('/shutdown', (req: Object, res: Object): any => {
+  app.get('/shutdown', async (req: Object, res: Object): any => {
     try {
       if (BABEL_ENV === 'coverage') {
         const NYC = require('nyc')
@@ -45,8 +48,13 @@ if (BABEL_ENV === 'test' || BABEL_ENV === 'coverage') {
     } catch (error) {
       console.error(error.stack) // eslint-disable-line no-console
     }
+    try {
+      await require('popsicle').get(`${target}/shutdown`)
+    } catch (error) {
+      console.error(error.stack) // eslint-disable-line no-console
+    }
     setTimeout(shutdown, 1000)
-    return proxy.web(req, res, {target})
+    res.status(200).send('shutting down...')
   })
 }
 

@@ -63,8 +63,11 @@ WebApp.onListening(() => {
 
 function shutdown() {
   shutdownDebug('got signal, shutting down')
-  WebApp.httpServer.close()
-  process.exit(0)
+  try {
+    WebApp.httpServer.close()
+  } finally {
+    process.exit(0)
+  }
 }
 
 process.on('SIGINT', shutdown)
