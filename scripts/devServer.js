@@ -37,8 +37,15 @@ if (BABEL_ENV === 'coverage') {
 // istanbul ignore next
 if (BABEL_ENV === 'test' || BABEL_ENV === 'coverage') {
   app.get('/shutdown', (req: Object, res: Object): any => {
-    setImmediate(shutdown)
-    return proxy.web(req, res, { target })
+    try {
+      if (BABEL_ENV === 'coverage') {
+        const NYC = require('nyc')
+        new NYC().writeCoverageFile()
+      }
+    } finally {
+      setTimeout(shutdown, 1000)
+      return proxy.web(req, res, {target})
+    }
   })
 }
 
