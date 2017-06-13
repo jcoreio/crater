@@ -5,12 +5,13 @@ RUN mkdir -p /usr/app/meteor/bundle/programs/server
 WORKDIR /usr/app
 
 ARG NODE_ENV=production
-ENV NODE_ENV $NODE_ENV \
-    NPM_CONFIG_LOGLEVEL warn
-
-ARG TARGET=""
-ENV TARGET $TARGET
 ARG BUILD_DIR=build
+ARG TARGET=""
+
+ENV NODE_ENV=$NODE_ENV \
+    TARGET=$TARGET \
+    NPM_CONFIG_LOGLEVEL=warn \
+    BUILD_DIR=$BUILD_DIR
 
 # I install the meteor deps first because I assume those will change less often
 
@@ -20,7 +21,7 @@ COPY $BUILD_DIR/meteor/bundle/programs/server/package.json \
 RUN cd meteor/bundle/programs/server && npm install
 
 COPY package.json /usr/app/
-RUN npm install
+RUN npm install --production
 
 COPY $BUILD_DIR/ /usr/app/
 
@@ -32,3 +33,4 @@ ENV MONGO_URL=mongodb://mongo:27017/crater \
     BUILD_DIR=/usr/app
 
 CMD ["node", "index.js"]
+

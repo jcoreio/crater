@@ -29,6 +29,7 @@ async function buildDocker(): Promise<void> {
   const tag = `jedwards1211/crater${TARGET ? '-' + TARGET : ''}:${commitHash}`
   await spawnAsync('docker', [
     'build',
+    '--build-arg', `NODE_ENV=${process.env.NODE_ENV || 'production'}`,
     '--build-arg', `BUILD_DIR=${path.relative(root, BUILD_DIR)}`,
     '--build-arg', `TARGET=${TARGET || ''}`,
     '-t', tag,
