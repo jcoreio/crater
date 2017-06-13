@@ -1,7 +1,7 @@
 import * as webdriverio from 'webdriverio'
 import {expect} from 'chai'
 import exec from 'crater-util/lib/exec'
-import {childPrinted, join} from 'async-child-process'
+import {childPrinted} from 'async-child-process'
 import kill from 'crater-util/lib/kill'
 import spawnAsync from 'crater-util/lib/spawnAsync'
 import execAsync from 'crater-util/lib/execAsync'
@@ -11,7 +11,7 @@ import fs from 'fs'
 import rimraf from 'rimraf'
 import mkdirp from 'mkdirp'
 import promisify from 'es6-promisify'
-import {Collector} from 'istanbul'
+import md5hex from 'md5-hex'
 import debug from 'debug'
 
 /* global browser: false */
@@ -87,15 +87,6 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
-function shutdown(server, rootUrl) {
-  const joinPromise = join(server).catch(() => {})
-  popsicle.get(rootUrl + '/shutdown')
-  return Promise.race([
-    joinPromise,
-    delay(10000).then(() => kill(server, 'SIGINT'))
-  ])
-}
-
 function sharedTests(getRootUrl) {
   describe('shared tests', function () {
     this.timeout(10000)
@@ -149,17 +140,20 @@ function unlinkIfExists(path, callback) {
 }
 
 // istanbul ignore next
-async function mergeClientCoverage() {
+async function writeClientCoverage() {
   if (process.env.BABEL_ENV === 'coverage') {
-    const collector = new Collector()
+    const clientCoverage = (await browser.execute(() => window.__coverage__)).value // eslint-disable-line no-undef
 
-    /* eslint-disable no-undef */
-    const clientCoverage = (await browser.execute(() => window.__coverage__)).value
-    /* eslint-enable no-undef */
+    if (!clientCoverage) return
 
-    if (global.__coverage__) collector.add(global.__coverage__)
-    if (clientCoverage) collector.add(clientCoverage)
-    global.__coverage__ = collector.getFinalCoverage()
+    const id = md5hex(process.hrtime().concat(process.pid).map(String))
+    const coverageFilename = path.resolve(root, '.nyc_output', id + '.json')
+
+    await promisify(fs.writeFile)(
+      coverageFilename,
+      JSON.stringify(clientCoverage),
+      'utf-8'
+    )
   }
 }
 
@@ -184,7 +178,7 @@ async function logBrowserMessages() {
   })
 }
 
-describe('prod mode', function () {
+describe('prod mode without DISABLE_FULL_SSR=1', function () {
   const env = {...process.env}
   const envDefaults =  require('../../env/prod')
   for (let key in envDefaults) delete env[key]
@@ -208,8 +202,8 @@ describe('prod mode', function () {
 
   after(async function () {
     this.timeout(600000)
-    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
-    if (server) await shutdown(server, ROOT_URL)
+    if (process.env.BABEL_ENV === 'coverage') await writeClientCoverage()
+    if (server) await kill(server, 'SIGINT')
     // restore code in App.js, which (may) have been changed by hot reloading test
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
@@ -285,8 +279,8 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
 
   after(async function () {
     this.timeout(30000)
-    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
-    if (server) await shutdown(server, ROOT_URL)
+    if (process.env.BABEL_ENV === 'coverage') await writeClientCoverage()
+    if (server) await kill(server, 'SIGINT')
     await logBrowserMessages()
   })
 })
@@ -351,8 +345,8 @@ describe('dev mode', function () {
 
   after(async function () {
     this.timeout(15 * 60000)
-    if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
-    if (server) await shutdown(server, ROOT_URL)
+    if (process.env.BABEL_ENV === 'coverage') await writeClientCoverage()
+    if (server) await kill(server, 'SIGINT')
     // restore code in App.js, which (may) have been changed by hot reloading test
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')

@@ -33,7 +33,7 @@ async function buildDocker(): Promise<void> {
 }
 
 if (!module.parent) {
-  process.on('SIGINT', (): any => process.exit(1))
+  require('./addSignalHooks')
   asyncScript(buildDocker)
 }
 

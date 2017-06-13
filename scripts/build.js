@@ -14,6 +14,6 @@ async function build(): Promise<void> {
 export default build
 
 if (!module.parent) {
-  process.on('SIGINT', (): any => process.exit(1))
+  require('./addSignalHooks')
   asyncScript(build)
 }

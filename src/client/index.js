@@ -26,6 +26,7 @@ Meteor.startup(() => {
   let reloads = 0
 
   // Hot Module Replacement API
+  // istanbul ignore next
   if (module.hot) {
     module.hot.accept('./Root', () => {
       const Root = require('./Root').default

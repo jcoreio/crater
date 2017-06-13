@@ -36,6 +36,6 @@ async function buildClient(): Promise<void> {
 export default buildClient
 
 if (!module.parent) {
-  process.on('SIGINT', (): any => process.exit(1))
+  require('./addSignalHooks')
   asyncScript(buildClient)
 }

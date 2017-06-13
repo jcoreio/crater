@@ -41,6 +41,6 @@ async function buildServer(): Promise<void> {
 export default buildServer
 
 if (!module.parent) {
-  process.on('SIGINT', (): any => process.exit(1))
+  require('./addSignalHooks')
   asyncScript(buildServer)
 }

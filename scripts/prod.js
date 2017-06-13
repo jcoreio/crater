@@ -62,9 +62,7 @@ async function prod(options?: {commandOptions?: Array<string>} = {}): Promise<an
 export default prod
 
 if (!module.parent) {
-  process.on('SIGINT', (): any => process.exit(0))
-  process.on('SIGTERM', (): any => process.exit(0))
-  asyncScript(prod, {
-    exitOnSuccess: false,
-  })
+  require('./addSignalHooks')
+  asyncScript(prod, {exitOnSuccess: false})
 }
+

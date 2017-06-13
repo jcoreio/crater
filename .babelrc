@@ -6,7 +6,12 @@
   "env": {
     "coverage": {
       "plugins": [
-        "istanbul"
+        ["istanbul", {
+          "exclude": [
+            "build/meteor/**/*.js",
+            "test/**/*.js"
+          ]
+        }]
       ]
     }
   }

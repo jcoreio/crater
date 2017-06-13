@@ -21,6 +21,8 @@ process.chdir(cwd)
 
 if (process.env.NODE_ENV !== 'production') require('babel-register')
 
+if (process.env.BABEL_ENV === 'coverage') require(path.resolve(cwd, 'scripts', 'addSignalHooks.js'))
+
 // eslint-disable-next-line no-undef
 Package.meteor.Meteor.startup(() => {
   if (process.env.NODE_ENV === 'production') {
@@ -29,3 +31,4 @@ Package.meteor.Meteor.startup(() => {
     require('./server/index')
   }
 })
+

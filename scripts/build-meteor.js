@@ -49,6 +49,6 @@ async function buildMeteor(): Promise<void> {
 export default buildMeteor
 
 if (!module.parent) {
-  process.on('SIGINT', (): any => process.exit(1))
+  require('./addSignalHooks')
   asyncScript(buildMeteor)
 }
