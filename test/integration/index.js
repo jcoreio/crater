@@ -87,6 +87,15 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
+function shutdown(server, rootUrl) {
+  const joinPromise = join(server).catch(() => {})
+  popsicle.get(rootUrl + '/shutdown')
+  return Promise.race([
+    joinPromise,
+    delay(10000).then(() => kill(server, 'SIGINT'))
+  ])
+}
+
 function sharedTests(getRootUrl) {
   describe('shared tests', function () {
     this.timeout(10000)
@@ -200,10 +209,7 @@ describe('prod mode', function () {
   after(async function () {
     this.timeout(600000)
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
-    if (server) {
-      popsicle.get(ROOT_URL + '/shutdown')
-      await join(server).catch(() => {})
-    }
+    if (server) await shutdown(server, ROOT_URL)
     // restore code in App.js, which (may) have been changed by hot reloading test
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
@@ -280,10 +286,7 @@ describe('prod mode with DISABLE_FULL_SSR=1', function () {
   after(async function () {
     this.timeout(30000)
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
-    if (server) {
-      popsicle.get(ROOT_URL + '/shutdown')
-      await join(server).catch(() => {})
-    }
+    if (server) await shutdown(server, ROOT_URL)
     await logBrowserMessages()
   })
 })
@@ -349,10 +352,7 @@ describe('dev mode', function () {
   after(async function () {
     this.timeout(15 * 60000)
     if (process.env.BABEL_ENV === 'coverage') await mergeClientCoverage()
-    if (server) {
-      popsicle.get(ROOT_URL + '/shutdown')
-      await join(server).catch(() => {})
-    }
+    if (server) await shutdown(server, ROOT_URL)
     // restore code in App.js, which (may) have been changed by hot reloading test
     if (appCode) await promisify(fs.writeFile)(appFile, appCode, 'utf8')
     if (serverCode) await promisify(fs.writeFile)(serverFile, serverCode, 'utf8')
