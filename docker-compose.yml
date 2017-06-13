@@ -6,12 +6,12 @@ services:
     ports:
       - "27017"
   crater:
-    image: jedwards1211/$NAME:$TAG
+    image: jedwards1211/crater
     ports:
-      - "$PORT:80"
+      - "3000:80"
     environment:
-      - ROOT_URL=$ROOT_URL
-      - MONGO_URL=mongodb://mongo:27017/$NAME
-      - METEOR_SETTINGS=$METEOR_SETTINGS
+      - ROOT_URL=http://localhost:3000
+      - MONGO_URL=mongodb://mongo:27017/crater
+      - 'METEOR_SETTINGS={"public": {"test": "success"}}'
     depends_on:
       - mongo

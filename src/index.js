@@ -1,7 +1,5 @@
 global.__CLIENT__ = false
 
-if (process.env.USE_GETENV) require('../getenv')
-
 global.__PRODUCTION__ = process.env.NODE_ENV === 'production'
 
 const path = require('path')

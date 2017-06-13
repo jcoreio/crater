@@ -5,12 +5,14 @@ node_js:
   - "6"
 sudo: required
 services:
+  - mongodb
   - docker
 env:
   DOCKER_COMPOSE_VERSION: 1.8.0
   CXX: g++-4.8
   DEBUG: crater-util:kill,crater-util:kill:ps,crater:shutdown,crater:logs:browser,smart-restart:supervisor
   DUMP_HTTP: 1
+  TMPDIR: $TRAVIS_BUILD_DIR/tmp
 
 addons:
   apt:
@@ -33,7 +35,14 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
   - curl https://install.meteor.com/ | sh
-  - docker run -p 27017:27017 --detach mongo:3.2.8
+
+install:
+  - npm install
+  - npm rebuild
+
+before_script:
+  # give mongo time to come up
+  - sleep 15
 
 script:
   - npm run lint
@@ -42,3 +51,4 @@ script:
   - rm -rf build
   - npm run coverage
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+

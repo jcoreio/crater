@@ -7,9 +7,6 @@ import buildMeteor from './build-meteor'
 import installMeteorDeps from './installMeteorDeps'
 import launch from 'smart-restart'
 
-process.env.NODE_ENV = 'development'
-process.env.USE_GETENV = '1'
-
 const root = path.resolve(__dirname, '..')
 const src = path.join(root, 'src')
 

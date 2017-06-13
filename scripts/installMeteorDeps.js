@@ -4,12 +4,11 @@
 import spawnAsync from 'crater-util/lib/spawnAsync'
 import isDirectory from 'crater-util/lib/isDirectory'
 import path from 'path'
-import '../getenv'
-import buildDir from '../buildDir'
-
-const programsServer = path.join(buildDir, 'meteor', 'bundle', 'programs', 'server')
+import requireEnv from '../requireEnv'
 
 async function installMeteorDeps(): Promise<any> {
+  const BULID_DIR = requireEnv('BUILD_DIR')
+  const programsServer = path.join(BULID_DIR, 'meteor', 'bundle', 'programs', 'server')
   if (!(await isDirectory(path.join(programsServer, 'node_modules')))) {
     console.log('installing Meteor npm dependencies...')
     await spawnAsync('npm', ['install'], {

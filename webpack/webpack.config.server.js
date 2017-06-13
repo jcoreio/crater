@@ -6,8 +6,10 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import HappyPack from 'happypack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import nodeExternals from 'webpack-node-externals'
-import '../getenv'
-import buildDir from '../buildDir'
+import requireEnv from '../requireEnv'
+
+const BUILD_DIR = requireEnv('BUILD_DIR')
+const {WEBPACK_DEVTOOL, CI} = process.env
 
 const root = path.resolve(__dirname, '..')
 const srcDir = path.resolve(root, 'src')
@@ -15,7 +17,6 @@ const globalCSS = path.join(srcDir, 'styles', 'global')
 
 const config = {
   context: root,
-  devtool: process.env.WEBPACK_DEVTOOL || 'source-map',
   entry: {
     prerender: './src/server',
   },
@@ -25,7 +26,7 @@ const config = {
     __filename: false,
   },
   output: {
-    path: buildDir,
+    path: BUILD_DIR,
     chunkFilename: '[name]_[chunkhash].js',
     filename: '[name].js',
     libraryTarget: 'commonjs2',
@@ -97,6 +98,7 @@ const config = {
 }
 
 /* istanbul ignore next */
-if (!process.env.CI) config.plugins.push(new ProgressBarPlugin())
+if (WEBPACK_DEVTOOL) (config: Object).devtool = WEBPACK_DEVTOOL
+if (!CI) config.plugins.push(new ProgressBarPlugin())
 
 export default config

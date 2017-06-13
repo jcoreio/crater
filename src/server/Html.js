@@ -1,6 +1,7 @@
 /* @flow */
 /* eslint react/no-danger:0 */
-import React, {Component, PropTypes} from 'react'
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import {Provider} from 'react-redux'
 import {RouterContext} from 'react-router'
 import {renderToString} from 'react-dom-stream/server'

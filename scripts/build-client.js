@@ -7,13 +7,14 @@ import isNewerThan from 'crater-util/lib/isNewerThan'
 import webpack from 'webpack'
 import webpackConfig from '../webpack/webpack.config.prod'
 import promisify from 'es6-promisify'
-import '../getenv'
-import buildDir from '../buildDir'
-
-const root = path.resolve(__dirname, '..')
-const assets = path.join(buildDir, 'assets.json')
+import requireEnv from '../requireEnv'
 
 async function buildClient(): Promise<void> {
+  const BUILD_DIR = requireEnv('BUILD_DIR')
+
+  const root = path.resolve(__dirname, '..')
+  const assets = path.join(BUILD_DIR, 'assets.json')
+
   if (await isNewerThan(path.join(root, 'webpack', 'webpack.config.prod.js'), assets) ||
       await isNewerThan(path.join(root, 'src'), assets)) {
     console.log('building client bundle...')

@@ -7,8 +7,10 @@ import HappyPack from 'happypack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import MeteorImportsPlugin from 'meteor-imports-webpack-plugin'
 import cssModulesValues from 'postcss-modules-values'
-import '../getenv'
-import buildDir from '../buildDir'
+import requireEnv from '../requireEnv'
+
+const BUILD_DIR = requireEnv('BUILD_DIR')
+const {WEBPACK_DEVTOOL, CI, NO_UGLIFY} = process.env
 
 const root = path.resolve(__dirname, '..')
 const srcDir = path.resolve(root, 'src')
@@ -22,7 +24,6 @@ const vendor = [
 
 const config = {
   context: root,
-  devtool: process.env.WEBPACK_DEVTOOL || 'source-map',
   entry: {
     app: './src/client/index.js',
     vendor,
@@ -31,7 +32,7 @@ const config = {
   output: {
     filename: '[name]_[chunkhash].js',
     chunkFilename: '[name]_[chunkhash].js',
-    path: path.join(buildDir, 'static'),
+    path: path.join(BUILD_DIR, 'static'),
     publicPath: '/static/',
   },
   plugins: [
@@ -47,7 +48,7 @@ const config = {
     new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.optimize.MinChunkSizePlugin({ minChunkSize: 50000 }),
     new webpack.NoErrorsPlugin(),
-    new AssetsPlugin({ path: buildDir, filename: 'assets.json' }),
+    new AssetsPlugin({ path: BUILD_DIR, filename: 'assets.json' }),
     new webpack.DefinePlugin({
       '__CLIENT__': true,
       'Meteor.isClient': true,
@@ -64,7 +65,7 @@ const config = {
       threads: 4,
     }),
     new MeteorImportsPlugin({
-      meteorProgramsFolder: path.resolve(buildDir, 'meteor', 'bundle', 'programs'),
+      meteorProgramsFolder: path.resolve(BUILD_DIR, 'meteor', 'bundle', 'programs'),
       injectMeteorRuntimeConfig: false,
     }),
   ],
@@ -99,8 +100,9 @@ const config = {
 }
 
 /* istanbul ignore next */
-if (!process.env.CI) config.plugins.push(new ProgressBarPlugin())
-if (!process.env.NO_UGLIFY && process.argv.indexOf('--no-uglify') < 0) {
+if (WEBPACK_DEVTOOL) (config: Object).devtool = WEBPACK_DEVTOOL
+if (!CI) config.plugins.push(new ProgressBarPlugin())
+if (!NO_UGLIFY && process.argv.indexOf('--no-uglify') < 0) {
   config.plugins.push(new webpack.optimize.UglifyJsPlugin({
     compressor: { warnings: false }
   }))

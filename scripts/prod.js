@@ -10,18 +10,15 @@ import path from 'path'
 import webpack from 'webpack'
 import clientConfig from '../webpack/webpack.config.prod'
 import serverConfig from '../webpack/webpack.config.server'
-import '../getenv'
-import buildDir from '../buildDir'
+import requireEnv from '../requireEnv'
 
 const root = path.resolve(__dirname, '..')
 
-process.env.NODE_ENV = 'production'
-process.env.USE_GETENV = '1'
-
 async function prod(options?: {commandOptions?: Array<string>} = {}): Promise<any> {
+  const BUILD_DIR = requireEnv('BUILD_DIR')
   await buildMeteor()
   await installMeteorDeps()
-  await spawnAsync('babel', [path.join(root, 'src', 'index.js'), '-o', path.join(buildDir, 'index.js')], {
+  await spawnAsync('babel', [path.join(root, 'src', 'index.js'), '-o', path.join(BUILD_DIR, 'index.js')], {
     cwd: root,
     stdio: 'inherit',
   })
@@ -57,7 +54,7 @@ async function prod(options?: {commandOptions?: Array<string>} = {}): Promise<an
   await Promise.all([launchWebpack(serverConfig), launchWebpack(clientConfig)])
 
   launch({
-    main: path.join(buildDir, 'index.js'),
+    main: path.join(BUILD_DIR, 'index.js'),
     commandOptions: options.commandOptions || [],
   })
 }
