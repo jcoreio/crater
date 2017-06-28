@@ -76,7 +76,7 @@
     "crater-util": "^1.2.2",
     "cross-spawn": "^5.0.1",
     "css-loader": "^0.26.0",
-    "defaultenv": "^1.1.0",
+    "defaultenv": "1.1.0",
     "empty": "^0.10.1",
     "eslint": "^3.10.2",
     "eslint-plugin-babel": "^4.0.0",
