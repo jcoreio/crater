@@ -93,7 +93,7 @@
     "happypack": "^3.0.0",
     "http-proxy": "^1.14.0",
     "istanbul": "^0.4.5",
-    "json-loader": "^0.5.4",
+    "json-loader": "^0.5.5",
     "meteor-imports-webpack-plugin": "^1.1.5",
     "mkdirp": "^0.5.1",
     "mocha": "^3.0.2",
