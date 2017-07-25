@@ -79,7 +79,7 @@
     "defaultenv": "^1.1.0",
     "empty": "^0.10.1",
     "eslint": "^3.10.2",
-    "eslint-plugin-babel": "^4.0.0",
+    "eslint-plugin-babel": "4.1.1",
     "eslint-plugin-flowtype": "^2.17.1",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.7.1",
