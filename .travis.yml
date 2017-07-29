@@ -44,6 +44,9 @@ before_script:
   # give mongo time to come up
   - sleep 15
 
+before_script:
+  - npm prune
+
 script:
   - npm run lint
   - npm run flow
