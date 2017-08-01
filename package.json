@@ -96,7 +96,7 @@
     "json-loader": "^0.5.4",
     "meteor-imports-webpack-plugin": "^1.1.5",
     "mkdirp": "^0.5.1",
-    "mocha": "^3.0.2",
+    "mocha": "3.4.2",
     "node-inspector": "^0.12.8",
     "nyc": "^10.0.0",
     "phantomjs-prebuilt": "2.1.4",
