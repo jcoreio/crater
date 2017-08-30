@@ -75,7 +75,7 @@
     "coveralls": "^2.11.15",
     "crater-util": "^1.2.2",
     "cross-spawn": "^5.0.1",
-    "css-loader": "^0.26.0",
+    "css-loader": "^0.28.6",
     "defaultenv": "^1.1.0",
     "empty": "^0.10.1",
     "eslint": "^3.10.2",
