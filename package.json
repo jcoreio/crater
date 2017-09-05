@@ -98,7 +98,7 @@
     "mkdirp": "^0.5.1",
     "mocha": "^3.0.2",
     "node-inspector": "^0.12.8",
-    "nyc": "^10.0.0",
+    "nyc": "^11.2.0",
     "phantomjs-prebuilt": "2.1.4",
     "popsicle": "^9.0.0",
     "postcss-loader": "^1.1.1",
