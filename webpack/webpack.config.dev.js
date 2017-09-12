@@ -18,6 +18,12 @@ const srcDir = path.join(root, 'src')
 const globalCSS = path.join(srcDir, 'styles', 'global')
 const clientInclude = [srcDir]
 
+const meteorConfig = {
+  meteorProgramsFolder: path.resolve(BUILD_DIR, 'meteor', 'bundle', 'programs'),
+  injectMeteorRuntimeConfig: false,
+  exclude: [],
+}
+
 const config = {
   context: root,
   entry: [
@@ -35,7 +41,7 @@ const config = {
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin({
       '__CLIENT__': true,
       '__PRODUCTION__': false,
@@ -46,41 +52,67 @@ const config = {
       'process.env.NODE_ENV': JSON.stringify('development'),
     }),
     new HappyPack({
-      id: '1', // https://github.com/amireh/happypack/issues/88
       loaders: [{
-        path: 'babel',
-        query: {
-          'plugins': [
-            'react-hot-loader/babel',
+        path: 'babel-loader',
+        options: {
+          "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react", "flow"],
+          "plugins": [
+            "transform-runtime",
+            "react-hot-loader/babel",
           ],
-        },
+          "env": {
+            "coverage": {
+              "plugins": [
+                "istanbul"
+              ]
+            }
+          }
+        }
       }],
       threads: 4,
     }),
-    new MeteorImportsPlugin({
-      meteorProgramsFolder: path.resolve(BUILD_DIR, 'meteor', 'bundle', 'programs'),
-      injectMeteorRuntimeConfig: false,
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        postcss: [cssModulesValues]
+      }
     }),
+    new MeteorImportsPlugin(meteorConfig),
   ],
-  postcss: [cssModulesValues],
   module: {
-    loaders: [
-      { test: /\.json$/, loader: 'json-loader', exclude: [
-        path.join(root, 'node_modules', 'meteor-imports-webpack-plugin'),
-        path.join(root, 'build', 'meteor', 'bundle', 'programs'),
-      ]},
-      { test: /\.txt$/, loader: 'raw-loader' },
-      { test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/, loader: 'url-loader?limit=10000' },
-      { test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader' },
+    rules: [
+      {
+        test: /\.json$/,
+        loader: 'json-loader',
+        exclude: [
+          path.join(root, 'build', 'meteor', 'bundle', 'programs'),
+        ]
+      },
+      {test: /\.txt$/, loader: 'raw-loader'},
+      {
+        test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
+        use: [{loader: 'url-loader', options: {limit: 10000}}]
+      },
+      {test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader'},
       {
         test: /\.css$/,
-        loader: 'style!css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss',
+        use: [
+          {loader: 'style-loader'},
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 1,
+              localIdentName: '[name]_[local]_[hash:base64:5]'
+            }
+          },
+          {loader: 'postcss-loader'},
+        ],
         exclude: globalCSS,
         include: clientInclude,
       },
       {
         test: /\.css$/,
-        loader: 'style!css',
+        use: [{loader: 'style-loader'}, {loader: 'css-loader'}],
         include: globalCSS,
       },
       {

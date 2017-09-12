@@ -47,9 +47,9 @@ const config = {
     },
   ],
   plugins: [
-    new webpack.NoErrorsPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
     new ExtractTextPlugin('/static/[name].css'),
-    new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+    new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
     new webpack.DefinePlugin({
       '__CLIENT__': false,
       '__PRODUCTION__': true,
@@ -62,30 +62,58 @@ const config = {
       // 'process.env.DISABLE_FULL_SSR': JSON.stringify('1'),
     }),
     new HappyPack({
-      id: '1', // https://github.com/amireh/happypack/issues/88
       cache: false,
-      loaders: ['babel'],
+      loaders: [{
+        path: 'babel-loader',
+        options: {
+          "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react", "flow"],
+          "plugins": [
+            "transform-runtime",
+            "meteor-imports"
+          ],
+          "env": {
+            "coverage": {
+              "plugins": [
+                "istanbul"
+              ]
+            }
+          }
+        }
+      }],
       threads: 4,
     }),
   ],
   module: {
     loaders: [
-      { test: /\.json$/, loader: 'json-loader' },
-      { test: /\.txt$/, loader: 'raw-loader' },
-      { test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/, loader: 'url-loader?limit=10000' },
-      { test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader' },
+      {test: /\.json$/, loader: 'json-loader'},
+      {test: /\.txt$/, loader: 'raw-loader'},
+      {test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/, use: [{loader: 'url-loader', options: {limit: 10000}}]},
+      {test: /\.(eot|ttf|wav|mp3)$/, loader: 'file-loader'},
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract(
-          'fake-style',
-          'css?modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]!postcss'
-        ),
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                importLoaders: 1,
+                localIdentName: '[name]_[local]_[hash:base64:5]',
+              }
+            },
+            {loader: 'postcss-loader'},
+          ]
+        }),
         include: srcDir,
         exclude: globalCSS,
       },
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract('fake-style', 'css'),
+        use: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: "css-loader"
+        }),
         include: globalCSS,
       },
       {
