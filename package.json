@@ -35,7 +35,7 @@
     "debug": "^2.5.2",
     "es6-promisify": "^5.0.0",
     "express": "^4.14.0",
-    "fibers": "^1.0.15",
+    "fibers": "^2.0.0",
     "immutable": "^3.8.1",
     "json-string-loader": "1.0.0",
     "meteor-node-stubs": "^0.2.4",
