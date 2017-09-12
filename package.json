@@ -59,7 +59,7 @@
     "async-child-process": "^1.0.0",
     "babel-cli": "^6.14.0",
     "babel-core": "^6.18.2",
-    "babel-eslint": "^7.1.1",
+    "babel-eslint": "^8.0.0",
     "babel-loader": "^6.2.8",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-istanbul": "^4.1.1",
