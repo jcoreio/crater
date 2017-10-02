@@ -105,7 +105,7 @@
     "postcss-modules-values": "^1.2.2",
     "pre-commit": "^1.2.2",
     "progress-bar-webpack-plugin": "^1.9.0",
-    "raw-loader": "^0.5.1",
+    "raw-loader": "^1.0.0-beta.0",
     "react-hot-loader": "^3.0.0-beta.2",
     "redux-logger": "^2.7.4",
     "rimraf": "^2.5.4",
